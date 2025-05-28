@@ -2,10 +2,11 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Menu, Send, Copy, RotateCcw, Square } from 'lucide-react';
+import { Plus, Menu, Send } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import Sidebar from './Sidebar';
 import PWAInstallPrompt from '../PWAInstallPrompt';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   id: string;
@@ -31,7 +32,7 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
-  const simulateAIResponse = async (userMessage: string) => {
+  const callChatAPI = async (conversationHistory: Message[]) => {
     const messageId = Date.now().toString();
     
     // Add thinking message
@@ -46,28 +47,50 @@ const ChatInterface = () => {
     
     setMessages(prev => [...prev, thinkingMessage]);
     
-    // Simulate thinking time
-    await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
-    
-    // Replace with actual response
-    const responses = [
-      "I understand you're asking about this topic. Based on my analysis, here's what I can help you with:\n\n1. **Key Points**: Let me break this down for you\n2. **Detailed Analysis**: Looking at the various aspects\n3. **Recommendations**: Here's what I suggest\n\nWould you like me to elaborate on any of these points?",
-      "That's a great question! Let me provide you with a comprehensive answer:\n\n**Overview**: This is an important topic that requires careful consideration.\n\n**My Analysis**: After processing your request, I can see several angles to approach this:\n- First consideration\n- Second important point\n- Third key aspect\n\nHow can I help you dive deeper into this?",
-      "I've processed your query and here's my detailed response:\n\n**Understanding**: I can see what you're looking for\n**Solution**: Here's how I can help you achieve your goal\n**Next Steps**: Consider these options moving forward\n\nFeel free to ask any follow-up questions!"
-    ];
-    
-    const actualResponse: Message = {
-      id: messageId,
-      content: responses[Math.floor(Math.random() * responses.length)],
-      role: 'assistant',
-      timestamp: new Date(),
-      isThinking: false
-    };
-    
-    setMessages(prev => prev.map(msg => 
-      msg.id === messageId ? actualResponse : msg
-    ));
-    setCurrentThinkingId(null);
+    try {
+      // Prepare messages for API (exclude thinking messages)
+      const apiMessages = conversationHistory
+        .filter(msg => !msg.isThinking)
+        .map(msg => ({
+          role: msg.role,
+          content: msg.content
+        }));
+
+      const { data, error } = await supabase.functions.invoke('chat-completion', {
+        body: { messages: apiMessages }
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const actualResponse: Message = {
+        id: messageId,
+        content: data.generatedText,
+        role: 'assistant',
+        timestamp: new Date(),
+        isThinking: false
+      };
+      
+      setMessages(prev => prev.map(msg => 
+        msg.id === messageId ? actualResponse : msg
+      ));
+    } catch (error) {
+      console.error('Error calling chat API:', error);
+      const errorResponse: Message = {
+        id: messageId,
+        content: 'Sorry, I encountered an error while processing your request. Please try again.',
+        role: 'assistant',
+        timestamp: new Date(),
+        isThinking: false
+      };
+      
+      setMessages(prev => prev.map(msg => 
+        msg.id === messageId ? errorResponse : msg
+      ));
+    } finally {
+      setCurrentThinkingId(null);
+    }
   };
 
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -81,11 +104,12 @@ const ChatInterface = () => {
       timestamp: new Date()
     };
 
-    setMessages(prev => [...prev, userMessage]);
+    const newMessages = [...messages, userMessage];
+    setMessages(newMessages);
     setInputValue('');
     setIsLoading(true);
 
-    await simulateAIResponse(inputValue);
+    await callChatAPI(newMessages);
     setIsLoading(false);
   };
 
@@ -144,7 +168,7 @@ const ChatInterface = () => {
         {/* Model Info */}
         <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
           <p className="text-sm text-center text-gray-700">
-            <span className="font-semibold">Makab o1 Pro</span> - Fast Reasoning Model
+            <span className="font-semibold">Makab o1 Pro</span> - Fast Reasoning Model (Llama 3.3 8B)
           </p>
         </div>
 
