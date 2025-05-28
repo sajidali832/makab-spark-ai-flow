@@ -1,12 +1,37 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import LoginForm from '@/components/auth/LoginForm';
+import ChatInterface from '@/components/chat/ChatInterface';
 
 const Index = () => {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Check if user is logged in (for now, using localStorage)
+    const user = localStorage.getItem('makab_user');
+    if (user) {
+      setIsAuthenticated(true);
+    }
+    setIsLoading(false);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white">
+      {!isAuthenticated ? (
+        <LoginForm onAuthSuccess={() => setIsAuthenticated(true)} />
+      ) : (
+        <ChatInterface />
+      )}
     </div>
   );
 };
