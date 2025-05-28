@@ -20,12 +20,12 @@ serve(async (req) => {
 
     // Create system prompt based on tool type
     const systemPrompts = {
-      caption: "You are a social media caption expert. Create engaging, authentic captions that connect with the target audience.",
-      script: "You are a video script writer. Create compelling, structured scripts that engage viewers from start to finish.",
-      hashtag: "You are a hashtag specialist. Generate relevant, trending hashtags that maximize reach and engagement.",
-      idea: "You are a creative ideation expert. Generate innovative, actionable ideas that solve real problems.",
-      youtube: "You are a YouTube strategy expert. Generate channel ideas that have strong growth potential and audience appeal.",
-      bio: "You are a personal branding expert. Create compelling bios that showcase personality and professional value."
+      caption: "You are a social media caption expert. Create engaging, authentic captions that connect with the target audience. Use emojis naturally and make it shareable.",
+      script: "You are a video script writer. Create compelling, structured scripts that engage viewers from start to finish. Include clear sections with timestamps.",
+      hashtag: "You are a hashtag specialist. Generate relevant, trending hashtags that maximize reach and engagement. Mix popular and niche tags.",
+      idea: "You are a creative ideation expert. Generate innovative, actionable ideas that solve real problems and have market potential.",
+      youtube: "You are a YouTube strategy expert. Generate channel ideas that have strong growth potential and audience appeal. Include content strategies.",
+      bio: "You are a personal branding expert. Create compelling bios that showcase personality and professional value in an authentic way."
     };
 
     // Create user prompt based on tool type and form data
@@ -33,7 +33,7 @@ serve(async (req) => {
     
     switch (toolType) {
       case 'caption':
-        userPrompt = `Create a social media caption for: ${formData.topic}
+        userPrompt = `Create an engaging social media caption for: ${formData.topic}
         Tone: ${formData.tone}
         Emotion: ${formData.emotion}
         Target Audience: ${formData.audience}
@@ -87,6 +87,8 @@ serve(async (req) => {
         break;
     }
 
+    console.log('Making request to OpenRouter with model: google/gemma-3-27b-it:free');
+
     const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -96,7 +98,7 @@ serve(async (req) => {
         'X-Title': 'Makab AI Tools',
       },
       body: JSON.stringify({
-        model: 'google/gemma-2-27b-it:free',
+        model: 'google/gemma-3-27b-it:free',
         messages: [
           {
             role: 'system',
@@ -113,10 +115,15 @@ serve(async (req) => {
     });
 
     if (!response.ok) {
+      console.error(`OpenRouter API error: ${response.status} ${response.statusText}`);
+      const errorText = await response.text();
+      console.error('Error response:', errorText);
       throw new Error(`OpenRouter API error: ${response.status}`);
     }
 
     const data = await response.json();
+    console.log('OpenRouter response received successfully');
+    
     const generatedContent = data.choices[0].message.content;
 
     return new Response(JSON.stringify({ generatedContent }), {

@@ -22,6 +22,7 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [currentThinkingId, setCurrentThinkingId] = useState<string | null>(null);
+  const [conversationId, setConversationId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -32,6 +33,40 @@ const ChatInterface = () => {
     scrollToBottom();
   }, [messages]);
 
+  const saveMessageToDatabase = async (message: Message, convId: string) => {
+    try {
+      const user = JSON.parse(localStorage.getItem('makab_user') || '{}');
+      if (user.id) {
+        await supabase.from('chat_messages').insert({
+          conversation_id: convId,
+          user_id: user.id,
+          content: message.content,
+          role: message.role
+        });
+      }
+    } catch (error) {
+      console.error('Error saving message:', error);
+    }
+  };
+
+  const createNewConversation = async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem('makab_user') || '{}');
+      if (user.id) {
+        const { data, error } = await supabase.from('chat_conversations').insert({
+          user_id: user.id,
+          title: 'New Chat'
+        }).select().single();
+
+        if (error) throw error;
+        return data.id;
+      }
+    } catch (error) {
+      console.error('Error creating conversation:', error);
+    }
+    return null;
+  };
+
   const callChatAPI = async (conversationHistory: Message[]) => {
     const messageId = Date.now().toString();
     
@@ -39,7 +74,7 @@ const ChatInterface = () => {
     setCurrentThinkingId(messageId);
     const thinkingMessage: Message = {
       id: messageId,
-      content: 'Analyzing your request and formulating a comprehensive response...',
+      content: 'Let me think about this... 🤔',
       role: 'assistant',
       timestamp: new Date(),
       isThinking: true
@@ -75,11 +110,16 @@ const ChatInterface = () => {
       setMessages(prev => prev.map(msg => 
         msg.id === messageId ? actualResponse : msg
       ));
+
+      // Save to database if we have a conversation
+      if (conversationId) {
+        await saveMessageToDatabase(actualResponse, conversationId);
+      }
     } catch (error) {
       console.error('Error calling chat API:', error);
       const errorResponse: Message = {
         id: messageId,
-        content: 'Sorry, I encountered an error while processing your request. Please try again.',
+        content: 'Oops! Something went wrong 😅 Could you try asking that again? I promise I\'ll do better! 💪',
         role: 'assistant',
         timestamp: new Date(),
         isThinking: false
@@ -104,10 +144,22 @@ const ChatInterface = () => {
       timestamp: new Date()
     };
 
+    // Create conversation if first message
+    let convId = conversationId;
+    if (!convId && messages.length === 0) {
+      convId = await createNewConversation();
+      setConversationId(convId);
+    }
+
     const newMessages = [...messages, userMessage];
     setMessages(newMessages);
     setInputValue('');
     setIsLoading(true);
+
+    // Save user message to database
+    if (convId) {
+      await saveMessageToDatabase(userMessage, convId);
+    }
 
     await callChatAPI(newMessages);
     setIsLoading(false);
@@ -116,7 +168,15 @@ const ChatInterface = () => {
   const startNewChat = () => {
     setMessages([]);
     setCurrentThinkingId(null);
+    setConversationId(null);
   };
+
+  const welcomeMessages = [
+    "Hey there! 👋 I'm Makab, your AI companion! What can I help you with today?",
+    "Hello! 😊 I'm here to assist you with anything you need. Ask me anything!",
+    "Hi! ✨ I'm Makab, and I'm excited to chat with you! What's on your mind?",
+    "Welcome! 🚀 I'm your AI assistant Makab. How can I make your day better?"
+  ];
 
   return (
     <div className="flex h-screen bg-white">
@@ -168,7 +228,7 @@ const ChatInterface = () => {
         {/* Model Info */}
         <div className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-100">
           <p className="text-sm text-center text-gray-700">
-            <span className="font-semibold">Makab o1 Pro</span> - Fast Reasoning Model (Llama 3.3 8B)
+            <span className="font-semibold">Makab o1 Pro</span> - Your Intelligent AI Companion ✨ (Powered by Llama 3.3 8B)
           </p>
         </div>
 
@@ -179,10 +239,23 @@ const ChatInterface = () => {
               <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center">
                 <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-16 h-16 rounded-2xl" />
               </div>
-              <h2 className="text-2xl font-bold text-gray-800">How can I help you today?</h2>
+              <h2 className="text-2xl font-bold text-gray-800">
+                {welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)]}
+              </h2>
               <p className="text-gray-600 max-w-md">
-                Ask me anything! I'm here to assist you with questions, generate content, or help with various tasks.
+                I'm here to help you with questions, generate content, brainstorm ideas, or just have a friendly chat! 🌟
               </p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                <Button variant="outline" size="sm" onClick={() => setInputValue("Tell me about yourself!")}>
+                  Who are you? 🤖
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setInputValue("What can you help me with?")}>
+                  What can you do? ⚡
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => setInputValue("Tell me a joke!")}>
+                  Tell me a joke! 😄
+                </Button>
+              </div>
             </div>
           ) : (
             messages.map((message) => (
@@ -202,7 +275,7 @@ const ChatInterface = () => {
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Message Makab..."
+              placeholder="Message Makab... ✨"
               className="flex-1 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl"
               disabled={isLoading}
             />

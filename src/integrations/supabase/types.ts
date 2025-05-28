@@ -9,7 +9,119 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      chat_conversations: {
+        Row: {
+          created_at: string
+          id: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      chat_messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chat_messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "chat_conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: []
+      }
+      tool_generations: {
+        Row: {
+          created_at: string
+          generated_content: string
+          id: string
+          input_data: Json
+          tool_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          generated_content: string
+          id?: string
+          input_data: Json
+          tool_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          generated_content?: string
+          id?: string
+          input_data?: Json
+          tool_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
