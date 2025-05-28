@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowLeft, Copy, Save, RotateCcw, Trash2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/integrations/supabase/client';
 
 interface ToolFormProps {
   toolId: string;
@@ -80,27 +80,49 @@ const ToolForm = ({ toolId, onBack }: ToolFormProps) => {
   const config = toolConfigs[toolId as keyof typeof toolConfigs];
 
   const handleGenerate = async () => {
+    // Check if required fields are filled
+    const requiredFields = config.fields.filter(field => field.required);
+    const missingFields = requiredFields.filter(field => !formData[field.name]);
+    
+    if (missingFields.length > 0) {
+      toast({
+        title: "Missing Information",
+        description: `Please fill in: ${missingFields.map(f => f.label).join(', ')}`,
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsGenerating(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000 + Math.random() * 2000));
-    
-    const sampleResults = {
-      caption: "🌟 Discover the power of innovation! ✨\n\nOur latest product is designed to transform your daily routine and boost your productivity. Join thousands of satisfied customers who've already made the switch!\n\n💡 Key benefits:\n• Time-saving features\n• User-friendly design\n• Proven results\n\n#Innovation #Productivity #LifeHack #TechLife #GameChanger",
-      script: "Hey everyone! Welcome back to my channel.\n\n[HOOK - 0:00-0:15]\nToday I'm going to show you something that will completely change how you think about [topic]. If you've ever struggled with [problem], this video is for you.\n\n[INTRODUCTION - 0:15-0:30]\nBefore we dive in, make sure to hit that subscribe button and ring the notification bell so you never miss our latest content.\n\n[MAIN CONTENT - 0:30-4:30]\nLet me break this down into three simple steps...\n\n[CONCLUSION - 4:30-5:00]\nThat's a wrap! Let me know in the comments what you think, and I'll see you in the next video!",
-      hashtag: "#innovation #tech #startup #entrepreneur #business #productivity #growth #success #motivation #inspiration #creative #design #digital #future #trending #viral #explore #discover #lifestyle #goals",
-      idea: "💡 **Idea #1: Eco-Friendly Meal Prep Containers**\nCreate biodegradable, compartmentalized containers for meal prep enthusiasts who care about the environment.\n\n💡 **Idea #2: Virtual Reality Workspace Tours**\nDevelop VR experiences that let remote workers 'visit' inspiring workspaces around the world.\n\n💡 **Idea #3: AI-Powered Plant Care Assistant**\nA smart device that monitors plant health and provides personalized care recommendations.",
-      youtube: "🎥 **Channel Ideas for You:**\n\n1. **Tech Simplified** - Breaking down complex technology for everyday users\n2. **Gadget Weekly** - Weekly reviews of the latest tech gadgets\n3. **Code & Coffee** - Programming tutorials with a cozy, approachable vibe\n4. **Future Tech Today** - Exploring emerging technologies and their impact\n5. **Tech on a Budget** - Finding affordable alternatives to expensive tech",
-      bio: "🚀 Digital Innovator | Tech Enthusiast\n💡 Turning ideas into reality, one line of code at a time\n🌟 Sharing the journey of building amazing products\n📍 Building the future from [Your City]\n👇 Check out my latest project"
-    };
-    
-    setResult(sampleResults[toolId as keyof typeof sampleResults] || 'Generated content will appear here...');
-    setIsGenerating(false);
-    
-    toast({
-      title: "Generated!",
-      description: "Your content has been generated successfully.",
-    });
+    try {
+      const { data, error } = await supabase.functions.invoke('tools-generation', {
+        body: { 
+          toolType: toolId,
+          formData: formData 
+        }
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      setResult(data.generatedContent);
+      
+      toast({
+        title: "Generated!",
+        description: "Your content has been generated successfully.",
+      });
+    } catch (error) {
+      console.error('Error generating content:', error);
+      toast({
+        title: "Error",
+        description: "Failed to generate content. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const handleAction = (action: string) => {
