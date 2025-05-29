@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Copy, Trash2, Eye, MessageSquare, Wrench } from 'lucide-react';
@@ -123,24 +123,24 @@ const HistorySection = () => {
 
   if (selectedItem) {
     return (
-      <div className="p-6 space-y-6">
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
         <div className="flex items-center space-x-3">
           <Button variant="ghost" size="sm" onClick={() => setSelectedItem(null)}>
             ← Back
           </Button>
-          <h2 className="text-2xl font-bold text-gray-800">View Content</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800">View Content</h2>
         </div>
 
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+          <CardHeader className="p-3 sm:p-6">
+            <CardTitle className="flex items-center justify-between text-sm sm:text-base">
               <div className="flex items-center space-x-2">
-                {React.createElement(getTypeIcon(selectedItem.type), { className: "h-5 w-5" })}
+                {React.createElement(getTypeIcon(selectedItem.type), { className: "h-4 w-4 sm:h-5 sm:w-5" })}
                 <span>{getTypeLabel(selectedItem.type)}</span>
               </div>
               <div className="flex space-x-2">
                 <Button variant="ghost" size="sm" onClick={() => handleCopy(selectedItem.content)}>
-                  <Copy className="h-4 w-4" />
+                  <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
                 <Button 
                   variant="ghost" 
@@ -150,22 +150,22 @@ const HistorySection = () => {
                     setSelectedItem(null);
                   }}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                 </Button>
               </div>
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="bg-gray-50 rounded-lg p-4 mb-4">
-              <pre className="whitespace-pre-wrap text-sm text-gray-800 font-sans">{selectedItem.content}</pre>
+          <CardContent className="p-3 sm:p-6">
+            <div className="bg-gray-50 rounded-lg p-3 sm:p-4 mb-4">
+              <pre className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 font-sans">{selectedItem.content}</pre>
             </div>
             <div className="flex items-center justify-between text-xs text-gray-500">
               <span>Created: {new Date(selectedItem.timestamp).toLocaleString()}</span>
               <span className="flex items-center space-x-1">
                 {selectedItem.source === 'database' ? (
-                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded">Synced ☁️</span>
+                  <span className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">Synced ☁️</span>
                 ) : (
-                  <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded">Local 💾</span>
+                  <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">Local 💾</span>
                 )}
               </span>
             </div>
@@ -176,34 +176,34 @@ const HistorySection = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 sm:p-6 space-y-4 sm:space-y-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-800">History 📚</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">History 📚</h2>
         {isLoading && (
-          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-blue-600"></div>
         )}
       </div>
       
       {history.length === 0 && !isLoading ? (
-        <div className="text-center py-12 text-gray-500">
-          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Wrench className="w-8 h-8 text-gray-400" />
+        <div className="text-center py-8 sm:py-12 text-gray-500">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Wrench className="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
           </div>
-          <p className="text-lg font-medium mb-2">No saved content yet 📝</p>
+          <p className="text-base sm:text-lg font-medium mb-2">No saved content yet 📝</p>
           <p className="text-sm">Generated content from tools will appear here when you save it.</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2 sm:space-y-3">
           {history.map((item) => {
             const Icon = getTypeIcon(item.type);
             return (
               <Card key={item.id} className="hover:shadow-md transition-shadow">
-                <CardContent className="p-4">
+                <CardContent className="p-3 sm:p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
                       <div className="flex items-center space-x-2 mb-2">
-                        <Icon className="h-4 w-4 text-gray-600" />
-                        <span className="text-sm font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                        <Icon className="h-3 w-3 sm:h-4 sm:w-4 text-gray-600" />
+                        <span className="text-xs sm:text-sm font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded">
                           {getTypeLabel(item.type)}
                         </span>
                         <span className="text-xs text-gray-500">
@@ -213,31 +213,34 @@ const HistorySection = () => {
                           <span className="text-xs bg-green-100 text-green-600 px-1 py-0.5 rounded">☁️</span>
                         )}
                       </div>
-                      <p className="text-sm text-gray-600 line-clamp-2">
+                      <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">
                         {item.content.substring(0, 100)}...
                       </p>
                     </div>
-                    <div className="flex space-x-2 ml-4">
+                    <div className="flex space-x-1 sm:space-x-2 ml-4">
                       <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={() => setSelectedItem(item)}
+                        className="h-8 w-8 p-0"
                       >
-                        <Eye className="h-4 w-4" />
+                        <Eye className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                       <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={() => handleCopy(item.content)}
+                        className="h-8 w-8 p-0"
                       >
-                        <Copy className="h-4 w-4" />
+                        <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                       <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={() => handleDelete(item.id, item.source || 'local')}
+                        className="h-8 w-8 p-0"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                       </Button>
                     </div>
                   </div>

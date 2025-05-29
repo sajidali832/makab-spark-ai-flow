@@ -1,11 +1,7 @@
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { X, MessageSquare, Wrench, User, History, Info } from 'lucide-react';
-import ProfilePage from '../profile/ProfilePage';
-import ToolsSection from '../tools/ToolsSection';
-import HistorySection from '../history/HistorySection';
-import AboutPage from '../about/AboutPage';
+import { useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -13,34 +9,19 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-  const [activeSection, setActiveSection] = useState<'chat' | 'tools' | 'profile' | 'history' | 'about'>('chat');
+  const navigate = useNavigate();
 
   const menuItems = [
-    { id: 'chat' as const, label: 'Chat', icon: MessageSquare },
-    { id: 'tools' as const, label: 'Tools', icon: Wrench },
-    { id: 'history' as const, label: 'History', icon: History },
-    { id: 'profile' as const, label: 'Profile', icon: User },
-    { id: 'about' as const, label: 'About', icon: Info },
+    { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
+    { id: 'tools', label: 'Tools', icon: Wrench, path: '/tools' },
+    { id: 'history', label: 'History', icon: History, path: '/history' },
+    { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
+    { id: 'about', label: 'About', icon: Info, path: '/about' },
   ];
 
-  const renderContent = () => {
-    switch (activeSection) {
-      case 'profile':
-        return <ProfilePage />;
-      case 'tools':
-        return <ToolsSection />;
-      case 'history':
-        return <HistorySection />;
-      case 'about':
-        return <AboutPage />;
-      default:
-        return (
-          <div className="p-6 text-center text-gray-600">
-            <MessageSquare className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-            <p>Continue your conversation in the main chat area.</p>
-          </div>
-        );
-    }
+  const handleNavigation = (path: string) => {
+    navigate(path);
+    onClose();
   };
 
   return (
@@ -55,17 +36,17 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       
       {/* Sidebar */}
       <div className={`
-        fixed lg:relative top-0 left-0 h-full w-80 bg-white border-r border-gray-200 z-50
+        fixed lg:relative top-0 left-0 h-full w-64 sm:w-80 bg-white border-r border-gray-200 z-50
         transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         lg:block
       `}>
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200">
             <div className="flex items-center space-x-2">
-              <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-8 h-8 rounded-lg" />
-              <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg" />
+              <span className="font-bold text-base sm:text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 MAKAB
               </span>
             </div>
@@ -73,23 +54,23 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="lg:hidden"
+              className="lg:hidden h-8 w-8 p-0"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
           </div>
 
           {/* Navigation */}
-          <nav className="p-4 border-b border-gray-200">
+          <nav className="p-3 sm:p-4">
             <div className="space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 return (
                   <Button
                     key={item.id}
-                    variant={activeSection === item.id ? "secondary" : "ghost"}
-                    className="w-full justify-start"
-                    onClick={() => setActiveSection(item.id)}
+                    variant="ghost"
+                    className="w-full justify-start text-sm sm:text-base h-9 sm:h-10"
+                    onClick={() => handleNavigation(item.path)}
                   >
                     <Icon className="h-4 w-4 mr-2" />
                     {item.label}
@@ -98,11 +79,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               })}
             </div>
           </nav>
-
-          {/* Content */}
-          <div className="flex-1 overflow-y-auto">
-            {renderContent()}
-          </div>
         </div>
       </div>
     </>
