@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Wand2, Sparkles, Star, Copy, Save, CopyAll } from 'lucide-react';
+import { ArrowLeft, Wand2, Sparkles, Star, Copy, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -357,7 +356,7 @@ const ToolForm = ({ toolId, onBack }: ToolFormProps) => {
               {generatedContent && (
                 <div className="flex space-x-2">
                   <Button variant="ghost" size="sm" onClick={handleCopyAll}>
-                    <CopyAll className="h-4 w-4 mr-1" />
+                    <Copy className="h-4 w-4 mr-1" />
                     Copy All
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleSave}>
