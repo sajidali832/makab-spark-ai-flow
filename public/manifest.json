@@ -30,5 +30,10 @@
       "type": "image/png",
       "form_factor": "wide"
     }
-  ]
+  ],
+  "permissions": [
+    "clipboard-read",
+    "clipboard-write"
+  ],
+  "prefer_related_applications": false
 }
