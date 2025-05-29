@@ -20,12 +20,12 @@ serve(async (req) => {
 
     // Create system prompt based on tool type
     const systemPrompts = {
-      caption: "You are a social media caption expert. Create engaging, authentic captions that connect with the target audience. Use emojis naturally and make it shareable.",
-      script: "You are a video script writer. Create compelling, structured scripts that engage viewers from start to finish. Include clear sections with timestamps.",
-      hashtag: "You are a hashtag specialist. Generate relevant, trending hashtags that maximize reach and engagement. Mix popular and niche tags.",
-      idea: "You are a creative ideation expert. Generate innovative, actionable ideas that solve real problems and have market potential.",
-      youtube: "You are a YouTube strategy expert. Generate channel ideas that have strong growth potential and audience appeal. Include content strategies.",
-      bio: "You are a personal branding expert. Create compelling bios that showcase personality and professional value in an authentic way."
+      caption: "Generate only the social media caption. No explanations, no introductions, no descriptions. Just the caption text with emojis.",
+      script: "Generate only the video script content. No explanations, no introductions. Just the script with clear sections and timestamps.",
+      hashtag: "Generate only hashtags. No explanations, no text, no descriptions. Just hashtags, one per line.",
+      idea: "Generate only the ideas. No explanations, no introductions. Just the ideas in a clean list format.",
+      youtube: "Generate only the YouTube channel ideas. No explanations, no introductions. Just the channel ideas with names and brief descriptions.",
+      bio: "Generate only the bio text. No explanations, no introductions, no descriptions. Just the bio content."
     };
 
     // Create user prompt based on tool type and form data
@@ -33,38 +33,28 @@ serve(async (req) => {
     
     switch (toolType) {
       case 'caption':
-        userPrompt = `Create an engaging social media caption for: ${formData.topic}
-        Tone: ${formData.tone}
-        Emotion: ${formData.emotion}
-        Target Audience: ${formData.audience}
-        
-        Make it engaging, authentic, and include relevant emojis. Keep it concise but impactful.`;
+        userPrompt = `Create a ${formData.tone} ${formData.emotion} social media caption for: ${formData.topic}
+        Target Audience: ${formData.audience}`;
         break;
         
       case 'script':
-        userPrompt = `Create a ${formData.length}-minute video script for ${formData.platform}
+        userPrompt = `Create a ${formData.length} video script for ${formData.platform}
         Topic: ${formData.topic}
         Tone: ${formData.tone}
-        Target Audience: ${formData.audience}
-        
-        Include clear sections with timestamps, engaging hooks, and call-to-actions.`;
+        Target Audience: ${formData.audience}`;
         break;
         
       case 'hashtag':
-        userPrompt = `Generate 20 relevant hashtags for ${formData.platform}
+        userPrompt = `Generate 20 hashtags for ${formData.platform}
         Niche: ${formData.niche}
         Keywords: ${formData.keywords}
-        ${formData.audience ? `Target Audience: ${formData.audience}` : ''}
-        
-        Mix popular and niche hashtags for maximum reach and engagement.`;
+        ${formData.audience ? `Target Audience: ${formData.audience}` : ''}`;
         break;
         
       case 'idea':
-        userPrompt = `Generate 5 creative ${formData.type} ideas for:
+        userPrompt = `Generate 5 ${formData.type} ideas for:
         Industry: ${formData.industry}
-        Goal: ${formData.goal}
-        
-        Make them innovative, actionable, and market-ready.`;
+        Goal: ${formData.goal}`;
         break;
         
       case 'youtube':
@@ -72,18 +62,14 @@ serve(async (req) => {
         Category: ${formData.category}
         Skill Level: ${formData.skill}
         Target Audience: ${formData.audience}
-        Content Type: ${formData.content}
-        
-        Include channel names, content strategies, and growth potential.`;
+        Content Type: ${formData.content}`;
         break;
         
       case 'bio':
-        userPrompt = `Create a compelling bio for ${formData.platform}
+        userPrompt = `Create a bio for ${formData.platform}
         Profession: ${formData.profession}
         Style: ${formData.vibe}
-        ${formData.hobbies ? `Interests: ${formData.hobbies}` : ''}
-        
-        Make it authentic, memorable, and platform-appropriate.`;
+        ${formData.hobbies ? `Interests: ${formData.hobbies}` : ''}`;
         break;
     }
 
