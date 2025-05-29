@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Wand2, Sparkles, Star, Copy, Save } from 'lucide-react';
+import { ArrowLeft, Wand2, Sparkles, Star, Copy, Save, CopyAll } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -152,49 +152,139 @@ const ToolForm = ({ toolId, onBack }: ToolFormProps) => {
     }
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(generatedContent);
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
     toast({
       title: "Copied! 📋",
       description: "Content copied to clipboard",
     });
   };
 
+  const handleCopyAll = () => {
+    navigator.clipboard.writeText(generatedContent);
+    toast({
+      title: "All Content Copied! 📋",
+      description: "Entire content copied to clipboard",
+    });
+  };
+
+  const formatGeneratedContent = (content: string) => {
+    if (!content) return null;
+
+    // Split content into sections and items
+    const sections = content.split('\n\n').filter(section => section.trim());
+    
+    return (
+      <div className="space-y-4">
+        {sections.map((section, sectionIndex) => {
+          const lines = section.split('\n').filter(line => line.trim());
+          
+          return (
+            <div key={sectionIndex} className="bg-white rounded-lg border border-gray-200 p-4">
+              {lines.map((line, lineIndex) => {
+                const trimmedLine = line.trim();
+                
+                // Check if it's a hashtag line
+                if (trimmedLine.startsWith('#') || trimmedLine.includes('#')) {
+                  const hashtags = trimmedLine.split(' ').filter(word => word.startsWith('#'));
+                  
+                  return (
+                    <div key={lineIndex} className="flex items-center justify-between p-2 bg-blue-50 rounded border mb-2">
+                      <span className="text-sm text-gray-800 flex-1">{trimmedLine}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleCopy(trimmedLine)}
+                        className="ml-2 h-8 w-8 p-0"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  );
+                }
+                
+                // Check if it's a title or heading
+                if (trimmedLine.includes(':') && lineIndex === 0) {
+                  return (
+                    <div key={lineIndex} className="flex items-center justify-between p-2 bg-gray-50 rounded border mb-2">
+                      <h4 className="font-semibold text-gray-900 flex-1">{trimmedLine}</h4>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleCopy(trimmedLine)}
+                        className="ml-2 h-8 w-8 p-0"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  );
+                }
+                
+                // Regular content lines
+                if (trimmedLine) {
+                  return (
+                    <div key={lineIndex} className="flex items-center justify-between p-2 bg-gray-50 rounded border mb-2">
+                      <span className="text-sm text-gray-800 flex-1">{trimmedLine}</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleCopy(trimmedLine)}
+                        className="ml-2 h-8 w-8 p-0"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  );
+                }
+                
+                return null;
+              })}
+            </div>
+          );
+        })}
+        
+        <div className="text-xs text-gray-500 text-center p-2 bg-gray-50 rounded">
+          Made by Sajid ✨
+        </div>
+      </div>
+    );
+  };
+
   const LoadingAnimation = () => (
     <div className="flex flex-col items-center justify-center py-12 space-y-4">
-      <div className="relative w-20 h-20">
+      <div className="relative w-16 h-16">
         <div className="absolute inset-0 rounded-full border-4 border-purple-200"></div>
         <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-purple-600 animate-spin"></div>
         <div className="absolute inset-2 rounded-full border-4 border-transparent border-t-blue-600 animate-spin animate-reverse"></div>
         <div className="absolute inset-0 flex items-center justify-center">
-          <Star className="w-8 h-8 text-purple-600 animate-pulse" />
+          <Star className="w-6 h-6 text-purple-600 animate-pulse" />
         </div>
       </div>
       <div className="text-center">
-        <p className="text-lg font-semibold text-gray-800">Generating your content...</p>
-        <p className="text-sm text-gray-600">AI is working its magic ✨</p>
+        <p className="text-lg font-semibold text-gray-800">Generating...</p>
+        <p className="text-sm text-gray-600">AI is working ✨</p>
       </div>
     </div>
   );
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 space-y-4">
       <div className="flex items-center space-x-3">
         <Button variant="ghost" size="sm" onClick={onBack}>
           <ArrowLeft className="h-4 w-4 mr-2" />
           Back
         </Button>
         <div className="flex items-center space-x-2">
-          <span className="text-2xl">{config.icon}</span>
-          <h2 className="text-2xl font-bold text-gray-800">{config.title}</h2>
+          <span className="text-xl">{config.icon}</span>
+          <h2 className="text-xl font-bold text-gray-800">{config.title}</h2>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-4">
         {/* Input Form */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
+            <CardTitle className="flex items-center space-x-2 text-lg">
               <Wand2 className="h-5 w-5" />
               <span>Configuration</span>
             </CardTitle>
@@ -202,13 +292,14 @@ const ToolForm = ({ toolId, onBack }: ToolFormProps) => {
           <CardContent className="space-y-4">
             {config.fields.map((field) => (
               <div key={field.name} className="space-y-2">
-                <Label htmlFor={field.name}>{field.label}</Label>
+                <Label htmlFor={field.name} className="text-sm">{field.label}</Label>
                 {field.type === 'input' ? (
                   <Input
                     id={field.name}
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
+                    className="h-9"
                   />
                 ) : field.type === 'textarea' ? (
                   <Textarea
@@ -216,10 +307,11 @@ const ToolForm = ({ toolId, onBack }: ToolFormProps) => {
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, [field.name]: e.target.value }))}
+                    className="min-h-[80px]"
                   />
                 ) : (
                   <Select value={formData[field.name] || ''} onValueChange={(value) => setFormData(prev => ({ ...prev, [field.name]: value }))}>
-                    <SelectTrigger>
+                    <SelectTrigger className="h-9">
                       <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
                     </SelectTrigger>
                     <SelectContent>
@@ -235,7 +327,7 @@ const ToolForm = ({ toolId, onBack }: ToolFormProps) => {
             <Button 
               onClick={handleGenerate}
               disabled={isGenerating || !Object.values(formData).some(v => v)}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 h-10"
             >
               {isGenerating ? (
                 <>
@@ -257,15 +349,16 @@ const ToolForm = ({ toolId, onBack }: ToolFormProps) => {
         {/* Output */}
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex items-center justify-between text-lg">
               <div className="flex items-center space-x-2">
                 <Sparkles className="h-5 w-5" />
                 <span>Generated Content</span>
               </div>
               {generatedContent && (
                 <div className="flex space-x-2">
-                  <Button variant="ghost" size="sm" onClick={handleCopy}>
-                    <Copy className="h-4 w-4" />
+                  <Button variant="ghost" size="sm" onClick={handleCopyAll}>
+                    <CopyAll className="h-4 w-4 mr-1" />
+                    Copy All
                   </Button>
                   <Button variant="ghost" size="sm" onClick={handleSave}>
                     <Save className="h-4 w-4" />
@@ -278,16 +371,14 @@ const ToolForm = ({ toolId, onBack }: ToolFormProps) => {
             {isGenerating ? (
               <LoadingAnimation />
             ) : generatedContent ? (
-              <div className="bg-gray-50 rounded-lg p-4 min-h-[300px]">
-                <pre className="whitespace-pre-wrap text-sm text-gray-800 font-sans">
-                  {generatedContent}
-                </pre>
+              <div className="max-h-[500px] overflow-y-auto">
+                {formatGeneratedContent(generatedContent)}
               </div>
             ) : (
               <div className="text-center py-12 text-gray-500">
                 <Sparkles className="w-12 h-12 mx-auto mb-4 text-gray-300" />
                 <p>Your generated content will appear here</p>
-                <p className="text-sm">Fill out the form and click generate to get started</p>
+                <p className="text-sm">Fill out the form and click generate</p>
               </div>
             )}
           </CardContent>
