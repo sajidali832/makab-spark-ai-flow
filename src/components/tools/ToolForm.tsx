@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Wand2, Sparkles, Star, Copy, Save, Zap, Crown } from 'lucide-react';
+import { ArrowLeft, Wand2, Sparkles, Star, Copy, Save, Zap } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -301,8 +301,8 @@ const ToolForm = ({ toolId, onBack }: ToolFormProps) => {
               <div>
                 <h2 className="text-xl sm:text-2xl font-bold text-gray-800">{config.title}</h2>
                 <div className="flex items-center space-x-1 text-purple-600">
-                  <Crown className="h-3 w-3" />
-                  <span className="text-xs font-medium">Premium Tool</span>
+                  <Sparkles className="h-3 w-3" />
+                  <span className="text-xs font-medium">AI Tool</span>
                 </div>
               </div>
             </div>

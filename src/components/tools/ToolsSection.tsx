@@ -11,7 +11,6 @@ import {
   Instagram, 
   User,
   ArrowRight,
-  Crown,
   Sparkles,
   Star,
   Zap
@@ -112,11 +111,11 @@ const ToolsSection = () => {
             AI Content Tools
           </h2>
           <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
-            Transform your ideas into engaging content with our premium AI-powered tools
+            Transform your ideas into engaging content with our AI-powered tools
           </p>
-          <div className="flex items-center justify-center space-x-1 text-yellow-500">
-            <Crown className="h-5 w-5" />
-            <span className="text-sm font-semibold text-gray-700">Premium Quality</span>
+          <div className="flex items-center justify-center space-x-1 text-blue-500">
+            <Sparkles className="h-5 w-5" />
+            <span className="text-sm font-semibold text-gray-700">High Quality</span>
             <Star className="h-4 w-4 fill-current" />
           </div>
         </div>
@@ -174,11 +173,11 @@ const ToolsSection = () => {
           })}
         </div>
         
-        {/* Premium Badge */}
+        {/* Features Badge */}
         <div className="text-center py-8">
           <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full px-6 py-3 shadow-lg">
-            <Crown className="h-5 w-5 text-yellow-600" />
-            <span className="text-sm font-bold text-gray-800">All Tools Included in Premium</span>
+            <Sparkles className="h-5 w-5 text-blue-600" />
+            <span className="text-sm font-bold text-gray-800">All Tools Available</span>
             <Sparkles className="h-4 w-4 text-purple-600" />
           </div>
         </div>

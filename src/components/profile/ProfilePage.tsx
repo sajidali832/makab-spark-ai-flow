@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { User, Mail, LogOut, Crown, Sparkles, Star, Zap } from 'lucide-react';
+import { User, Mail, LogOut, Sparkles, Star, Zap } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const ProfilePage = () => {
@@ -29,9 +29,6 @@ const ProfilePage = () => {
               <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
                 <User className="h-10 w-10 sm:h-12 sm:w-12 text-white" />
               </div>
-              <div className="absolute -top-1 -right-1 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                <Crown className="h-4 w-4 text-white" />
-              </div>
               <div className="absolute -bottom-1 -left-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
                 <Star className="h-3 w-3 text-white" />
               </div>
@@ -42,7 +39,7 @@ const ProfilePage = () => {
           </h2>
           <div className="flex items-center justify-center space-x-1 text-purple-600">
             <Sparkles className="h-4 w-4" />
-            <span className="text-sm font-medium">Makab Pro User</span>
+            <span className="text-sm font-medium">Makab User</span>
             <Zap className="h-4 w-4" />
           </div>
         </div>
@@ -75,17 +72,17 @@ const ProfilePage = () => {
               </div>
             </div>
 
-            {/* Premium Features */}
-            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-4 border border-yellow-200">
+            {/* Features */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-200">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <Crown className="h-5 w-5 text-yellow-600" />
-                  <span className="font-semibold text-yellow-800">Premium Access</span>
+                  <Sparkles className="h-5 w-5 text-green-600" />
+                  <span className="font-semibold text-green-800">Full Access</span>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                  <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+                  <Star className="h-4 w-4 text-green-500 fill-green-500" />
+                  <Star className="h-4 w-4 text-green-500 fill-green-500" />
+                  <Star className="h-4 w-4 text-green-500 fill-green-500" />
                 </div>
               </div>
             </div>
