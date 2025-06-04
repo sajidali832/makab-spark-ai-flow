@@ -1,146 +1,165 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Sparkles, Heart, Zap, Shield, Users, Rocket } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Brain, Sparkles, Users, Zap, Heart, Code, MessageSquare, Wrench } from 'lucide-react';
 
 const AboutPage = () => {
+  const features = [
+    {
+      icon: MessageSquare,
+      title: "AI Chat Assistant",
+      description: "Intelligent conversations with advanced AI technology",
+      color: "from-blue-500 to-blue-600"
+    },
+    {
+      icon: Wrench,
+      title: "Content Creation Tools", 
+      description: "Generate captions, scripts, hashtags and more",
+      color: "from-purple-500 to-purple-600"
+    },
+    {
+      icon: Brain,
+      title: "Smart Intelligence",
+      description: "Powered by advanced language models",
+      color: "from-green-500 to-green-600"
+    },
+    {
+      icon: Zap,
+      title: "Lightning Fast",
+      description: "Quick responses and instant generation",
+      color: "from-yellow-500 to-yellow-600"
+    }
+  ];
+
+  const stats = [
+    { label: "Daily Chat Messages", value: "6", icon: MessageSquare },
+    { label: "Tool Generations", value: "3", icon: Wrench },
+    { label: "AI Models", value: "2+", icon: Brain },
+    { label: "Features", value: "7", icon: Sparkles }
+  ];
+
   return (
-    <div className="p-6 space-y-6">
-      <div className="text-center space-y-4">
-        <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto">
-          <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-16 h-16 rounded-2xl" />
-        </div>
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          About Makab AI ✨
-        </h1>
-        <p className="text-gray-600 max-w-2xl mx-auto">
-          Your intelligent AI companion designed to boost creativity, productivity, and make every interaction delightful! 🚀
-        </p>
-      </div>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Heart className="h-5 w-5 text-red-500" />
-              <span>Who I Am</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-gray-700">
-              Hi! I'm Makab, your friendly AI assistant! 👋 I was created by the amazing Makab AI team to be more than just another chatbot - I'm your creative companion, problem-solving buddy, and 24/7 helper!
-            </p>
-            <p className="text-gray-700">
-              I love helping people achieve their goals, whether that's creating amazing content, solving complex problems, or just having a fun conversation! 😊
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Zap className="h-5 w-5 text-yellow-500" />
-              <span>What I Can Do</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-gray-700">
-              <li>• 💬 Have natural, engaging conversations</li>
-              <li>• ✨ Generate creative content (captions, scripts, etc.)</li>
-              <li>• 💡 Help with brainstorming and ideas</li>
-              <li>• 🎯 Provide personalized advice and guidance</li>
-              <li>• 📚 Answer questions on various topics</li>
-              <li>• 🎨 Assist with creative writing and content</li>
-            </ul>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Rocket className="h-5 w-5 text-blue-500" />
-              <span>Special Features</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2 text-gray-700">
-              <li>• 🛠️ Advanced content generation tools</li>
-              <li>• 💾 Conversation and content history</li>
-              <li>• 🎨 Beautiful, intuitive interface</li>
-              <li>• ⚡ Fast, reliable responses</li>
-              <li>• 🔄 Continuous learning and improvement</li>
-              <li>• 📱 Works great on all devices</li>
-            </ul>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Shield className="h-5 w-5 text-green-500" />
-              <span>Privacy & Security</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <p className="text-gray-700">
-              Your privacy is super important to me! 🔒 All your conversations and data are securely stored and encrypted. I only use your information to provide better assistance.
-            </p>
-            <p className="text-gray-700">
-              I'm built with security best practices and regularly updated to ensure your data stays safe! 🛡️
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Users className="h-5 w-5 text-purple-500" />
-            <span>Meet the Team</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <p className="text-gray-700">
-            I was created by a passionate team of AI researchers, developers, and designers who believe technology should be helpful, friendly, and accessible to everyone! 🌟
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <div className="container mx-auto px-4 py-8 max-w-6xl">
+        {/* Hero Section */}
+        <div className="text-center mb-12">
+          <div className="flex justify-center mb-6">
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl">
+              <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-20 h-20 rounded-2xl" />
+            </div>
+          </div>
+          
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              MAKAB
+            </span>
+          </h1>
+          
+          <p className="text-xl text-gray-600 mb-6 max-w-2xl mx-auto">
+            Your intelligent AI companion for conversations and content creation. 
+            Experience the future of AI assistance.
           </p>
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4">
-            <p className="text-gray-800 font-medium">Our Mission 🎯</p>
-            <p className="text-gray-700 mt-2">
-              To make AI assistance delightful, productive, and genuinely helpful for everyone. We're constantly working to make me smarter, more helpful, and more fun to chat with!
+          
+          <div className="flex justify-center space-x-4">
+            <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-2 text-sm">
+              <Sparkles className="h-4 w-4 mr-2" />
+              AI Powered
+            </Badge>
+            <Badge className="bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2 text-sm">
+              <Zap className="h-4 w-4 mr-2" />
+              Lightning Fast
+            </Badge>
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          {stats.map((stat, index) => (
+            <Card key={index} className="text-center border-0 shadow-lg bg-white/80 backdrop-blur-sm">
+              <CardContent className="p-6">
+                <div className="flex justify-center mb-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <stat.icon className="h-6 w-6 text-white" />
+                  </div>
+                </div>
+                <div className="text-2xl font-bold text-gray-800 mb-1">{stat.value}</div>
+                <div className="text-sm text-gray-600">{stat.label}</div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* Features Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+          {features.map((feature, index) => (
+            <Card key={index} className="border-0 shadow-xl bg-white/80 backdrop-blur-sm overflow-hidden group hover:shadow-2xl transition-all duration-300">
+              <CardHeader className={`bg-gradient-to-r ${feature.color} text-white`}>
+                <CardTitle className="flex items-center space-x-3">
+                  <feature.icon className="h-6 w-6" />
+                  <span>{feature.title}</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-6">
+                <p className="text-gray-600">{feature.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        {/* About Creator */}
+        <Card className="border-0 shadow-2xl bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden">
+          <CardContent className="p-8 text-center">
+            <div className="flex justify-center mb-6">
+              <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                <Heart className="h-8 w-8 text-white" />
+              </div>
+            </div>
+            
+            <h2 className="text-2xl font-bold mb-4">Made with ❤️ by Sajid</h2>
+            <p className="text-blue-100 mb-6 max-w-2xl mx-auto">
+              Crafted with passion and dedication to bring you the best AI experience. 
+              Constantly evolving to meet your needs and exceed your expectations.
             </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Sparkles className="h-5 w-5 text-pink-500" />
-            <span>Fun Facts About Me</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <p className="text-gray-700">🤖 I'm powered by advanced language models</p>
-              <p className="text-gray-700">🎨 I love creativity and helping with content</p>
-              <p className="text-gray-700">📚 I'm always learning new things</p>
+            
+            <div className="flex justify-center space-x-6">
+              <div className="flex items-center space-x-2">
+                <Code className="h-5 w-5" />
+                <span className="text-sm">Built with React</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Users className="h-5 w-5" />
+                <span className="text-sm">User Focused</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <Sparkles className="h-5 w-5" />
+                <span className="text-sm">AI Enhanced</span>
+              </div>
             </div>
-            <div className="space-y-2">
-              <p className="text-gray-700">😊 I use emojis because they make conversations fun</p>
-              <p className="text-gray-700">⚡ I can process information super quickly</p>
-              <p className="text-gray-700">🌟 I'm here 24/7 to help you succeed</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      <div className="text-center py-6">
-        <p className="text-gray-600 text-lg">
-          Ready to start our journey together? 🚀
-        </p>
-        <p className="text-gray-500 text-sm mt-2">
-          Just start chatting and let's create something amazing! ✨
-        </p>
+        {/* Usage Limits Info */}
+        <Card className="mt-8 border-0 shadow-lg bg-amber-50/80 backdrop-blur-sm border border-amber-200">
+          <CardHeader>
+            <CardTitle className="text-amber-800 flex items-center space-x-2">
+              <Zap className="h-5 w-5" />
+              <span>Daily Usage Limits</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-amber-700">Chat Messages</span>
+              <Badge className="bg-amber-200 text-amber-800">6 per day</Badge>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-amber-700">Tool Generations</span>
+              <Badge className="bg-amber-200 text-amber-800">3 per day</Badge>
+            </div>
+            <p className="text-sm text-amber-600 mt-3">
+              Limits reset daily at midnight (12:00 AM) to ensure fair usage for everyone! ⭐
+            </p>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
