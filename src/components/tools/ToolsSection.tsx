@@ -12,7 +12,10 @@ import {
   ArrowRight,
   Sparkles,
   Star,
-  Zap
+  Zap,
+  BookOpen,
+  Video,
+  HelpCircle
 } from 'lucide-react';
 import ToolForm from './ToolForm';
 
@@ -73,6 +76,32 @@ const toolConfigurations = {
       { name: 'vibe', label: 'Style', type: 'select', options: ['Professional', 'Creative', 'Minimalist'] },
       { name: 'hobbies', label: 'Interests', type: 'text' }
     ]
+  },
+  blog: {
+    fields: [
+      { name: 'topic', label: 'Blog Topic', type: 'text' },
+      { name: 'audience', label: 'Target Audience', type: 'text' },
+      { name: 'tone', label: 'Writing Tone', type: 'select', options: ['Professional', 'Casual', 'Educational', 'Conversational'] },
+      { name: 'length', label: 'Post Length', type: 'select', options: ['Short (500 words)', 'Medium (1000 words)', 'Long (1500+ words)'] },
+      { name: 'keywords', label: 'Keywords (optional)', type: 'text' }
+    ]
+  },
+  reel: {
+    fields: [
+      { name: 'niche', label: 'Content Niche', type: 'text' },
+      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram Reels', 'TikTok', 'YouTube Shorts'] },
+      { name: 'style', label: 'Content Style', type: 'select', options: ['Educational', 'Entertainment', 'Trending', 'Behind-the-scenes'] },
+      { name: 'audience', label: 'Target Audience', type: 'text' },
+      { name: 'duration', label: 'Video Duration', type: 'select', options: ['15-30 seconds', '30-60 seconds', '60-90 seconds'] }
+    ]
+  },
+  engagement: {
+    fields: [
+      { name: 'topic', label: 'Post Topic', type: 'text' },
+      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram Stories', 'Instagram Posts', 'Facebook', 'LinkedIn'] },
+      { name: 'type', label: 'Question Type', type: 'select', options: ['This or That', 'Opinion', 'Yes/No', 'Fill in the blank'] },
+      { name: 'audience', label: 'Target Audience', type: 'text' }
+    ]
   }
 };
 
@@ -121,20 +150,44 @@ const ToolsSection = () => {
       description: 'Build your YouTube presence'
     },
     { 
-      id: 'instagram', 
-      name: 'Instagram Post Generator', 
-      icon: Instagram, 
-      available: false, 
-      gradient: 'from-gray-400 to-gray-500',
-      description: 'Coming soon - Instagram content'
-    },
-    { 
       id: 'bio', 
       name: 'Bio Generator', 
       icon: User, 
       available: true, 
       gradient: 'from-indigo-500 to-purple-500',
       description: 'Craft perfect profile bios'
+    },
+    { 
+      id: 'blog', 
+      name: 'Blog Post Generator', 
+      icon: BookOpen, 
+      available: true, 
+      gradient: 'from-teal-500 to-blue-500',
+      description: 'Create engaging blog content'
+    },
+    { 
+      id: 'reel', 
+      name: 'Reel Idea Generator', 
+      icon: Video, 
+      available: true, 
+      gradient: 'from-pink-500 to-violet-500',
+      description: 'Generate viral reel concepts'
+    },
+    { 
+      id: 'engagement', 
+      name: 'Engagement Question Generator', 
+      icon: HelpCircle, 
+      available: true, 
+      gradient: 'from-orange-500 to-red-500',
+      description: 'Create interactive story questions'
+    },
+    { 
+      id: 'instagram', 
+      name: 'Instagram Post Generator', 
+      icon: Instagram, 
+      available: false, 
+      gradient: 'from-gray-400 to-gray-500',
+      description: 'Coming soon - Instagram content'
     },
   ];
 

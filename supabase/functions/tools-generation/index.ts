@@ -25,7 +25,10 @@ serve(async (req) => {
       hashtag: "Generate only hashtags. No explanations, no text, no descriptions. Just hashtags, one per line.",
       idea: "Generate only the ideas. No explanations, no introductions. Just the ideas in a clean list format.",
       youtube: "Generate only the YouTube channel ideas. No explanations, no introductions. Just the channel ideas with names and brief descriptions.",
-      bio: "Generate only the bio text. No explanations, no introductions, no descriptions. Just the bio content."
+      bio: "Generate only the bio text. No explanations, no introductions, no descriptions. Just the bio content.",
+      blog: "Generate only the blog post content. No explanations, no introductions. Just the complete blog post with proper structure and headings.",
+      reel: "Generate only the reel ideas. No explanations, no introductions. Just the reel concepts with brief descriptions.",
+      engagement: "Generate only the engagement questions. No explanations, no introductions. Just the questions in the specified format."
     };
 
     // Create user prompt based on tool type and form data
@@ -70,6 +73,29 @@ serve(async (req) => {
         Profession: ${formData.profession}
         Style: ${formData.vibe}
         ${formData.hobbies ? `Interests: ${formData.hobbies}` : ''}`;
+        break;
+
+      case 'blog':
+        userPrompt = `Create a ${formData.length} blog post about: ${formData.topic}
+        Target Audience: ${formData.audience}
+        Writing Tone: ${formData.tone}
+        ${formData.keywords ? `Keywords to include: ${formData.keywords}` : ''}
+        Include proper headings and structure.`;
+        break;
+
+      case 'reel':
+        userPrompt = `Generate 5 ${formData.style} reel ideas for ${formData.platform}
+        Content Niche: ${formData.niche}
+        Target Audience: ${formData.audience}
+        Video Duration: ${formData.duration}
+        Include hook, content outline, and call-to-action for each idea.`;
+        break;
+
+      case 'engagement':
+        userPrompt = `Create 10 ${formData.type} engagement questions for ${formData.platform}
+        Topic: ${formData.topic}
+        Target Audience: ${formData.audience}
+        Make them interactive and engaging to boost audience participation.`;
         break;
     }
 

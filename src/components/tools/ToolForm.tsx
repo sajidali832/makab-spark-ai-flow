@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -79,6 +80,32 @@ const toolConfigurations = {
       { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram', 'Twitter', 'LinkedIn'] },
       { name: 'vibe', label: 'Style', type: 'select', options: ['Professional', 'Creative', 'Minimalist'] },
       { name: 'hobbies', label: 'Interests', type: 'text' }
+    ]
+  },
+  blog: {
+    fields: [
+      { name: 'topic', label: 'Blog Topic', type: 'text' },
+      { name: 'audience', label: 'Target Audience', type: 'text' },
+      { name: 'tone', label: 'Writing Tone', type: 'select', options: ['Professional', 'Casual', 'Educational', 'Conversational'] },
+      { name: 'length', label: 'Post Length', type: 'select', options: ['Short (500 words)', 'Medium (1000 words)', 'Long (1500+ words)'] },
+      { name: 'keywords', label: 'Keywords (optional)', type: 'text' }
+    ]
+  },
+  reel: {
+    fields: [
+      { name: 'niche', label: 'Content Niche', type: 'text' },
+      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram Reels', 'TikTok', 'YouTube Shorts'] },
+      { name: 'style', label: 'Content Style', type: 'select', options: ['Educational', 'Entertainment', 'Trending', 'Behind-the-scenes'] },
+      { name: 'audience', label: 'Target Audience', type: 'text' },
+      { name: 'duration', label: 'Video Duration', type: 'select', options: ['15-30 seconds', '30-60 seconds', '60-90 seconds'] }
+    ]
+  },
+  engagement: {
+    fields: [
+      { name: 'topic', label: 'Post Topic', type: 'text' },
+      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram Stories', 'Instagram Posts', 'Facebook', 'LinkedIn'] },
+      { name: 'type', label: 'Question Type', type: 'select', options: ['This or That', 'Opinion', 'Yes/No', 'Fill in the blank'] },
+      { name: 'audience', label: 'Target Audience', type: 'text' }
     ]
   }
 };
