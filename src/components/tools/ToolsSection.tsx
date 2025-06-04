@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,6 +24,57 @@ interface Tool {
   gradient: string;
   description: string;
 }
+
+const toolConfigurations = {
+  caption: {
+    fields: [
+      { name: 'topic', label: 'Topic', type: 'text' },
+      { name: 'audience', label: 'Target Audience', type: 'text' },
+      { name: 'tone', label: 'Tone', type: 'select', options: ['Friendly', 'Professional', 'Humorous', 'Exciting'] },
+      { name: 'emotion', label: 'Emotion', type: 'select', options: ['Happy', 'Sad', 'Angry', 'Surprised'] }
+    ]
+  },
+  script: {
+    fields: [
+      { name: 'topic', label: 'Topic', type: 'text' },
+      { name: 'platform', label: 'Platform', type: 'select', options: ['YouTube', 'TikTok', 'Instagram Reels'] },
+      { name: 'tone', label: 'Tone', type: 'select', options: ['Informative', 'Entertaining', 'Educational'] },
+      { name: 'audience', label: 'Target Audience', type: 'text' },
+      { name: 'length', label: 'Length', type: 'select', options: ['Short', 'Medium', 'Long'] }
+    ]
+  },
+  hashtag: {
+    fields: [
+      { name: 'niche', label: 'Niche', type: 'text' },
+      { name: 'keywords', label: 'Keywords', type: 'text' },
+      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram', 'Twitter', 'TikTok'] },
+      { name: 'audience', label: 'Target Audience', type: 'text' }
+    ]
+  },
+  idea: {
+    fields: [
+      { name: 'industry', label: 'Industry', type: 'text' },
+      { name: 'goal', label: 'Goal', type: 'text' },
+      { name: 'type', label: 'Type', type: 'select', options: ['Business', 'Marketing', 'Product', 'Content'] }
+    ]
+  },
+  youtube: {
+    fields: [
+      { name: 'category', label: 'Category', type: 'text' },
+      { name: 'skill', label: 'Skill Level', type: 'select', options: ['Beginner', 'Intermediate', 'Advanced'] },
+      { name: 'audience', label: 'Target Audience', type: 'text' },
+      { name: 'content', label: 'Content Type', type: 'select', options: ['Tutorials', 'Reviews', 'Vlogs'] }
+    ]
+  },
+  bio: {
+    fields: [
+      { name: 'profession', label: 'Profession', type: 'text' },
+      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram', 'Twitter', 'LinkedIn'] },
+      { name: 'vibe', label: 'Style', type: 'select', options: ['Professional', 'Creative', 'Minimalist'] },
+      { name: 'hobbies', label: 'Interests', type: 'text' }
+    ]
+  }
+};
 
 const ToolsSection = () => {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
@@ -91,6 +141,7 @@ const ToolsSection = () => {
   if (selectedTool) {
     const tool = tools.find(t => t.id === selectedTool);
     if (tool) {
+      const toolConfig = toolConfigurations[tool.id as keyof typeof toolConfigurations];
       return (
         <ToolForm 
           tool={{
@@ -98,7 +149,8 @@ const ToolsSection = () => {
             name: tool.name,
             description: tool.description,
             icon: tool.icon,
-            color: `bg-gradient-to-r ${tool.gradient}`
+            color: `bg-gradient-to-r ${tool.gradient}`,
+            fields: toolConfig.fields
           }}
           onBack={() => setSelectedTool(null)} 
         />
