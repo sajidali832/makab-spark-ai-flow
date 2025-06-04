@@ -89,12 +89,21 @@ const ToolsSection = () => {
   ];
 
   if (selectedTool) {
-    return (
-      <ToolForm 
-        toolId={selectedTool} 
-        onBack={() => setSelectedTool(null)} 
-      />
-    );
+    const tool = tools.find(t => t.id === selectedTool);
+    if (tool) {
+      return (
+        <ToolForm 
+          tool={{
+            id: tool.id,
+            name: tool.name,
+            description: tool.description,
+            icon: tool.icon,
+            color: `bg-gradient-to-r ${tool.gradient}`
+          }}
+          onBack={() => setSelectedTool(null)} 
+        />
+      );
+    }
   }
 
   return (
