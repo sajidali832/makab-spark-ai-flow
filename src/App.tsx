@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Chat from "./pages/Chat";
 import Tools from "./pages/Tools";
 import History from "./pages/History";
+import ChatHistory from "./pages/ChatHistory";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/chat" element={<Chat />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/history" element={<History />} />
+          <Route path="/chat-history" element={<ChatHistory />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />

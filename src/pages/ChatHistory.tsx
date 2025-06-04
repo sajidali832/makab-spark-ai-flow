@@ -1,9 +1,9 @@
 
 import { useState } from 'react';
-import HistorySection from '@/components/history/HistorySection';
+import ChatHistorySection from '@/components/history/ChatHistorySection';
 import Sidebar from '@/components/chat/Sidebar';
 
-const History = () => {
+const ChatHistory = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -19,11 +19,11 @@ const History = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <h1 className="ml-4 text-xl font-semibold">Tools History</h1>
+          <h1 className="ml-4 text-xl font-semibold">Chats History</h1>
         </div>
         <div className="flex-1 overflow-auto">
           <div className="max-w-4xl mx-auto p-4">
-            <HistorySection />
+            <ChatHistorySection />
           </div>
         </div>
       </div>
@@ -31,4 +31,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default ChatHistory;
