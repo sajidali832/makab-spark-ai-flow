@@ -24,6 +24,8 @@ interface ToolFormProps {
       label: string;
       type: string;
       options?: string[];
+      required?: boolean;
+      placeholder?: string;
     }[];
   };
   onBack: () => void;
@@ -32,83 +34,6 @@ interface ToolFormProps {
 interface FormData {
   [key: string]: string;
 }
-
-const toolConfigurations = {
-  caption: {
-    fields: [
-      { name: 'topic', label: 'Topic', type: 'text' },
-      { name: 'audience', label: 'Target Audience', type: 'text' },
-      { name: 'tone', label: 'Tone', type: 'select', options: ['Friendly', 'Professional', 'Humorous', 'Exciting'] },
-      { name: 'emotion', label: 'Emotion', type: 'select', options: ['Happy', 'Sad', 'Angry', 'Surprised'] }
-    ]
-  },
-  script: {
-    fields: [
-      { name: 'topic', label: 'Topic', type: 'text' },
-      { name: 'platform', label: 'Platform', type: 'select', options: ['YouTube', 'TikTok', 'Instagram Reels'] },
-      { name: 'tone', label: 'Tone', type: 'select', options: ['Informative', 'Entertaining', 'Educational'] },
-      { name: 'audience', label: 'Target Audience', type: 'text' },
-      { name: 'length', label: 'Length', type: 'select', options: ['Short', 'Medium', 'Long'] }
-    ]
-  },
-  hashtag: {
-    fields: [
-      { name: 'niche', label: 'Niche', type: 'text' },
-      { name: 'keywords', label: 'Keywords', type: 'text' },
-      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram', 'Twitter', 'TikTok'] },
-      { name: 'audience', label: 'Target Audience', type: 'text' }
-    ]
-  },
-  idea: {
-    fields: [
-      { name: 'industry', label: 'Industry', type: 'text' },
-      { name: 'goal', label: 'Goal', type: 'text' },
-      { name: 'type', label: 'Type', type: 'select', options: ['Business', 'Marketing', 'Product', 'Content'] }
-    ]
-  },
-  youtube: {
-    fields: [
-      { name: 'category', label: 'Category', type: 'text' },
-      { name: 'skill', label: 'Skill Level', type: 'select', options: ['Beginner', 'Intermediate', 'Advanced'] },
-      { name: 'audience', label: 'Target Audience', type: 'text' },
-      { name: 'content', label: 'Content Type', type: 'select', options: ['Tutorials', 'Reviews', 'Vlogs'] }
-    ]
-  },
-  bio: {
-    fields: [
-      { name: 'profession', label: 'Profession', type: 'text' },
-      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram', 'Twitter', 'LinkedIn'] },
-      { name: 'vibe', label: 'Style', type: 'select', options: ['Professional', 'Creative', 'Minimalist'] },
-      { name: 'hobbies', label: 'Interests', type: 'text' }
-    ]
-  },
-  blog: {
-    fields: [
-      { name: 'topic', label: 'Blog Topic', type: 'text' },
-      { name: 'audience', label: 'Target Audience', type: 'text' },
-      { name: 'tone', label: 'Writing Tone', type: 'select', options: ['Professional', 'Casual', 'Educational', 'Conversational'] },
-      { name: 'length', label: 'Post Length', type: 'select', options: ['Short (500 words)', 'Medium (1000 words)', 'Long (1500+ words)'] },
-      { name: 'keywords', label: 'Keywords (optional)', type: 'text' }
-    ]
-  },
-  reel: {
-    fields: [
-      { name: 'niche', label: 'Content Niche', type: 'text' },
-      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram Reels', 'TikTok', 'YouTube Shorts'] },
-      { name: 'style', label: 'Content Style', type: 'select', options: ['Educational', 'Entertainment', 'Trending', 'Behind-the-scenes'] },
-      { name: 'audience', label: 'Target Audience', type: 'text' },
-      { name: 'duration', label: 'Video Duration', type: 'select', options: ['15-30 seconds', '30-60 seconds', '60-90 seconds'] }
-    ]
-  },
-  engagement: {
-    fields: [
-      { name: 'topic', label: 'Post Topic', type: 'text' },
-      { name: 'platform', label: 'Platform', type: 'select', options: ['Instagram Stories', 'Instagram Posts', 'Facebook', 'LinkedIn'] },
-      { name: 'type', label: 'Question Type', type: 'select', options: ['This or That', 'Opinion', 'Yes/No', 'Fill in the blank'] },
-      { name: 'audience', label: 'Target Audience', type: 'text' }
-    ]
-  }
-};
 
 const ToolForm = ({ tool, onBack }: ToolFormProps) => {
   const [formData, setFormData] = useState<FormData>({});
@@ -134,8 +59,27 @@ const ToolForm = ({ tool, onBack }: ToolFormProps) => {
     });
   };
 
+  const validateForm = () => {
+    const requiredFields = tool.fields.filter(field => field.required);
+    for (const field of requiredFields) {
+      if (!formData[field.name] || formData[field.name].trim() === '') {
+        toast({
+          title: "Missing Required Field",
+          description: `Please fill in the ${field.label} field.`,
+          variant: "destructive"
+        });
+        return false;
+      }
+    }
+    return true;
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
     
     // Check daily limit
     if (!canUseTools()) {
@@ -183,49 +127,53 @@ const ToolForm = ({ tool, onBack }: ToolFormProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-cyan-50">
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center space-x-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onBack}
-              className="hover:bg-white/60"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to Tools
-            </Button>
-            <div className="flex items-center space-x-2">
-              <div className={`p-2 rounded-xl ${tool.color} shadow-lg`}>
-                <tool.icon className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-800">{tool.name}</h1>
-                <p className="text-gray-600">{tool.description}</p>
-              </div>
-            </div>
-          </div>
+      <div className="container mx-auto px-4 py-4 sm:py-6 max-w-6xl">
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onBack}
+            className="hover:bg-white/60 flex items-center"
+          >
+            <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+            <span className="text-sm sm:text-base">Back</span>
+          </Button>
           
-          <div className="text-sm text-gray-500 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 border border-gray-200">
-            {remainingGenerations}/3 generations left
+          <div className="text-xs sm:text-sm text-gray-500 bg-white/60 backdrop-blur-sm rounded-full px-2 sm:px-4 py-1 sm:py-2 border border-gray-200">
+            {remainingGenerations}/3 left
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Tool Header */}
+        <div className="flex items-center space-x-3 mb-6">
+          <div className={`p-2 sm:p-3 rounded-xl ${tool.color} shadow-lg`}>
+            <tool.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{tool.name}</h1>
+            <p className="text-sm sm:text-base text-gray-600">{tool.description}</p>
+          </div>
+        </div>
+
+        {/* Mobile-First Layout */}
+        <div className="space-y-6">
           {/* Input Form */}
-          <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-lg">
-              <CardTitle className="flex items-center space-x-2">
+          <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-t-lg p-4">
+              <CardTitle className="flex items-center space-x-2 text-lg">
                 <Wand2 className="h-5 w-5" />
                 <span>Create {tool.name}</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 space-y-4">
+            <CardContent className="p-4 sm:p-6">
               <form onSubmit={handleSubmit} className="space-y-4">
-                {toolConfigurations[tool.id as keyof typeof toolConfigurations].fields.map((field) => (
-                  <div key={field.name}>
-                    <Label htmlFor={field.name}>{field.label}</Label>
+                {tool.fields.map((field) => (
+                  <div key={field.name} className="space-y-2">
+                    <Label htmlFor={field.name} className="text-sm font-medium">
+                      {field.label} {field.required && <span className="text-red-500">*</span>}
+                    </Label>
+                    
                     {field.type === 'text' && (
                       <Input
                         type="text"
@@ -233,21 +181,30 @@ const ToolForm = ({ tool, onBack }: ToolFormProps) => {
                         name={field.name}
                         value={formData[field.name] || ''}
                         onChange={handleChange}
-                        className="mt-1"
+                        placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
+                        className="w-full"
+                        required={field.required}
                       />
                     )}
+                    
                     {field.type === 'textarea' && (
                       <Textarea
                         id={field.name}
                         name={field.name}
                         value={formData[field.name] || ''}
                         onChange={handleChange}
-                        className="mt-1"
+                        placeholder={field.placeholder || `Enter ${field.label.toLowerCase()}`}
+                        className="w-full min-h-[80px]"
+                        required={field.required}
                       />
                     )}
+                    
                     {field.type === 'select' && field.options && (
-                      <Select onValueChange={(value) => handleSelectChange(field.name, value)}>
-                        <SelectTrigger className="w-full mt-1">
+                      <Select 
+                        onValueChange={(value) => handleSelectChange(field.name, value)}
+                        required={field.required}
+                      >
+                        <SelectTrigger className="w-full">
                           <SelectValue placeholder={`Select ${field.label}`} />
                         </SelectTrigger>
                         <SelectContent>
@@ -277,7 +234,7 @@ const ToolForm = ({ tool, onBack }: ToolFormProps) => {
                   ) : (
                     <div className="flex items-center space-x-2">
                       <Sparkles className="h-4 w-4" />
-                      <span>Generate {tool.name}</span>
+                      <span>Generate Content</span>
                     </div>
                   )}
                 </Button>
@@ -292,20 +249,20 @@ const ToolForm = ({ tool, onBack }: ToolFormProps) => {
           </Card>
 
           {/* Result Display */}
-          <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-            <CardHeader className="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-t-lg">
-              <CardTitle className="flex items-center space-x-2">
+          <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+            <CardHeader className="bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-t-lg p-4">
+              <CardTitle className="flex items-center space-x-2 text-lg">
                 <Sparkles className="h-5 w-5" />
                 <span>Generated Content</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6 space-y-4">
+            <CardContent className="p-4 sm:p-6">
               {result ? (
-                <>
+                <div className="space-y-4">
                   <Textarea
                     value={result}
                     readOnly
-                    className="bg-gray-50 border-gray-300 focus:ring-green-500 focus:border-green-500 text-sm"
+                    className="bg-gray-50 border-gray-300 focus:ring-green-500 focus:border-green-500 text-sm min-h-[200px] w-full"
                   />
                   <Button
                     onClick={handleCopy}
@@ -314,9 +271,13 @@ const ToolForm = ({ tool, onBack }: ToolFormProps) => {
                     <Copy className="h-4 w-4 mr-2" />
                     Copy to Clipboard
                   </Button>
-                </>
+                </div>
               ) : (
-                <p className="text-gray-500">No content generated yet.</p>
+                <div className="text-center py-8">
+                  <Sparkles className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500">No content generated yet.</p>
+                  <p className="text-sm text-gray-400 mt-1">Fill out the form and click generate to see results here.</p>
+                </div>
               )}
             </CardContent>
           </Card>
