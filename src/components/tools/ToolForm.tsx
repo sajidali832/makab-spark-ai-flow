@@ -23,7 +23,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
   const [copied, setCopied] = useState(false);
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const { toast } = useToast();
-  const { canUseTools, incrementToolUsage } = useDailyLimits();
+  const { canUseTools, incrementToolGenerations } = useDailyLimits();
 
   const toolConfigs: Record<string, any> = {
     'script-generator': {
@@ -93,7 +93,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
       return;
     }
 
-    if (!incrementToolUsage()) {
+    if (!incrementToolGenerations()) {
       setLimitModalOpen(true);
       return;
     }
