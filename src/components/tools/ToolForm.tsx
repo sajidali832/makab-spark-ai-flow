@@ -339,11 +339,22 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
           </CardHeader>
           <CardContent>
             {isGenerating ? (
-              <div className="flex items-center justify-center h-32">
-                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600"></div>
+              <div className="flex flex-col items-center justify-center h-32 space-y-3">
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                  <div className="absolute inset-0 animate-ping rounded-full h-8 w-8 border border-blue-400 opacity-20"></div>
+                </div>
+                <div className="text-center">
+                  <p className="text-sm font-medium text-gray-700 animate-pulse">Generating amazing content...</p>
+                  <div className="flex justify-center space-x-1 mt-2">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                </div>
               </div>
             ) : generatedContent ? (
-              <div className="space-y-3 sm:space-y-4">
+              <div className="space-y-3 sm:space-y-4 animate-fade-in">
                 <div className="max-h-80 sm:max-h-96 overflow-y-auto p-3 sm:p-4 bg-gray-50 rounded-lg border">
                   <pre className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 font-mono">
                     {generatedContent}

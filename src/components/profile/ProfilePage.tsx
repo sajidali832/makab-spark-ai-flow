@@ -20,69 +20,69 @@ const ProfilePage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-2 sm:p-4">
-      <div className="max-w-md mx-auto space-y-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-1 sm:p-2">
+      <div className="max-w-sm mx-auto space-y-2 sm:space-y-3">
         {/* Header */}
-        <div className="text-center space-y-2 py-4">
-          <div className="flex justify-center mb-4">
+        <div className="text-center space-y-1 py-2 sm:py-3">
+          <div className="flex justify-center mb-2 sm:mb-3">
             <div className="relative">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-2xl animate-pulse">
-                <User className="h-10 w-10 sm:h-12 sm:w-12 text-white" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-full flex items-center justify-center shadow-xl animate-pulse">
+                <User className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
               </div>
-              <div className="absolute -bottom-1 -left-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
-                <Star className="h-3 w-3 text-white" />
+              <div className="absolute -bottom-0.5 -left-0.5 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center">
+                <Star className="h-2.5 w-2.5 text-white" />
               </div>
             </div>
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="text-lg sm:text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             {userData.name || 'Amazing User'}
           </h2>
           <div className="flex items-center justify-center space-x-1 text-purple-600">
-            <Sparkles className="h-4 w-4" />
-            <span className="text-sm font-medium">Makab User</span>
-            <Zap className="h-4 w-4" />
+            <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
+            <span className="text-xs sm:text-sm font-medium">Makab User</span>
+            <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
           </div>
         </div>
         
         {/* Main Profile Card */}
-        <Card className="border-0 shadow-2xl bg-white/80 backdrop-blur-sm">
-          <CardContent className="p-4 sm:p-6 space-y-6">
+        <Card className="border-0 shadow-xl bg-white/80 backdrop-blur-sm">
+          <CardContent className="p-3 sm:p-4 space-y-3 sm:space-y-4">
             {/* Email Section */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-4 border border-blue-100">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <Mail className="h-6 w-6 text-white" />
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-3 border border-blue-100">
+              <div className="flex items-center space-x-2 sm:space-x-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center shadow-lg">
+                  <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-xs text-gray-500 uppercase tracking-wide font-semibold">Email Address</p>
-                  <p className="font-bold text-gray-800 truncate">{userData.email || 'user@makab.ai'}</p>
+                  <p className="font-bold text-gray-800 truncate text-sm sm:text-base">{userData.email || 'user@makab.ai'}</p>
                 </div>
               </div>
             </div>
             
             {/* Stats Grid */}
-            <div className="grid grid-cols-2 gap-3">
-              <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl border border-blue-200">
-                <div className="text-2xl font-bold text-blue-600 mb-1">∞</div>
+            <div className="grid grid-cols-2 gap-2">
+              <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl border border-blue-200">
+                <div className="text-lg sm:text-xl font-bold text-blue-600 mb-0.5">∞</div>
                 <p className="text-xs text-blue-700 font-medium">Generations</p>
               </div>
-              <div className="text-center p-4 bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl border border-purple-200">
-                <div className="text-2xl font-bold text-purple-600 mb-1">7</div>
+              <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border border-purple-200">
+                <div className="text-lg sm:text-xl font-bold text-purple-600 mb-0.5">7</div>
                 <p className="text-xs text-purple-700 font-medium">AI Tools</p>
               </div>
             </div>
 
             {/* Features */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-4 border border-green-200">
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-3 border border-green-200">
               <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-2">
-                  <Sparkles className="h-5 w-5 text-green-600" />
-                  <span className="font-semibold text-green-800">Full Access</span>
+                <div className="flex items-center space-x-1.5">
+                  <Sparkles className="h-4 w-4 text-green-600" />
+                  <span className="font-semibold text-green-800 text-sm">Full Access</span>
                 </div>
-                <div className="flex items-center space-x-1">
-                  <Star className="h-4 w-4 text-green-500 fill-green-500" />
-                  <Star className="h-4 w-4 text-green-500 fill-green-500" />
-                  <Star className="h-4 w-4 text-green-500 fill-green-500" />
+                <div className="flex items-center space-x-0.5">
+                  <Star className="h-3 w-3 text-green-500 fill-green-500" />
+                  <Star className="h-3 w-3 text-green-500 fill-green-500" />
+                  <Star className="h-3 w-3 text-green-500 fill-green-500" />
                 </div>
               </div>
             </div>
@@ -93,15 +93,15 @@ const ProfilePage = () => {
         <Button
           onClick={handleLogout}
           variant="destructive"
-          className="w-full flex items-center justify-center space-x-2 h-12 text-base font-semibold shadow-2xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transform hover:scale-105 transition-all duration-300"
+          className="w-full flex items-center justify-center space-x-2 h-10 sm:h-12 text-sm sm:text-base font-semibold shadow-xl bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 transform hover:scale-105 transition-all duration-300"
         >
-          <LogOut className="h-5 w-5" />
+          <LogOut className="h-4 w-4 sm:h-5 sm:w-5" />
           <span>Logout</span>
         </Button>
 
         {/* Footer */}
-        <div className="text-center py-4">
-          <p className="text-xs text-gray-500 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 inline-block shadow-lg">
+        <div className="text-center py-2 sm:py-3">
+          <p className="text-xs text-gray-500 bg-white/60 backdrop-blur-sm rounded-full px-3 py-1.5 inline-block shadow-lg">
             Made with ❤️ by Sajid
           </p>
         </div>
