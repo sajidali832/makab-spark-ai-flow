@@ -26,6 +26,67 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
   const { canUseTools, incrementToolGenerations } = useDailyLimits();
 
   const toolConfigs: Record<string, any> = {
+    'caption': {
+      title: 'Caption Generator',
+      description: 'Create engaging social media captions',
+      fields: [
+        { name: 'topic', label: 'Post Topic', type: 'text', required: true, placeholder: 'What is your post about?' },
+        { name: 'platform', label: 'Platform', type: 'select', required: true, options: ['Instagram', 'Facebook', 'Twitter', 'LinkedIn', 'TikTok', 'General'] },
+        { name: 'tone', label: 'Tone', type: 'select', required: true, options: ['Professional', 'Casual', 'Funny', 'Inspirational', 'Educational', 'Promotional'] },
+        { name: 'audience', label: 'Target Audience', type: 'text', required: true, placeholder: 'Who is your target audience?' },
+        { name: 'cta', label: 'Call-to-Action', type: 'text', placeholder: 'What action should followers take?' },
+        { name: 'keywords', label: 'Keywords', type: 'text', placeholder: 'Enter keywords separated by commas' }
+      ]
+    },
+    'hashtag': {
+      title: 'Hashtag Generator',
+      description: 'Generate trending hashtags for your content',
+      fields: [
+        { name: 'topic', label: 'Content Topic', type: 'text', required: true, placeholder: 'What is your content about?' },
+        { name: 'platform', label: 'Platform', type: 'select', required: true, options: ['Instagram', 'Twitter', 'TikTok', 'LinkedIn', 'Facebook', 'YouTube'] },
+        { name: 'niche', label: 'Niche/Industry', type: 'text', required: true, placeholder: 'Your industry or niche' },
+        { name: 'audience', label: 'Target Audience', type: 'text', required: true, placeholder: 'Describe your audience' },
+        { name: 'count', label: 'Number of Hashtags', type: 'select', required: true, options: ['10 hashtags', '20 hashtags', '30 hashtags', '50 hashtags'] },
+        { name: 'mix', label: 'Hashtag Mix', type: 'select', required: true, options: ['Popular + Niche', 'Trending Focus', 'Niche Focus', 'Branded Focus'] }
+      ]
+    },
+    'idea': {
+      title: 'Content Idea Generator',
+      description: 'Spark creative content ideas for your brand',
+      fields: [
+        { name: 'niche', label: 'Content Niche', type: 'text', required: true, placeholder: 'Your content niche or industry' },
+        { name: 'platform', label: 'Platform', type: 'select', required: true, options: ['Instagram', 'YouTube', 'TikTok', 'Facebook', 'LinkedIn', 'Blog', 'All Platforms'] },
+        { name: 'content_type', label: 'Content Type', type: 'select', required: true, options: ['Posts', 'Videos', 'Stories', 'Reels', 'Blog Posts', 'Mixed Content'] },
+        { name: 'audience', label: 'Target Audience', type: 'text', required: true, placeholder: 'Describe your target audience' },
+        { name: 'goals', label: 'Content Goals', type: 'select', required: true, options: ['Engagement', 'Education', 'Entertainment', 'Sales', 'Brand Awareness', 'Community Building'] },
+        { name: 'quantity', label: 'Number of Ideas', type: 'select', required: true, options: ['5 ideas', '10 ideas', '15 ideas', '20 ideas'] }
+      ]
+    },
+    'youtube': {
+      title: 'YouTube Channel Ideas',
+      description: 'Build your YouTube presence with creative channel ideas',
+      fields: [
+        { name: 'niche', label: 'Channel Niche', type: 'text', required: true, placeholder: 'What niche do you want to focus on?' },
+        { name: 'audience', label: 'Target Audience', type: 'text', required: true, placeholder: 'Who is your target audience?' },
+        { name: 'content_style', label: 'Content Style', type: 'select', required: true, options: ['Educational', 'Entertainment', 'Lifestyle', 'Gaming', 'Tech Reviews', 'How-to Tutorials', 'Vlogs'] },
+        { name: 'experience', label: 'Your Experience Level', type: 'select', required: true, options: ['Beginner', 'Intermediate', 'Advanced', 'Expert'] },
+        { name: 'goals', label: 'Channel Goals', type: 'select', required: true, options: ['Build Community', 'Generate Income', 'Share Knowledge', 'Entertainment', 'Brand Building'] },
+        { name: 'frequency', label: 'Upload Frequency', type: 'select', required: true, options: ['Daily', 'Weekly', 'Bi-weekly', 'Monthly'] }
+      ]
+    },
+    'bio': {
+      title: 'Bio Generator',
+      description: 'Craft perfect profile bios for social media',
+      fields: [
+        { name: 'platform', label: 'Platform', type: 'select', required: true, options: ['Instagram', 'Twitter', 'LinkedIn', 'Facebook', 'TikTok', 'General'] },
+        { name: 'profession', label: 'Profession/Role', type: 'text', required: true, placeholder: 'What do you do?' },
+        { name: 'personality', label: 'Personality', type: 'select', required: true, options: ['Professional', 'Creative', 'Fun & Quirky', 'Inspirational', 'Minimalist', 'Bold'] },
+        { name: 'achievements', label: 'Key Achievements', type: 'text', placeholder: 'Your main accomplishments or credentials' },
+        { name: 'interests', label: 'Interests/Hobbies', type: 'text', placeholder: 'Your interests outside of work' },
+        { name: 'cta', label: 'Call-to-Action', type: 'text', placeholder: 'What should people do? (DM, visit website, etc.)' },
+        { name: 'emoji_style', label: 'Emoji Style', type: 'select', required: true, options: ['No Emojis', 'Minimal Emojis', 'Moderate Emojis', 'Lots of Emojis'] }
+      ]
+    },
     'script-generator': {
       title: 'Script Generator',
       description: 'Generate engaging scripts for videos, presentations, or content',
@@ -165,27 +226,27 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     .every((field: any) => formData[field.name]?.trim());
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <div className="flex items-center space-x-4 mb-6">
+    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-2 sm:p-4">
+      <div className="flex items-center space-x-2 sm:space-x-4 mb-4 sm:mb-6">
         <Button onClick={onBack} variant="outline" size="sm">
           ← Back
         </Button>
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">{currentTool.title}</h2>
-          <p className="text-gray-600">{currentTool.description}</p>
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-900">{currentTool.title}</h2>
+          <p className="text-sm sm:text-base text-gray-600">{currentTool.description}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
         {/* Input Form */}
         <Card>
-          <CardHeader>
-            <CardTitle>Input Details</CardTitle>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-lg">Input Details</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3 sm:space-y-4">
             {currentTool.fields.map((field: any) => (
-              <div key={field.name} className="space-y-2">
-                <Label htmlFor={field.name}>
+              <div key={field.name} className="space-y-1 sm:space-y-2">
+                <Label htmlFor={field.name} className="text-sm">
                   {field.label}
                   {field.required && <span className="text-red-500 ml-1">*</span>}
                 </Label>
@@ -195,7 +256,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleInputChange(field.name, e.target.value)}
-                    className="w-full"
+                    className="w-full text-sm"
                   />
                 )}
                 {field.type === 'textarea' && (
@@ -204,7 +265,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleInputChange(field.name, e.target.value)}
-                    className="w-full min-h-[100px]"
+                    className="w-full min-h-[80px] text-sm"
                   />
                 )}
                 {field.type === 'select' && (
@@ -212,12 +273,12 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     value={formData[field.name] || ''}
                     onValueChange={(value) => handleInputChange(field.name, value)}
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full text-sm">
                       <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
                     </SelectTrigger>
                     <SelectContent>
                       {field.options.map((option: string) => (
-                        <SelectItem key={option} value={option}>
+                        <SelectItem key={option} value={option} className="text-sm">
                           {option}
                         </SelectItem>
                       ))}
@@ -230,13 +291,13 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
             <Button
               onClick={handleGenerate}
               disabled={!canGenerate || isGenerating || !canUseTools()}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm sm:text-base"
             >
               {isGenerating ? 'Generating...' : 'Generate Content'}
             </Button>
 
             {!canUseTools() && (
-              <p className="text-center text-sm text-red-500 mt-2">
+              <p className="text-center text-xs sm:text-sm text-red-500 mt-2">
                 Daily tool limit reached. Resets at midnight.
               </p>
             )}
@@ -245,21 +306,21 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
 
         {/* Generated Content */}
         <Card>
-          <CardHeader>
+          <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle>Generated Content</CardTitle>
+              <CardTitle className="text-lg">Generated Content</CardTitle>
               {generatedContent && (
-                <div className="flex space-x-2">
+                <div className="flex space-x-1 sm:space-x-2">
                   <Button
                     onClick={copyToClipboard}
                     variant="outline"
                     size="sm"
-                    className="flex items-center"
+                    className="flex items-center text-xs sm:text-sm"
                   >
                     {copied ? (
-                      <Check className="h-4 w-4 mr-1 text-green-600" />
+                      <Check className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-green-600" />
                     ) : (
-                      <Copy className="h-4 w-4 mr-1" />
+                      <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     )}
                     {copied ? 'Copied!' : 'Copy All'}
                   </Button>
@@ -267,9 +328,9 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     onClick={downloadAsFile}
                     variant="outline"
                     size="sm"
-                    className="flex items-center"
+                    className="flex items-center text-xs sm:text-sm"
                   >
-                    <Download className="h-4 w-4 mr-1" />
+                    <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     Download
                   </Button>
                 </div>
@@ -279,12 +340,12 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
           <CardContent>
             {isGenerating ? (
               <div className="flex items-center justify-center h-32">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600"></div>
               </div>
             ) : generatedContent ? (
-              <div className="space-y-4">
-                <div className="max-h-96 overflow-y-auto p-4 bg-gray-50 rounded-lg border">
-                  <pre className="whitespace-pre-wrap text-sm text-gray-800 font-mono">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="max-h-80 sm:max-h-96 overflow-y-auto p-3 sm:p-4 bg-gray-50 rounded-lg border">
+                  <pre className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 font-mono">
                     {generatedContent}
                   </pre>
                 </div>
@@ -294,7 +355,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
               </div>
             ) : (
               <div className="flex items-center justify-center h-32 text-gray-500">
-                <p>Generated content will appear here</p>
+                <p className="text-sm">Generated content will appear here</p>
               </div>
             )}
           </CardContent>
