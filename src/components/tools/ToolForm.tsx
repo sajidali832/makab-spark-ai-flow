@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -5,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, Download, Check } from 'lucide-react';
+import { Copy, Download, Check, Sparkles, Zap, Stars } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import LimitExceededModal from '../LimitExceededModal';
@@ -178,14 +179,14 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
       setGeneratedContent(data.generatedContent);
       
       toast({
-        title: "Success!",
-        description: "Content generated successfully",
+        title: "🎉 Content Generated Successfully!",
+        description: "Your amazing content is ready to use",
       });
     } catch (error) {
       console.error('Error generating content:', error);
       toast({
-        title: "Error",
-        description: "Failed to generate content. Please try again.",
+        title: "⚠️ Generation Failed",
+        description: "Something went wrong. Please try again in a moment.",
         variant: "destructive",
       });
     } finally {
@@ -199,13 +200,13 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       toast({
-        title: "Copied!",
-        description: "Content copied to clipboard",
+        title: "📋 Copied Successfully!",
+        description: "Content is now in your clipboard",
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to copy content",
+        title: "❌ Copy Failed",
+        description: "Unable to copy content to clipboard",
         variant: "destructive",
       });
     }
@@ -219,6 +220,11 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
+    
+    toast({
+      title: "📥 Download Started!",
+      description: "Your content file is being downloaded",
+    });
   };
 
   const canGenerate = currentTool.fields
@@ -291,15 +297,33 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
             <Button
               onClick={handleGenerate}
               disabled={!canGenerate || isGenerating || !canUseTools()}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm sm:text-base"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm sm:text-base transition-all duration-300 hover:scale-105 active:scale-95"
             >
-              {isGenerating ? 'Generating...' : 'Generate Content'}
+              {isGenerating ? (
+                <div className="flex items-center space-x-2">
+                  <div className="animate-spin">
+                    <Sparkles className="h-4 w-4" />
+                  </div>
+                  <span>Creating Magic...</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <Zap className="h-4 w-4" />
+                  <span>Generate Content</span>
+                </div>
+              )}
             </Button>
 
             {!canUseTools() && (
-              <p className="text-center text-xs sm:text-sm text-red-500 mt-2">
-                Daily tool limit reached. Resets at midnight.
-              </p>
+              <div className="text-center p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div className="flex items-center justify-center space-x-2 text-red-600 mb-2">
+                  <Stars className="h-5 w-5" />
+                  <span className="font-semibold">Daily Limit Reached</span>
+                </div>
+                <p className="text-xs sm:text-sm text-red-500">
+                  You've used all your daily generations. Come back tomorrow for more amazing content!
+                </p>
+              </div>
             )}
           </CardContent>
         </Card>
@@ -315,7 +339,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     onClick={copyToClipboard}
                     variant="outline"
                     size="sm"
-                    className="flex items-center text-xs sm:text-sm"
+                    className="flex items-center text-xs sm:text-sm transition-all duration-200 hover:scale-105"
                   >
                     {copied ? (
                       <Check className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-green-600" />
@@ -328,7 +352,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     onClick={downloadAsFile}
                     variant="outline"
                     size="sm"
-                    className="flex items-center text-xs sm:text-sm"
+                    className="flex items-center text-xs sm:text-sm transition-all duration-200 hover:scale-105"
                   >
                     <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     Download
@@ -339,34 +363,60 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
           </CardHeader>
           <CardContent>
             {isGenerating ? (
-              <div className="flex flex-col items-center justify-center h-32 space-y-3">
+              <div className="flex flex-col items-center justify-center h-48 space-y-6">
+                {/* Enhanced loading animation */}
                 <div className="relative">
-                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                  <div className="absolute inset-0 animate-ping rounded-full h-8 w-8 border border-blue-400 opacity-20"></div>
+                  <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-4 border-blue-400 opacity-30"></div>
+                  <div className="absolute inset-2 animate-pulse rounded-full h-12 w-12 border-4 border-purple-400 opacity-40"></div>
+                  <div className="relative animate-spin rounded-full h-16 w-16 border-4 border-t-blue-600 border-r-purple-600 border-b-pink-600 border-l-indigo-600"></div>
+                  <div className="absolute inset-4 animate-bounce">
+                    <Sparkles className="h-8 w-8 text-blue-600" />
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-sm font-medium text-gray-700 animate-pulse">Generating amazing content...</p>
-                  <div className="flex justify-center space-x-1 mt-2">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                
+                {/* Animated text */}
+                <div className="text-center space-y-2">
+                  <h3 className="text-lg font-semibold text-gray-800 animate-pulse">
+                    ✨ Crafting Your Content ✨
+                  </h3>
+                  <p className="text-sm text-gray-600">
+                    Our AI is working its magic...
+                  </p>
+                  
+                  {/* Animated dots */}
+                  <div className="flex justify-center space-x-2 mt-4">
+                    <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce"></div>
+                    <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-3 h-3 bg-gradient-to-r from-pink-500 to-red-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                  </div>
+                </div>
+                
+                {/* Progress bars */}
+                <div className="w-full max-w-xs space-y-2">
+                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
+                  </div>
+                  <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
                   </div>
                 </div>
               </div>
             ) : generatedContent ? (
               <div className="space-y-3 sm:space-y-4 animate-fade-in">
-                <div className="max-h-80 sm:max-h-96 overflow-y-auto p-3 sm:p-4 bg-gray-50 rounded-lg border">
-                  <pre className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 font-mono">
+                <div className="max-h-80 sm:max-h-96 overflow-y-auto p-3 sm:p-4 bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg border border-blue-100 shadow-inner">
+                  <pre className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 font-mono leading-relaxed">
                     {generatedContent}
                   </pre>
                 </div>
-                <div className="text-xs text-gray-500 text-center">
-                  Click "Copy All" to copy the complete content, or "Download" to save as a file
+                <div className="text-xs text-gray-500 text-center bg-green-50 border border-green-200 rounded-lg p-2">
+                  🎉 Content generated successfully! Use the buttons above to copy or download.
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-32 text-gray-500">
-                <p className="text-sm">Generated content will appear here</p>
+              <div className="flex flex-col items-center justify-center h-32 text-gray-500 space-y-3">
+                <div className="text-4xl">📝</div>
+                <p className="text-sm text-center">Your amazing content will appear here once generated</p>
+                <p className="text-xs text-center text-gray-400">Fill out the form and hit generate to get started!</p>
               </div>
             )}
           </CardContent>
