@@ -18,19 +18,13 @@ serve(async (req) => {
     const { toolType, inputData } = await req.json()
     console.log('Request data:', { toolType, inputData });
 
-    const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
-    if (!OPENAI_API_KEY) {
-      console.error('OpenAI API key not found in environment variables');
-      throw new Error('OpenAI API key not configured')
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')
+    if (!GEMINI_API_KEY) {
+      console.error('Gemini API key not found in environment variables');
+      throw new Error('Gemini API key not configured')
     }
 
-    // Simple validation of API key format (very basic check)
-    if (!OPENAI_API_KEY.startsWith('sk-') || OPENAI_API_KEY.length < 20) {
-      console.error('OpenAI API key appears to be invalid');
-      throw new Error('Invalid OpenAI API key format. Please check your API key and try again.')
-    }
-
-    console.log('OpenAI API key validation passed, generating prompt...');
+    console.log('Gemini API key found, generating prompt...');
 
     let prompt = ''
     
@@ -188,53 +182,58 @@ serve(async (req) => {
         prompt = `Generate helpful content based on the user's request for ${toolType} with the following details: ${JSON.stringify(inputData)}`
     }
 
-    console.log('Sending request to OpenAI...');
+    console.log('Sending request to Gemini API...');
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
+        contents: [
           {
-            role: 'system',
-            content: 'You are a professional content creator and marketing expert. Generate high-quality, actionable content that users can immediately use. Be specific, creative, and provide value. Do not explain what you can do - just deliver the requested content directly. Format everything clearly and professionally.'
-          },
-          {
-            role: 'user',
-            content: prompt
+            role: "user",
+            parts: [
+              {
+                text: `You are a professional content creator and marketing expert. Generate high-quality, actionable content that users can immediately use. Be specific, creative, and provide value. Do not explain what you can do - just deliver the requested content directly. Format everything clearly and professionally. Here is the request: ${prompt}`
+              }
+            ]
           }
         ],
-        max_tokens: 2000,
-        temperature: 0.7,
+        generationConfig: {
+          temperature: 0.7,
+          maxOutputTokens: 2000,
+        }
       }),
     })
 
-    console.log('OpenAI response status:', response.status);
+    console.log('Gemini API response status:', response.status);
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error('OpenAI API error:', response.status, errorText);
+      console.error('Gemini API error:', response.status, errorText);
       
       // Create more user-friendly error messages based on common API errors
-      if (response.status === 401) {
-        throw new Error('Authentication error: The OpenAI API key appears to be invalid')
+      if (response.status === 400) {
+        throw new Error('Invalid request: Please check your API key and try again')
+      } else if (response.status === 401 || response.status === 403) {
+        throw new Error('Authentication error: The Gemini API key appears to be invalid')
       } else if (response.status === 429) {
-        throw new Error('Rate limit exceeded: Too many requests to the OpenAI API')
+        throw new Error('Rate limit exceeded: Too many requests to the Gemini API')
       } else if (response.status === 500) {
-        throw new Error('OpenAI service error: Their servers may be experiencing issues')
+        throw new Error('Gemini service error: Their servers may be experiencing issues')
       } else {
-        throw new Error(`OpenAI API error: ${response.status} - Please check the function logs for details`)
+        throw new Error(`Gemini API error: ${response.status} - Please check the function logs for details`)
       }
     }
 
     const data = await response.json()
-    console.log('OpenAI response received successfully');
+    console.log('Gemini response received successfully');
     
-    const generatedContent = data.choices[0]?.message?.content || 'No content generated'
+    // Extract the generated content from Gemini's response structure
+    const generatedContent = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No content generated';
 
     return new Response(
       JSON.stringify({ generatedContent }),
