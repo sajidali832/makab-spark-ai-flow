@@ -24,7 +24,13 @@ serve(async (req) => {
       throw new Error('OpenAI API key not configured')
     }
 
-    console.log('OpenAI API key found, generating prompt...');
+    // Simple validation of API key format (very basic check)
+    if (!OPENAI_API_KEY.startsWith('sk-') || OPENAI_API_KEY.length < 20) {
+      console.error('OpenAI API key appears to be invalid');
+      throw new Error('Invalid OpenAI API key format. Please check your API key and try again.')
+    }
+
+    console.log('OpenAI API key validation passed, generating prompt...');
 
     let prompt = ''
     
@@ -212,7 +218,17 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('OpenAI API error:', response.status, errorText);
-      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`)
+      
+      // Create more user-friendly error messages based on common API errors
+      if (response.status === 401) {
+        throw new Error('Authentication error: The OpenAI API key appears to be invalid')
+      } else if (response.status === 429) {
+        throw new Error('Rate limit exceeded: Too many requests to the OpenAI API')
+      } else if (response.status === 500) {
+        throw new Error('OpenAI service error: Their servers may be experiencing issues')
+      } else {
+        throw new Error(`OpenAI API error: ${response.status} - Please check the function logs for details`)
+      }
     }
 
     const data = await response.json()
@@ -224,6 +240,7 @@ serve(async (req) => {
       JSON.stringify({ generatedContent }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
       },
     )
   } catch (error) {
