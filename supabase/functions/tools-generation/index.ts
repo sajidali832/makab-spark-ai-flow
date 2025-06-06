@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import "https://deno.land/x/xhr@0.1.0/mod.ts"
 
@@ -18,13 +17,11 @@ serve(async (req) => {
     const { toolType, inputData } = await req.json()
     console.log('Request data:', { toolType, inputData });
 
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY')
-    if (!GEMINI_API_KEY) {
-      console.error('Gemini API key not found in environment variables');
-      throw new Error('Gemini API key not configured')
-    }
+    // Use the provided API key directly
+    const GEMINI_API_KEY = "AIzaSyAxpV4OY_zVDst3jGaYNwnyHhFmZ0V4XJE"
+    console.log('Using hardcoded Gemini API key');
 
-    console.log('Gemini API key found, generating prompt...');
+    console.log('Generating prompt...');
 
     let prompt = ''
     
@@ -217,7 +214,7 @@ serve(async (req) => {
       
       // Create more user-friendly error messages based on common API errors
       if (response.status === 400) {
-        throw new Error('Invalid request: Please check your API key and try again')
+        throw new Error('Invalid request: Please check your input and try again')
       } else if (response.status === 401 || response.status === 403) {
         throw new Error('Authentication error: The Gemini API key appears to be invalid')
       } else if (response.status === 429) {
