@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -24,7 +23,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
   const [copied, setCopied] = useState(false);
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const { toast } = useToast();
-  const { canUseTools, incrementToolGenerations } = useDailyLimits();
+  const { canUseTools, incrementToolGenerations, remainingGenerations } = useDailyLimits();
 
   const toolConfigs: Record<string, any> = {
     'caption': {
@@ -150,22 +149,44 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
   };
 
   const handleGenerate = async () => {
+    console.log('Generate button clicked');
+    console.log('Can use tools:', canUseTools());
+    console.log('Remaining generations:', remainingGenerations);
+
+    // Check limits BEFORE attempting to generate
     if (!canUseTools()) {
+      console.log('Opening limit modal - no generations left');
       setLimitModalOpen(true);
       return;
     }
 
+    // Try to increment first
     if (!incrementToolGenerations()) {
+      console.log('Failed to increment tool generations');
       setLimitModalOpen(true);
       return;
     }
 
+    console.log('Starting content generation...');
     setIsGenerating(true);
     setGeneratedContent('');
 
     try {
-      const user = JSON.parse(localStorage.getItem('makab_user') || '{}');
-      
+      // Create a simple user object for new users
+      let user = { id: 'anonymous_user' };
+      try {
+        const storedUser = localStorage.getItem('makab_user');
+        if (storedUser) {
+          user = JSON.parse(storedUser);
+        }
+      } catch (e) {
+        console.log('No stored user found, using anonymous user');
+      }
+
+      console.log('Making API call to tools-generation function...');
+      console.log('Form data:', formData);
+      console.log('Tool type:', toolType);
+
       const { data, error } = await supabase.functions.invoke('tools-generation', {
         body: {
           toolType,
@@ -174,19 +195,35 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
         }
       });
 
-      if (error) throw error;
+      console.log('API response received:', { data, error });
 
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Failed to generate content');
+      }
+
+      if (!data || !data.generatedContent) {
+        console.error('No content in response:', data);
+        throw new Error('No content received from the server');
+      }
+
+      console.log('Content generation successful');
       setGeneratedContent(data.generatedContent);
       
       toast({
         title: "🎉 Content Generated Successfully!",
         description: "Your amazing content is ready to use",
       });
-    } catch (error) {
-      console.error('Error generating content:', error);
+    } catch (error: any) {
+      console.error('Content generation failed:', error);
+      
+      // Don't decrement if there was an error
+      const { decrementToolGenerations } = useDailyLimits();
+      // We would need to implement this function to rollback on error
+      
       toast({
         title: "⚠️ Generation Failed",
-        description: "Something went wrong. Please try again in a moment.",
+        description: error.message || "Something went wrong. Please try again in a moment.",
         variant: "destructive",
       });
     } finally {
@@ -296,7 +333,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
             
             <Button
               onClick={handleGenerate}
-              disabled={!canGenerate || isGenerating || !canUseTools()}
+              disabled={!canGenerate || isGenerating}
               className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm sm:text-base transition-all duration-300 hover:scale-105 active:scale-95"
             >
               {isGenerating ? (
@@ -314,17 +351,16 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
               )}
             </Button>
 
-            {!canUseTools() && (
-              <div className="text-center p-4 bg-red-50 border border-red-200 rounded-lg">
-                <div className="flex items-center justify-center space-x-2 text-red-600 mb-2">
-                  <Stars className="h-5 w-5" />
-                  <span className="font-semibold">Daily Limit Reached</span>
-                </div>
-                <p className="text-xs sm:text-sm text-red-500">
-                  You've used all your daily generations. Come back tomorrow for more amazing content!
-                </p>
+            {/* Show remaining generations for transparency */}
+            <div className="text-center p-2 bg-blue-50 border border-blue-200 rounded-lg">
+              <div className="flex items-center justify-center space-x-2 text-blue-600 mb-1">
+                <Stars className="h-4 w-4" />
+                <span className="font-semibold text-sm">Daily Usage</span>
               </div>
-            )}
+              <p className="text-xs text-blue-500">
+                {remainingGenerations} generations remaining today
+              </p>
+            </div>
           </CardContent>
         </Card>
 

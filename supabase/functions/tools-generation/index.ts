@@ -13,12 +13,18 @@ serve(async (req) => {
   }
 
   try {
+    console.log('Tools generation function called');
+    
     const { toolType, inputData } = await req.json()
+    console.log('Request data:', { toolType, inputData });
 
     const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')
     if (!OPENAI_API_KEY) {
+      console.error('OpenAI API key not found in environment variables');
       throw new Error('OpenAI API key not configured')
     }
+
+    console.log('OpenAI API key found, generating prompt...');
 
     let prompt = ''
     
@@ -176,6 +182,8 @@ serve(async (req) => {
         prompt = `Generate helpful content based on the user's request for ${toolType} with the following details: ${JSON.stringify(inputData)}`
     }
 
+    console.log('Sending request to OpenAI...');
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -199,11 +207,17 @@ serve(async (req) => {
       }),
     })
 
+    console.log('OpenAI response status:', response.status);
+
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`)
+      const errorText = await response.text();
+      console.error('OpenAI API error:', response.status, errorText);
+      throw new Error(`OpenAI API error: ${response.status} - ${errorText}`)
     }
 
     const data = await response.json()
+    console.log('OpenAI response received successfully');
+    
     const generatedContent = data.choices[0]?.message?.content || 'No content generated'
 
     return new Response(
@@ -215,7 +229,10 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in tools-generation function:', error)
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message || 'An unexpected error occurred',
+        details: 'Please check the console logs for more information'
+      }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
