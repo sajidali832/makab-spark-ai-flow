@@ -172,7 +172,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     setGeneratedContent('');
 
     try {
-      // Create a simple user object for new users
+      // Create a proper user object for authentication
       let user = { id: 'anonymous_user' };
       try {
         const storedUser = localStorage.getItem('makab_user');
@@ -216,10 +216,6 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
       });
     } catch (error: any) {
       console.error('Content generation failed:', error);
-      
-      // Don't decrement if there was an error
-      const { decrementToolGenerations } = useDailyLimits();
-      // We would need to implement this function to rollback on error
       
       toast({
         title: "⚠️ Generation Failed",
