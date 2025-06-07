@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, Download, Check, Sparkles, Zap, Stars, RefreshCw, Save } from 'lucide-react';
+import { Copy, Check, Sparkles, Zap, Stars, RefreshCw, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import LimitExceededModal from '../LimitExceededModal';
@@ -211,14 +211,14 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
       setGeneratedContent(data.generatedContent);
       
       toast({
-        title: "🎉 Content Generated Successfully!",
-        description: "Your amazing content is ready to use",
+        title: "Content Generated Successfully!",
+        description: "Your content is ready to use",
       });
     } catch (error: any) {
       console.error('Content generation failed:', error);
       
       toast({
-        title: "⚠️ Generation Failed",
+        title: "Generation Failed",
         description: error.message || "Something went wrong. Please try again in a moment.",
         variant: "destructive",
       });
@@ -233,31 +233,16 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
       setCopied(prev => ({ ...prev, [section]: true }));
       setTimeout(() => setCopied(prev => ({ ...prev, [section]: false })), 2000);
       toast({
-        title: "📋 Copied Successfully!",
+        title: "Copied Successfully!",
         description: "Content is now in your clipboard",
       });
     } catch (error) {
       toast({
-        title: "❌ Copy Failed",
+        title: "Copy Failed",
         description: "Unable to copy content to clipboard",
         variant: "destructive",
       });
     }
-  };
-
-  const downloadAsFile = () => {
-    const element = document.createElement('a');
-    const file = new Blob([generatedContent], { type: 'text/plain' });
-    element.href = URL.createObjectURL(file);
-    element.download = `${toolType}-${Date.now()}.txt`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-    
-    toast({
-      title: "📥 Download Started!",
-      description: "Your content file is being downloaded",
-    });
   };
 
   const saveContent = () => {
@@ -272,7 +257,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     localStorage.setItem('savedContent', JSON.stringify(content));
     
     toast({
-      title: "💾 Content Saved!",
+      title: "Content Saved!",
       description: "Content saved to your local storage",
     });
   };
@@ -332,27 +317,27 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     .every((field: any) => formData[field.name]?.trim());
 
   return (
-    <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 p-2 sm:p-4">
-      <div className="flex items-center space-x-2 sm:space-x-4 mb-4 sm:mb-6">
-        <Button onClick={onBack} variant="outline" size="sm">
+    <div className="max-w-7xl mx-auto space-y-4 p-3 sm:p-4">
+      <div className="flex items-center space-x-2 mb-4">
+        <Button onClick={onBack} variant="outline" size="sm" className="shrink-0">
           ← Back
         </Button>
-        <div>
-          <h2 className="text-lg sm:text-2xl font-bold text-gray-900">{currentTool.title}</h2>
-          <p className="text-sm sm:text-base text-gray-600">{currentTool.description}</p>
+        <div className="min-w-0">
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">{currentTool.title}</h2>
+          <p className="text-xs sm:text-base text-gray-600 truncate">{currentTool.description}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Input Form */}
-        <Card>
+        <Card className="order-2 lg:order-1">
           <CardHeader className="pb-3">
-            <CardTitle className="text-lg">Input Details</CardTitle>
+            <CardTitle className="text-base sm:text-lg">Input Details</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3 sm:space-y-4">
+          <CardContent className="space-y-3">
             {currentTool.fields.map((field: any) => (
-              <div key={field.name} className="space-y-1 sm:space-y-2">
-                <Label htmlFor={field.name} className="text-sm">
+              <div key={field.name} className="space-y-1">
+                <Label htmlFor={field.name} className="text-xs sm:text-sm">
                   {field.label}
                   {field.required && <span className="text-red-500 ml-1">*</span>}
                 </Label>
@@ -362,7 +347,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleInputChange(field.name, e.target.value)}
-                    className="w-full text-sm"
+                    className="w-full text-xs sm:text-sm"
                   />
                 )}
                 {field.type === 'textarea' && (
@@ -371,7 +356,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleInputChange(field.name, e.target.value)}
-                    className="w-full min-h-[80px] text-sm"
+                    className="w-full min-h-[60px] sm:min-h-[80px] text-xs sm:text-sm"
                   />
                 )}
                 {field.type === 'select' && (
@@ -379,12 +364,12 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     value={formData[field.name] || ''}
                     onValueChange={(value) => handleInputChange(field.name, value)}
                   >
-                    <SelectTrigger className="w-full text-sm">
+                    <SelectTrigger className="w-full text-xs sm:text-sm">
                       <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
                     </SelectTrigger>
                     <SelectContent>
                       {field.options.map((option: string) => (
-                        <SelectItem key={option} value={option} className="text-sm">
+                        <SelectItem key={option} value={option} className="text-xs sm:text-sm">
                           {option}
                         </SelectItem>
                       ))}
@@ -397,28 +382,28 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
             <Button
               onClick={handleGenerate}
               disabled={!canGenerate || isGenerating}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-sm sm:text-base transition-all duration-300 hover:scale-105 active:scale-95"
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xs sm:text-base py-2 sm:py-3 transition-all duration-300 hover:scale-105 active:scale-95"
             >
               {isGenerating ? (
                 <div className="flex items-center space-x-2">
                   <div className="animate-spin">
-                    <Sparkles className="h-4 w-4" />
+                    <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
                   </div>
-                  <span>Creating Magic...</span>
+                  <span className="text-xs sm:text-sm">Creating...</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-2">
-                  <Zap className="h-4 w-4" />
-                  <span>Generate Content</span>
+                  <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-xs sm:text-sm">Generate Content</span>
                 </div>
               )}
             </Button>
 
-            {/* Show remaining generations for transparency */}
+            {/* Daily Usage */}
             <div className="text-center p-2 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center justify-center space-x-2 text-blue-600 mb-1">
-                <Stars className="h-4 w-4" />
-                <span className="font-semibold text-sm">Daily Usage</span>
+              <div className="flex items-center justify-center space-x-1 text-blue-600 mb-1">
+                <Stars className="h-3 w-3 sm:h-4 sm:w-4" />
+                <span className="font-semibold text-xs sm:text-sm">Daily Usage</span>
               </div>
               <p className="text-xs text-blue-500">
                 {remainingGenerations} generations remaining today
@@ -428,52 +413,43 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
         </Card>
 
         {/* Generated Content */}
-        <Card>
+        <Card className="order-1 lg:order-2">
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">Generated Content</CardTitle>
+              <CardTitle className="text-base sm:text-lg">Generated Content</CardTitle>
               {generatedContent && (
-                <div className="flex space-x-1 sm:space-x-2">
+                <div className="flex space-x-1">
                   <Button
                     onClick={handleGenerate}
                     variant="outline"
                     size="sm"
-                    className="flex items-center text-xs sm:text-sm transition-all duration-200 hover:scale-105"
+                    className="p-1.5 sm:p-2 transition-all duration-200 hover:scale-105"
                     disabled={isGenerating}
+                    title="Regenerate"
                   >
-                    <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                    Regenerate
+                    <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                   <Button
                     onClick={() => copyToClipboard(generatedContent)}
                     variant="outline"
                     size="sm"
-                    className="flex items-center text-xs sm:text-sm transition-all duration-200 hover:scale-105"
+                    className="p-1.5 sm:p-2 transition-all duration-200 hover:scale-105"
+                    title="Copy All"
                   >
                     {copied.all ? (
-                      <Check className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-green-600" />
+                      <Check className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
                     ) : (
-                      <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
                     )}
-                    Copy All
                   </Button>
                   <Button
                     onClick={saveContent}
                     variant="outline"
                     size="sm"
-                    className="flex items-center text-xs sm:text-sm transition-all duration-200 hover:scale-105"
+                    className="p-1.5 sm:p-2 transition-all duration-200 hover:scale-105"
+                    title="Save"
                   >
-                    <Save className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                    Save
-                  </Button>
-                  <Button
-                    onClick={downloadAsFile}
-                    variant="outline"
-                    size="sm"
-                    className="flex items-center text-xs sm:text-sm transition-all duration-200 hover:scale-105"
-                  >
-                    <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                    Download
+                    <Save className="h-3 w-3 sm:h-4 sm:w-4" />
                   </Button>
                 </div>
               )}
@@ -484,34 +460,34 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
               <div className="flex flex-col items-center justify-center h-48 space-y-6">
                 {/* Enhanced loading animation */}
                 <div className="relative">
-                  <div className="absolute inset-0 animate-ping rounded-full h-16 w-16 border-4 border-blue-400 opacity-30"></div>
-                  <div className="absolute inset-2 animate-pulse rounded-full h-12 w-12 border-4 border-purple-400 opacity-40"></div>
-                  <div className="relative animate-spin rounded-full h-16 w-16 border-4 border-t-blue-600 border-r-purple-600 border-b-pink-600 border-l-indigo-600"></div>
-                  <div className="absolute inset-4 animate-bounce">
-                    <Sparkles className="h-8 w-8 text-blue-600" />
+                  <div className="absolute inset-0 animate-ping rounded-full h-12 w-12 sm:h-16 sm:w-16 border-4 border-blue-400 opacity-30"></div>
+                  <div className="absolute inset-2 animate-pulse rounded-full h-8 w-8 sm:h-12 sm:w-12 border-4 border-purple-400 opacity-40"></div>
+                  <div className="relative animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-4 border-t-blue-600 border-r-purple-600 border-b-pink-600 border-l-indigo-600"></div>
+                  <div className="absolute inset-3 sm:inset-4 animate-bounce">
+                    <Sparkles className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
                   </div>
                 </div>
                 
                 {/* Animated text */}
                 <div className="text-center space-y-2">
-                  <h3 className="text-lg font-semibold text-gray-800 animate-pulse">
+                  <h3 className="text-sm sm:text-lg font-semibold text-gray-800 animate-pulse">
                     ✨ Crafting Your Content ✨
                   </h3>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-xs sm:text-sm text-gray-600">
                     Our AI is working its magic...
                   </p>
                   
                   {/* Animated dots */}
                   <div className="flex justify-center space-x-2 mt-4">
-                    <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce"></div>
-                    <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-3 h-3 bg-gradient-to-r from-pink-500 to-red-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-pink-500 to-red-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                   </div>
                 </div>
                 
                 {/* Progress bars */}
                 <div className="w-full max-w-xs space-y-2">
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                  <div className="h-1.5 sm:h-2 bg-gray-200 rounded-full overflow-hidden">
                     <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
                   </div>
                   <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
@@ -520,16 +496,17 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                 </div>
               </div>
             ) : generatedContent ? (
-              <div className="space-y-3 sm:space-y-4 animate-fade-in">
+              <div className="space-y-3 animate-fade-in">
                 {parseGeneratedContent(generatedContent).map((section, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
-                    <div className="bg-gray-50 px-3 py-2 border-b border-gray-200 flex items-center justify-between">
-                      <h4 className="font-medium text-sm text-gray-700">{section.title}</h4>
+                  <div key={index} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
+                    <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-3 py-2 border-b border-gray-200 flex items-center justify-between">
+                      <h4 className="font-medium text-xs sm:text-sm text-gray-700">{section.title}</h4>
                       <Button
                         onClick={() => copyToClipboard(section.content, `section-${index}`)}
                         variant="ghost"
                         size="sm"
-                        className="h-6 px-2 text-xs hover:bg-gray-200"
+                        className="h-6 w-6 p-0 hover:bg-gray-200 transition-all duration-200 hover:scale-110"
+                        title="Copy this section"
                       >
                         {copied[`section-${index}`] ? (
                           <Check className="h-3 w-3 text-green-600" />
@@ -551,8 +528,8 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center h-32 text-gray-500 space-y-3">
-                <div className="text-4xl">📝</div>
-                <p className="text-sm text-center">Your amazing content will appear here once generated</p>
+                <div className="text-2xl sm:text-4xl">📝</div>
+                <p className="text-xs sm:text-sm text-center">Your amazing content will appear here once generated</p>
                 <p className="text-xs text-center text-gray-400">Fill out the form and hit generate to get started!</p>
               </div>
             )}
