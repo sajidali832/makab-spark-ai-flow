@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, Download, Check, Sparkles, Zap, Stars } from 'lucide-react';
+import { Copy, Download, Check, Sparkles, Zap, Stars, RefreshCw, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import LimitExceededModal from '../LimitExceededModal';
@@ -20,7 +20,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [generatedContent, setGeneratedContent] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied] = useState<Record<string, boolean>>({});
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const { toast } = useToast();
   const { canUseTools, incrementToolGenerations, remainingGenerations } = useDailyLimits();
@@ -227,11 +227,11 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     }
   };
 
-  const copyToClipboard = async () => {
+  const copyToClipboard = async (text: string, section: string = 'all') => {
     try {
-      await navigator.clipboard.writeText(generatedContent);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      await navigator.clipboard.writeText(text);
+      setCopied(prev => ({ ...prev, [section]: true }));
+      setTimeout(() => setCopied(prev => ({ ...prev, [section]: false })), 2000);
       toast({
         title: "📋 Copied Successfully!",
         description: "Content is now in your clipboard",
@@ -260,12 +260,79 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     });
   };
 
+  const saveContent = () => {
+    const savedContent = localStorage.getItem('savedContent') || '[]';
+    const content = JSON.parse(savedContent);
+    content.push({
+      id: Date.now(),
+      type: toolType,
+      content: generatedContent,
+      timestamp: new Date().toISOString()
+    });
+    localStorage.setItem('savedContent', JSON.stringify(content));
+    
+    toast({
+      title: "💾 Content Saved!",
+      description: "Content saved to your local storage",
+    });
+  };
+
+  const parseGeneratedContent = (content: string) => {
+    const sections: { title: string; content: string; type: string }[] = [];
+    
+    if (toolType === 'caption') {
+      const captionMatch = content.match(/Caption[s]?:?\s*([\s\S]*?)(?=\n\n|Hashtags|$)/i);
+      const hashtagMatch = content.match(/Hashtags?:?\s*([\s\S]*?)(?=\n\n|$)/i);
+      
+      if (captionMatch) {
+        sections.push({
+          title: 'Caption',
+          content: captionMatch[1].trim(),
+          type: 'caption'
+        });
+      }
+      
+      if (hashtagMatch) {
+        sections.push({
+          title: 'Hashtags',
+          content: hashtagMatch[1].trim(),
+          type: 'hashtags'
+        });
+      }
+    } else if (toolType === 'hashtag') {
+      sections.push({
+        title: 'Hashtags',
+        content: content,
+        type: 'hashtags'
+      });
+    } else if (toolType === 'engagement-questions') {
+      const questionBlocks = content.split('\n\n').filter(block => block.trim());
+      questionBlocks.forEach((block, index) => {
+        if (block.trim()) {
+          sections.push({
+            title: `Question ${index + 1}`,
+            content: block.trim(),
+            type: 'question'
+          });
+        }
+      });
+    } else {
+      sections.push({
+        title: 'Generated Content',
+        content: content,
+        type: 'general'
+      });
+    }
+    
+    return sections;
+  };
+
   const canGenerate = currentTool.fields
     .filter((field: any) => field.required)
     .every((field: any) => formData[field.name]?.trim());
 
   return (
-    <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6 p-2 sm:p-4">
+    <div className="max-w-6xl mx-auto space-y-4 sm:space-y-6 p-2 sm:p-4">
       <div className="flex items-center space-x-2 sm:space-x-4 mb-4 sm:mb-6">
         <Button onClick={onBack} variant="outline" size="sm">
           ← Back
@@ -368,17 +435,36 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
               {generatedContent && (
                 <div className="flex space-x-1 sm:space-x-2">
                   <Button
-                    onClick={copyToClipboard}
+                    onClick={handleGenerate}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center text-xs sm:text-sm transition-all duration-200 hover:scale-105"
+                    disabled={isGenerating}
+                  >
+                    <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                    Regenerate
+                  </Button>
+                  <Button
+                    onClick={() => copyToClipboard(generatedContent)}
                     variant="outline"
                     size="sm"
                     className="flex items-center text-xs sm:text-sm transition-all duration-200 hover:scale-105"
                   >
-                    {copied ? (
+                    {copied.all ? (
                       <Check className="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-green-600" />
                     ) : (
                       <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
                     )}
-                    {copied ? 'Copied!' : 'Copy All'}
+                    Copy All
+                  </Button>
+                  <Button
+                    onClick={saveContent}
+                    variant="outline"
+                    size="sm"
+                    className="flex items-center text-xs sm:text-sm transition-all duration-200 hover:scale-105"
+                  >
+                    <Save className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                    Save
                   </Button>
                   <Button
                     onClick={downloadAsFile}
@@ -435,13 +521,32 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
               </div>
             ) : generatedContent ? (
               <div className="space-y-3 sm:space-y-4 animate-fade-in">
-                <div className="max-h-80 sm:max-h-96 overflow-y-auto p-3 sm:p-4 bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg border border-blue-100 shadow-inner">
-                  <pre className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 font-mono leading-relaxed">
-                    {generatedContent}
-                  </pre>
-                </div>
+                {parseGeneratedContent(generatedContent).map((section, index) => (
+                  <div key={index} className="border border-gray-200 rounded-lg overflow-hidden">
+                    <div className="bg-gray-50 px-3 py-2 border-b border-gray-200 flex items-center justify-between">
+                      <h4 className="font-medium text-sm text-gray-700">{section.title}</h4>
+                      <Button
+                        onClick={() => copyToClipboard(section.content, `section-${index}`)}
+                        variant="ghost"
+                        size="sm"
+                        className="h-6 px-2 text-xs hover:bg-gray-200"
+                      >
+                        {copied[`section-${index}`] ? (
+                          <Check className="h-3 w-3 text-green-600" />
+                        ) : (
+                          <Copy className="h-3 w-3" />
+                        )}
+                      </Button>
+                    </div>
+                    <div className="p-3 bg-white">
+                      <pre className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 font-mono leading-relaxed">
+                        {section.content}
+                      </pre>
+                    </div>
+                  </div>
+                ))}
                 <div className="text-xs text-gray-500 text-center bg-green-50 border border-green-200 rounded-lg p-2">
-                  🎉 Content generated successfully! Use the buttons above to copy or download.
+                  🎉 Content generated successfully! Use the copy buttons to copy individual sections.
                 </div>
               </div>
             ) : (

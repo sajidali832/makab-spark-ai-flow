@@ -77,89 +77,75 @@ const FreeCourseSection = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8 px-4">
-      <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8 animate-fade-in">
+      <div className="max-w-4xl mx-auto">
+        {/* Header with Course Image */}
+        <div className="text-center mb-8">
           <Badge className="mb-4 bg-green-100 text-green-800 border-green-200">
             100% FREE COURSE
           </Badge>
+          
+          {/* Course Image */}
+          <div className="relative group mb-6">
+            <div className="absolute -inset-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
+            <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden transform group-hover:scale-105 transition-transform duration-300 max-w-2xl mx-auto">
+              <img 
+                src="/lovable-uploads/c1fd8ef5-7159-4a5c-95c1-42c7d93267ed.png" 
+                alt="Build Your AI Startup Company in 2025" 
+                className="w-full h-auto object-cover"
+              />
+              <div className="absolute top-4 right-4">
+                <Badge className="bg-red-500 text-white animate-pulse">
+                  FREE
+                </Badge>
+              </div>
+            </div>
+          </div>
+
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
             Build Your AI Startup
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6">
             Complete guide to launching a successful AI-powered startup in 2025.
           </p>
-        </div>
 
-        {/* Course Image and Main Content */}
-        <div className="grid lg:grid-cols-2 gap-8 items-center mb-12">
-          <div className="order-2 lg:order-1">
-            <div className="relative group">
-              <div className="absolute -inset-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
-              <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden transform group-hover:scale-105 transition-transform duration-300">
-                <img 
-                  src="/lovable-uploads/c1fd8ef5-7159-4a5c-95c1-42c7d93267ed.png" 
-                  alt="Build Your AI Startup Company in 2025" 
-                  className="w-full h-auto object-cover"
-                />
-                <div className="absolute top-4 right-4">
-                  <Badge className="bg-red-500 text-white animate-pulse">
-                    FREE
-                  </Badge>
-                </div>
-              </div>
+          <div className="flex items-center justify-center space-x-4 mb-6">
+            <div className="flex items-center">
+              <Star className="h-5 w-5 text-yellow-400 fill-current" />
+              <Star className="h-5 w-5 text-yellow-400 fill-current" />
+              <Star className="h-5 w-5 text-yellow-400 fill-current" />
+              <Star className="h-5 w-5 text-yellow-400 fill-current" />
+              <Star className="h-5 w-5 text-yellow-400 fill-current" />
+              <span className="ml-2 text-sm md:text-base text-gray-600">5.0 (2,847 reviews)</span>
             </div>
           </div>
 
-          <div className="order-1 lg:order-2 space-y-6">
-            <div className="space-y-4">
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
-                Access Your Free Course
-              </h2>
-              <p className="text-base md:text-lg text-gray-600">
-                Get instant access to our comprehensive AI startup guide. Learn from industry experts and start building your dream company today.
-              </p>
-              
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center">
-                  <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                  <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                  <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                  <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                  <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                  <span className="ml-2 text-sm md:text-base text-gray-600">5.0 (2,847 reviews)</span>
+          <Button 
+            onClick={handleAccessCourse}
+            className="w-full max-w-md bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 md:py-4 text-base md:text-lg font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300 mb-6"
+          >
+            <Download className="h-5 w-5 mr-2" />
+            Access Free Course
+          </Button>
+
+          {/* Red Alert Box */}
+          <Alert className="border-red-200 bg-red-50 border-2 max-w-3xl mx-auto">
+            <AlertDescription className="text-red-800">
+              <div className="flex items-start space-x-3">
+                <div className="flex-shrink-0 mt-1">
+                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                </div>
+                <div>
+                  <p className="font-semibold mb-2">🎯 Important Notice:</p>
+                  <p className="text-sm leading-relaxed">
+                    We're providing this premium course absolutely FREE! Since we don't earn from this course, 
+                    we show a few ads to cover our costs and keep providing quality content. 
+                    You'll watch 8 quick ads to access the PDF - this helps us continue offering 
+                    free educational resources. Thank you for your understanding! 🚀
+                  </p>
                 </div>
               </div>
-
-              <Button 
-                onClick={handleAccessCourse}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 md:py-4 text-base md:text-lg font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
-              >
-                <Download className="h-5 w-5 mr-2" />
-                Access Free Course
-              </Button>
-            </div>
-
-            {/* Red Alert Box */}
-            <Alert className="border-red-200 bg-red-50 border-2">
-              <AlertDescription className="text-red-800">
-                <div className="flex items-start space-x-3">
-                  <div className="flex-shrink-0 mt-1">
-                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
-                  </div>
-                  <div>
-                    <p className="font-semibold mb-2">🎯 Important Notice:</p>
-                    <p className="text-sm leading-relaxed">
-                      We're providing this premium course absolutely FREE! Since we don't earn from this course, 
-                      we show a few ads to cover our costs and keep providing quality content. 
-                      You'll watch 8 quick ads to access the PDF - this helps us continue offering 
-                      free educational resources. Thank you for your understanding! 🚀
-                    </p>
-                  </div>
-                </div>
-              </AlertDescription>
-            </Alert>
-          </div>
+            </AlertDescription>
+          </Alert>
         </div>
 
         {/* Benefits Section */}
