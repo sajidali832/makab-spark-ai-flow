@@ -32,17 +32,15 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
   useEffect(() => {
     // Load Adsterra ad script for each new ad
     const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = '//www.highperformanceformat.com/1189490da0458b9766bfb9a72750d0b4/invoke.js';
-    script.async = true;
+    <script type="text/javascript" src="//www.highperformanceformat.com/d1df4d0571ff45346fa5cd749b0678a0/invoke.js"></script>
     
     // Set the ad options before loading the script
     (window as any).atOptions = {
-      'key': '1189490da0458b9766bfb9a72750d0b4',
-      'format': 'iframe',
-      'height': 250,
-      'width': 300,
-      'params': {}
+		'key' : 'd1df4d0571ff45346fa5cd749b0678a0',
+		'format' : 'iframe',
+		'height' : 250,
+		'width' : 300,
+		'params' : {}
     };
 
     const adContainer = document.getElementById(`ad-container-${currentAd}`);
