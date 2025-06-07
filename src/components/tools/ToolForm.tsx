@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -160,28 +161,20 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
       return;
     }
 
-    // Try to increment first
-    if (!incrementToolGenerations()) {
-      console.log('Failed to increment tool generations');
-      setLimitModalOpen(true);
-      return;
-    }
-
     console.log('Starting content generation...');
     setIsGenerating(true);
     setGeneratedContent('');
 
+    let incrementedSuccessfully = false;
+
     try {
-      // Create a proper user object for authentication
-      let user = { id: 'anonymous_user' };
-      try {
-        const storedUser = localStorage.getItem('makab_user');
-        if (storedUser) {
-          user = JSON.parse(storedUser);
-        }
-      } catch (e) {
-        console.log('No stored user found, using anonymous user');
+      // Try to increment first - if this fails, don't proceed
+      if (!incrementToolGenerations()) {
+        console.log('Failed to increment tool generations');
+        setLimitModalOpen(true);
+        return;
       }
+      incrementedSuccessfully = true;
 
       console.log('Making API call to tools-generation function...');
       console.log('Form data:', formData);
@@ -190,8 +183,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
       const { data, error } = await supabase.functions.invoke('tools-generation', {
         body: {
           toolType,
-          inputData: formData,
-          userId: user.id
+          inputData: formData
         }
       });
 
@@ -217,9 +209,11 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     } catch (error: any) {
       console.error('Content generation failed:', error);
       
+      // If generation failed and we had incremented, we should ideally restore the credit
+      // Since we can't easily restore, we'll just show an error
       toast({
         title: "Generation Failed",
-        description: error.message || "Something went wrong. Please try again in a moment.",
+        description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -266,38 +260,74 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     const sections: { title: string; content: string; type: string }[] = [];
     
     if (toolType === 'caption') {
-      const captionMatch = content.match(/Caption[s]?:?\s*([\s\S]*?)(?=\n\n|Hashtags|$)/i);
-      const hashtagMatch = content.match(/Hashtags?:?\s*([\s\S]*?)(?=\n\n|$)/i);
+      // Split content into caption variations and hashtags
+      const lines = content.split('\n').filter(line => line.trim());
+      let currentSection = '';
+      let currentContent = '';
       
-      if (captionMatch) {
-        sections.push({
-          title: 'Caption',
-          content: captionMatch[1].trim(),
-          type: 'caption'
-        });
+      for (const line of lines) {
+        if (line.includes('Caption') || line.includes('CAPTION') || line.includes('Version')) {
+          if (currentContent) {
+            sections.push({
+              title: currentSection || 'Caption',
+              content: currentContent.trim(),
+              type: 'caption'
+            });
+          }
+          currentSection = line.replace(/[#*\-]/g, '').trim();
+          currentContent = '';
+        } else if (line.includes('Hashtag') || line.includes('HASHTAG') || line.includes('#')) {
+          if (currentContent) {
+            sections.push({
+              title: currentSection || 'Caption',
+              content: currentContent.trim(),
+              type: 'caption'
+            });
+          }
+          sections.push({
+            title: 'Hashtags',
+            content: line.replace(/Hashtags?:?/i, '').trim(),
+            type: 'hashtags'
+          });
+          currentSection = '';
+          currentContent = '';
+        } else {
+          currentContent += line + '\n';
+        }
       }
       
-      if (hashtagMatch) {
+      if (currentContent) {
         sections.push({
-          title: 'Hashtags',
-          content: hashtagMatch[1].trim(),
-          type: 'hashtags'
+          title: currentSection || 'Caption',
+          content: currentContent.trim(),
+          type: 'caption'
         });
       }
     } else if (toolType === 'hashtag') {
       sections.push({
-        title: 'Hashtags',
+        title: 'Generated Hashtags',
         content: content,
         type: 'hashtags'
       });
     } else if (toolType === 'engagement-questions') {
-      const questionBlocks = content.split('\n\n').filter(block => block.trim());
+      const questionBlocks = content.split(/\n\s*\n/).filter(block => block.trim());
       questionBlocks.forEach((block, index) => {
         if (block.trim()) {
           sections.push({
             title: `Question ${index + 1}`,
             content: block.trim(),
             type: 'question'
+          });
+        }
+      });
+    } else if (toolType === 'idea') {
+      const ideaBlocks = content.split(/\n\s*\n/).filter(block => block.trim());
+      ideaBlocks.forEach((block, index) => {
+        if (block.trim()) {
+          sections.push({
+            title: `Idea ${index + 1}`,
+            content: block.trim(),
+            type: 'idea'
           });
         }
       });
@@ -318,26 +348,44 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
 
   return (
     <div className="max-w-7xl mx-auto space-y-4 p-3 sm:p-4">
-      <div className="flex items-center space-x-2 mb-4">
-        <Button onClick={onBack} variant="outline" size="sm" className="shrink-0">
-          ← Back
-        </Button>
-        <div className="min-w-0">
-          <h2 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">{currentTool.title}</h2>
-          <p className="text-xs sm:text-base text-gray-600 truncate">{currentTool.description}</p>
+      {/* Enhanced Header */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-6 mb-6">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="relative z-10">
+          <div className="flex items-center space-x-3 mb-4">
+            <Button onClick={onBack} variant="secondary" size="sm" className="shrink-0 bg-white/20 hover:bg-white/30 text-white border-0">
+              ← Back
+            </Button>
+            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+              <Sparkles className="h-6 w-6 text-white" />
+            </div>
+          </div>
+          <div className="text-white">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-2">{currentTool.title}</h2>
+            <p className="text-lg text-white/90 mb-4">{currentTool.description}</p>
+            <div className="flex items-center space-x-2 text-sm">
+              <Stars className="h-4 w-4" />
+              <span className="font-medium">AI-Powered Content Generation</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Form */}
-        <Card className="order-2 lg:order-1">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-base sm:text-lg">Input Details</CardTitle>
+        <Card className="order-2 lg:order-1 shadow-lg">
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg sm:text-xl flex items-center space-x-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                <Zap className="h-4 w-4 text-white" />
+              </div>
+              <span>Input Details</span>
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
             {currentTool.fields.map((field: any) => (
-              <div key={field.name} className="space-y-1">
-                <Label htmlFor={field.name} className="text-xs sm:text-sm">
+              <div key={field.name} className="space-y-2">
+                <Label htmlFor={field.name} className="text-sm font-medium">
                   {field.label}
                   {field.required && <span className="text-red-500 ml-1">*</span>}
                 </Label>
@@ -347,7 +395,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleInputChange(field.name, e.target.value)}
-                    className="w-full text-xs sm:text-sm"
+                    className="w-full"
                   />
                 )}
                 {field.type === 'textarea' && (
@@ -356,7 +404,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleInputChange(field.name, e.target.value)}
-                    className="w-full min-h-[60px] sm:min-h-[80px] text-xs sm:text-sm"
+                    className="w-full min-h-[80px]"
                   />
                 )}
                 {field.type === 'select' && (
@@ -364,12 +412,12 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     value={formData[field.name] || ''}
                     onValueChange={(value) => handleInputChange(field.name, value)}
                   >
-                    <SelectTrigger className="w-full text-xs sm:text-sm">
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
                     </SelectTrigger>
                     <SelectContent>
                       {field.options.map((option: string) => (
-                        <SelectItem key={option} value={option} className="text-xs sm:text-sm">
+                        <SelectItem key={option} value={option}>
                           {option}
                         </SelectItem>
                       ))}
@@ -379,77 +427,82 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
               </div>
             ))}
             
-            <Button
-              onClick={handleGenerate}
-              disabled={!canGenerate || isGenerating}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white text-xs sm:text-base py-2 sm:py-3 transition-all duration-300 hover:scale-105 active:scale-95"
-            >
-              {isGenerating ? (
-                <div className="flex items-center space-x-2">
-                  <div className="animate-spin">
-                    <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
-                  </div>
-                  <span className="text-xs sm:text-sm">Creating...</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-2">
-                  <Zap className="h-3 w-3 sm:h-4 sm:w-4" />
-                  <span className="text-xs sm:text-sm">Generate Content</span>
-                </div>
-              )}
-            </Button>
-
             {/* Daily Usage */}
-            <div className="text-center p-2 bg-blue-50 border border-blue-200 rounded-lg">
-              <div className="flex items-center justify-center space-x-1 text-blue-600 mb-1">
-                <Stars className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="font-semibold text-xs sm:text-sm">Daily Usage</span>
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-4">
+              <div className="flex items-center justify-center space-x-2 text-blue-600 mb-2">
+                <Stars className="h-5 w-5" />
+                <span className="font-semibold">Daily Usage</span>
               </div>
-              <p className="text-xs text-blue-500">
+              <p className="text-center text-blue-500 font-medium">
                 {remainingGenerations} generations remaining today
               </p>
             </div>
+
+            <Button
+              onClick={handleGenerate}
+              disabled={!canGenerate || isGenerating}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
+            >
+              {isGenerating ? (
+                <div className="flex items-center space-x-3">
+                  <div className="animate-spin">
+                    <Sparkles className="h-5 w-5" />
+                  </div>
+                  <span>Creating Magic...</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Zap className="h-5 w-5" />
+                  <span>Generate Content</span>
+                </div>
+              )}
+            </Button>
           </CardContent>
         </Card>
 
         {/* Generated Content */}
-        <Card className="order-1 lg:order-2">
-          <CardHeader className="pb-3">
+        <Card className="order-1 lg:order-2 shadow-lg">
+          <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base sm:text-lg">Generated Content</CardTitle>
+              <CardTitle className="text-lg sm:text-xl flex items-center space-x-2">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center">
+                  <Sparkles className="h-4 w-4 text-white" />
+                </div>
+                <span>Generated Content</span>
+              </CardTitle>
               {generatedContent && (
-                <div className="flex space-x-1">
+                <div className="flex space-x-2">
                   <Button
                     onClick={handleGenerate}
                     variant="outline"
                     size="sm"
-                    className="p-1.5 sm:p-2 transition-all duration-200 hover:scale-105"
+                    className="p-2 transition-all duration-200 hover:scale-110"
                     disabled={isGenerating}
                     title="Regenerate"
                   >
-                    <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <RefreshCw className="h-4 w-4" />
                   </Button>
                   <Button
                     onClick={() => copyToClipboard(generatedContent)}
                     variant="outline"
                     size="sm"
-                    className="p-1.5 sm:p-2 transition-all duration-200 hover:scale-105"
+                    className="p-2 transition-all duration-200 hover:scale-110"
                     title="Copy All"
                   >
                     {copied.all ? (
-                      <Check className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
+                      <Check className="h-4 w-4 text-green-600" />
                     ) : (
-                      <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
+                      <Copy className="h-4 w-4" />
                     )}
                   </Button>
                   <Button
                     onClick={saveContent}
                     variant="outline"
                     size="sm"
-                    className="p-1.5 sm:p-2 transition-all duration-200 hover:scale-105"
+                    className="p-2 transition-all duration-200 hover:scale-110"
                     title="Save"
                   >
-                    <Save className="h-3 w-3 sm:h-4 sm:w-4" />
+                    <Save className="h-4 w-4" />
                   </Button>
                 </div>
               )}
@@ -457,80 +510,86 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
           </CardHeader>
           <CardContent>
             {isGenerating ? (
-              <div className="flex flex-col items-center justify-center h-48 space-y-6">
+              <div className="flex flex-col items-center justify-center h-64 space-y-8">
                 {/* Enhanced loading animation */}
                 <div className="relative">
-                  <div className="absolute inset-0 animate-ping rounded-full h-12 w-12 sm:h-16 sm:w-16 border-4 border-blue-400 opacity-30"></div>
-                  <div className="absolute inset-2 animate-pulse rounded-full h-8 w-8 sm:h-12 sm:w-12 border-4 border-purple-400 opacity-40"></div>
-                  <div className="relative animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-4 border-t-blue-600 border-r-purple-600 border-b-pink-600 border-l-indigo-600"></div>
-                  <div className="absolute inset-3 sm:inset-4 animate-bounce">
-                    <Sparkles className="h-6 w-6 sm:h-8 sm:w-8 text-blue-600" />
+                  <div className="absolute inset-0 animate-ping rounded-full h-20 w-20 border-4 border-blue-400 opacity-30"></div>
+                  <div className="absolute inset-2 animate-pulse rounded-full h-16 w-16 border-4 border-purple-400 opacity-40"></div>
+                  <div className="relative animate-spin rounded-full h-20 w-20 border-4 border-t-blue-600 border-r-purple-600 border-b-pink-600 border-l-indigo-600"></div>
+                  <div className="absolute inset-6 animate-bounce">
+                    <Sparkles className="h-8 w-8 text-blue-600" />
                   </div>
                 </div>
                 
                 {/* Animated text */}
-                <div className="text-center space-y-2">
-                  <h3 className="text-sm sm:text-lg font-semibold text-gray-800 animate-pulse">
+                <div className="text-center space-y-3">
+                  <h3 className="text-xl font-bold text-gray-800 animate-pulse">
                     ✨ Crafting Your Content ✨
                   </h3>
-                  <p className="text-xs sm:text-sm text-gray-600">
+                  <p className="text-gray-600">
                     Our AI is working its magic...
                   </p>
                   
-                  {/* Animated dots */}
-                  <div className="flex justify-center space-x-2 mt-4">
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-2 h-2 sm:w-3 sm:h-3 bg-gradient-to-r from-pink-500 to-red-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                  {/* Animated progress dots */}
+                  <div className="flex justify-center space-x-2 mt-6">
+                    <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce"></div>
+                    <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-3 h-3 bg-gradient-to-r from-pink-500 to-red-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
                   </div>
                 </div>
                 
-                {/* Progress bars */}
-                <div className="w-full max-w-xs space-y-2">
-                  <div className="h-1.5 sm:h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-pulse"></div>
-                  </div>
-                  <div className="h-1 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                {/* Progress bar */}
+                <div className="w-full max-w-sm">
+                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full animate-pulse"></div>
                   </div>
                 </div>
               </div>
             ) : generatedContent ? (
-              <div className="space-y-3 animate-fade-in">
+              <div className="space-y-4 animate-fade-in">
                 {parseGeneratedContent(generatedContent).map((section, index) => (
-                  <div key={index} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm">
-                    <div className="bg-gradient-to-r from-gray-50 to-gray-100 px-3 py-2 border-b border-gray-200 flex items-center justify-between">
-                      <h4 className="font-medium text-xs sm:text-sm text-gray-700">{section.title}</h4>
+                  <div key={index} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm bg-white">
+                    <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
+                      <h4 className="font-semibold text-gray-700 flex items-center space-x-2">
+                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
+                        <span>{section.title}</span>
+                      </h4>
                       <Button
                         onClick={() => copyToClipboard(section.content, `section-${index}`)}
                         variant="ghost"
                         size="sm"
-                        className="h-6 w-6 p-0 hover:bg-gray-200 transition-all duration-200 hover:scale-110"
+                        className="h-8 w-8 p-0 hover:bg-blue-100 transition-all duration-200 hover:scale-110"
                         title="Copy this section"
                       >
                         {copied[`section-${index}`] ? (
-                          <Check className="h-3 w-3 text-green-600" />
+                          <Check className="h-4 w-4 text-green-600" />
                         ) : (
-                          <Copy className="h-3 w-3" />
+                          <Copy className="h-4 w-4 text-gray-600" />
                         )}
                       </Button>
                     </div>
-                    <div className="p-3 bg-white">
-                      <pre className="whitespace-pre-wrap text-xs sm:text-sm text-gray-800 font-mono leading-relaxed">
+                    <div className="p-4 bg-white">
+                      <pre className="whitespace-pre-wrap text-sm text-gray-800 leading-relaxed font-medium">
                         {section.content}
                       </pre>
                     </div>
                   </div>
                 ))}
-                <div className="text-xs text-gray-500 text-center bg-green-50 border border-green-200 rounded-lg p-2">
-                  🎉 Content generated successfully! Use the copy buttons to copy individual sections.
+                <div className="text-center bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl p-4">
+                  <div className="flex items-center justify-center space-x-2 text-green-600">
+                    <Check className="h-5 w-5" />
+                    <span className="font-semibold">Content Generated Successfully!</span>
+                  </div>
+                  <p className="text-sm text-gray-600 mt-1">Use the copy buttons to copy individual sections</p>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-32 text-gray-500 space-y-3">
-                <div className="text-2xl sm:text-4xl">📝</div>
-                <p className="text-xs sm:text-sm text-center">Your amazing content will appear here once generated</p>
-                <p className="text-xs text-center text-gray-400">Fill out the form and hit generate to get started!</p>
+              <div className="flex flex-col items-center justify-center h-48 text-gray-500 space-y-4">
+                <div className="text-5xl">✨</div>
+                <div className="text-center space-y-2">
+                  <p className="text-lg font-medium">Ready to Create Amazing Content?</p>
+                  <p className="text-sm text-gray-400">Fill out the form and hit generate to get started!</p>
+                </div>
               </div>
             )}
           </CardContent>
