@@ -16,22 +16,22 @@ const FreeCourseSection = () => {
     {
       icon: <Lightbulb className="h-6 w-6 text-yellow-500" />,
       title: "AI Startup Fundamentals",
-      description: "Learn the core principles of building an AI-powered startup from scratch"
+      description: "Learn core principles of building AI-powered startups"
     },
     {
       icon: <TrendingUp className="h-6 w-6 text-green-500" />,
       title: "Market Analysis",
-      description: "Understand how to identify opportunities in the AI market"
+      description: "Identify opportunities in the AI market effectively"
     },
     {
       icon: <Users className="h-6 w-6 text-blue-500" />,
       title: "Team Building",
-      description: "Strategies for assembling the right team for your AI venture"
+      description: "Assemble the right team for your AI venture"
     },
     {
       icon: <FileText className="h-6 w-6 text-purple-500" />,
       title: "Business Planning",
-      description: "Complete framework for creating a solid business plan"
+      description: "Complete framework for solid business plans"
     }
   ];
 
@@ -76,30 +76,30 @@ const FreeCourseSection = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-16 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8 px-4">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-8 animate-fade-in">
           <Badge className="mb-4 bg-green-100 text-green-800 border-green-200">
             100% FREE COURSE
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
             Build Your AI Startup
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Complete guide to launching a successful AI-powered startup. Everything you need to know in one comprehensive PDF.
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">
+            Complete guide to launching a successful AI-powered startup in 2025.
           </p>
         </div>
 
         {/* Course Image and Main Content */}
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+        <div className="grid lg:grid-cols-2 gap-8 items-center mb-12">
           <div className="order-2 lg:order-1">
             <div className="relative group">
               <div className="absolute -inset-4 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
               <div className="relative bg-white rounded-2xl shadow-2xl overflow-hidden transform group-hover:scale-105 transition-transform duration-300">
                 <img 
-                  src="/lovable-uploads/fe97d932-d669-4077-85d6-2582761c7d6c.png" 
-                  alt="AI Startup Course" 
+                  src="/lovable-uploads/c1fd8ef5-7159-4a5c-95c1-42c7d93267ed.png" 
+                  alt="Build Your AI Startup Company in 2025" 
                   className="w-full h-auto object-cover"
                 />
                 <div className="absolute top-4 right-4">
@@ -111,12 +111,12 @@ const FreeCourseSection = () => {
             </div>
           </div>
 
-          <div className="order-1 lg:order-2 space-y-8">
-            <div className="space-y-6">
-              <h2 className="text-3xl font-bold text-gray-800">
+          <div className="order-1 lg:order-2 space-y-6">
+            <div className="space-y-4">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
                 Access Your Free Course
               </h2>
-              <p className="text-lg text-gray-600">
+              <p className="text-base md:text-lg text-gray-600">
                 Get instant access to our comprehensive AI startup guide. Learn from industry experts and start building your dream company today.
               </p>
               
@@ -127,13 +127,13 @@ const FreeCourseSection = () => {
                   <Star className="h-5 w-5 text-yellow-400 fill-current" />
                   <Star className="h-5 w-5 text-yellow-400 fill-current" />
                   <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                  <span className="ml-2 text-gray-600">5.0 (2,847 reviews)</span>
+                  <span className="ml-2 text-sm md:text-base text-gray-600">5.0 (2,847 reviews)</span>
                 </div>
               </div>
 
               <Button 
                 onClick={handleAccessCourse}
-                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 text-lg font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 md:py-4 text-base md:text-lg font-semibold rounded-xl shadow-lg transform hover:scale-105 transition-all duration-300"
               >
                 <Download className="h-5 w-5 mr-2" />
                 Access Free Course
@@ -150,7 +150,7 @@ const FreeCourseSection = () => {
                   <div>
                     <p className="font-semibold mb-2">🎯 Important Notice:</p>
                     <p className="text-sm leading-relaxed">
-                      We are providing this premium course absolutely FREE! Since we don't earn from this course, 
+                      We're providing this premium course absolutely FREE! Since we don't earn from this course, 
                       we show a few ads to cover our costs and keep providing quality content. 
                       You'll watch 8 quick ads to access the PDF - this helps us continue offering 
                       free educational resources. Thank you for your understanding! 🚀
@@ -163,25 +163,25 @@ const FreeCourseSection = () => {
         </div>
 
         {/* Benefits Section */}
-        <div className="mb-16">
-          <h3 className="text-3xl font-bold text-center text-gray-800 mb-12">
+        <div className="mb-12">
+          <h3 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">
             What You'll Learn
           </h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {benefits.map((benefit, index) => (
               <Card 
                 key={index} 
                 className="group hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 animate-scale-in"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <CardHeader className="text-center">
-                  <div className="mx-auto mb-4 p-3 bg-gray-100 rounded-full group-hover:bg-gray-200 transition-colors">
+                <CardHeader className="text-center pb-3">
+                  <div className="mx-auto mb-3 p-3 bg-gray-100 rounded-full group-hover:bg-gray-200 transition-colors">
                     {benefit.icon}
                   </div>
-                  <CardTitle className="text-lg">{benefit.title}</CardTitle>
+                  <CardTitle className="text-base md:text-lg">{benefit.title}</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-center">
+                <CardContent className="pt-0">
+                  <CardDescription className="text-center text-sm">
                     {benefit.description}
                   </CardDescription>
                 </CardContent>
@@ -191,18 +191,18 @@ const FreeCourseSection = () => {
         </div>
 
         {/* Reviews Section */}
-        <div className="mb-16">
-          <h3 className="text-3xl font-bold text-center text-gray-800 mb-12">
+        <div className="mb-12">
+          <h3 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">
             What Students Say
           </h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             {reviews.map((review, index) => (
               <Card 
                 key={index} 
                 className="hover:shadow-lg transition-all duration-300 animate-fade-in"
                 style={{ animationDelay: `${index * 0.2}s` }}
               >
-                <CardHeader>
+                <CardHeader className="pb-3">
                   <div className="flex items-center space-x-2 mb-2">
                     <div className="flex">
                       {[...Array(review.rating)].map((_, i) => (
@@ -210,13 +210,13 @@ const FreeCourseSection = () => {
                       ))}
                     </div>
                   </div>
-                  <CardTitle className="text-lg">{review.name}</CardTitle>
-                  <CardDescription className="text-sm text-gray-500">
+                  <CardTitle className="text-base md:text-lg">{review.name}</CardTitle>
+                  <CardDescription className="text-xs text-gray-500">
                     {review.location}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 text-sm italic">
+                <CardContent className="pt-0">
+                  <p className="text-gray-600 text-xs md:text-sm italic">
                     "{review.comment}"
                   </p>
                 </CardContent>
@@ -227,18 +227,18 @@ const FreeCourseSection = () => {
 
         {/* Course Stats */}
         <div className="text-center space-y-4">
-          <div className="flex justify-center items-center space-x-8 text-gray-600">
+          <div className="flex justify-center items-center space-x-4 md:space-x-8 text-gray-600 flex-wrap">
             <div className="flex items-center space-x-2">
-              <Users className="h-5 w-5" />
-              <span>50,000+ Students</span>
+              <Users className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-sm md:text-base">50,000+ Students</span>
             </div>
             <div className="flex items-center space-x-2">
-              <FileText className="h-5 w-5" />
-              <span>PDF Format</span>
+              <FileText className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-sm md:text-base">PDF Format</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Download className="h-5 w-5" />
-              <span>Instant Access</span>
+              <Download className="h-4 w-4 md:h-5 md:w-5" />
+              <span className="text-sm md:text-base">Instant Access</span>
             </div>
           </div>
         </div>
