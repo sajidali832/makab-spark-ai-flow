@@ -40,8 +40,8 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
     (window as any).atOptions = {
       'key': '1189490da0458b9766bfb9a72750d0b4',
       'format': 'iframe',
-      'height': 90,
-      'width': 728,
+      'height': 250,
+      'width': 300,
       'params': {}
     };
 
