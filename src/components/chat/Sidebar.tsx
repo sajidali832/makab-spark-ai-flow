@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { X, MessageSquare, Wrench, User, History, MessageCircle, Info } from 'lucide-react';
+import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
@@ -15,6 +15,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const menuItems = [
     { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
     { id: 'tools', label: 'Tools', icon: Wrench, path: '/tools' },
+    { id: 'free-course', label: 'Free Course', icon: BookOpen, path: '/free-course' },
     { id: 'history', label: 'Tools History', icon: History, path: '/history' },
     { id: 'chat-history', label: 'Chats History', icon: MessageCircle, path: '/chat-history' },
     { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
