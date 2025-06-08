@@ -1,7 +1,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { User, Mail, LogOut, Sparkles, Star, Zap } from 'lucide-react';
+import { User, Mail, LogOut, Sparkles, Star, Zap, Brain, Rocket } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 const ProfilePage = () => {
@@ -67,7 +67,7 @@ const ProfilePage = () => {
                 <p className="text-xs text-blue-700 font-medium">Generations</p>
               </div>
               <div className="text-center p-3 bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl border border-purple-200">
-                <div className="text-lg sm:text-xl font-bold text-purple-600 mb-0.5">7</div>
+                <div className="text-lg sm:text-xl font-bold text-purple-600 mb-0.5">9</div>
                 <p className="text-xs text-purple-700 font-medium">AI Tools</p>
               </div>
             </div>
@@ -83,6 +83,50 @@ const ProfilePage = () => {
                   <Star className="h-3 w-3 text-green-500 fill-green-500" />
                   <Star className="h-3 w-3 text-green-500 fill-green-500" />
                   <Star className="h-3 w-3 text-green-500 fill-green-500" />
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* AI Model Information */}
+        <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-50 to-purple-50 backdrop-blur-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-center flex items-center justify-center space-x-2 text-sm">
+              <Brain className="h-4 w-4 text-blue-600" />
+              <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent font-bold">
+                AI Model Information
+              </span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="pt-0 px-3 pb-3">
+            <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border border-blue-200 shadow-inner">
+              <div className="text-center space-y-3">
+                <div className="flex items-center justify-center space-x-2 mb-2">
+                  <Zap className="h-5 w-5 text-blue-600 animate-pulse" />
+                  <h3 className="font-bold text-blue-700 text-lg">Makab O1</h3>
+                  <Sparkles className="h-5 w-5 text-purple-600 animate-pulse" />
+                </div>
+                
+                <div className="space-y-2 text-sm text-gray-700">
+                  <p className="font-semibold text-blue-600">⚡ Lightning Fast & Completely Free</p>
+                  <p>Developed by Makab, led by CEO Sajid, providing cutting-edge AI technology at no cost to empower creators worldwide.</p>
+                </div>
+
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-3 border border-purple-200 mt-4">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <Rocket className="h-4 w-4 text-purple-600" />
+                    <p className="font-bold text-purple-700 text-sm">Coming Soon</p>
+                  </div>
+                  <p className="text-xs text-gray-600 leading-relaxed">
+                    <span className="font-semibold text-purple-600">Makab O2 Pro</span> - Our fastest, most intelligent, and most powerful model is under development. We're committed to keeping it free for all users!
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-center space-x-1 text-xs text-gray-500 mt-3">
+                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
+                  <span>Powered by Innovation</span>
+                  <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
                 </div>
               </div>
             </div>

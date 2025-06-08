@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { X, Download } from 'lucide-react';
+import { X, Download, Clock } from 'lucide-react';
 
 interface AdModalProps {
   onComplete: () => void;
@@ -11,7 +11,7 @@ interface AdModalProps {
 
 const AdModal = ({ onComplete, onClose }: AdModalProps) => {
   const [currentAd, setCurrentAd] = useState(1);
-  const [countdown, setCountdown] = useState(5);
+  const [countdown, setCountdown] = useState(9); // Increased to 9 seconds
   const [canSkip, setCanSkip] = useState(false);
   const totalAds = 8;
 
@@ -61,7 +61,7 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
   const handleNextAd = () => {
     if (currentAd < totalAds) {
       setCurrentAd(currentAd + 1);
-      setCountdown(5);
+      setCountdown(9); // Reset to 9 seconds
       setCanSkip(false);
     } else {
       // All ads completed, download PDF
@@ -123,13 +123,17 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
             <div className="space-y-4">
               {!canSkip ? (
                 <div className="text-gray-600">
-                  <p className="text-sm md:text-base">You can skip this ad in {countdown} seconds...</p>
-                  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div className="flex items-center justify-center space-x-2 mb-2">
+                    <Clock className="h-4 w-4 text-blue-600" />
+                    <p className="text-sm md:text-base">Watch for {countdown} more seconds...</p>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-3 mt-2">
                     <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-1000"
-                      style={{ width: `${((5 - countdown) / 5) * 100}%` }}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 h-3 rounded-full transition-all duration-1000"
+                      style={{ width: `${((9 - countdown) / 9) * 100}%` }}
                     ></div>
                   </div>
+                  <p className="text-xs text-gray-500 mt-2">Please wait for the timer to complete</p>
                 </div>
               ) : (
                 <div className="space-y-3">

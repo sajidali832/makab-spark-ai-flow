@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -6,7 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Copy, Check, Sparkles, Zap, Stars, RefreshCw, Save } from 'lucide-react';
+import { Copy, Check, Sparkles, Zap, Stars, RefreshCw, Save, Hash } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import LimitExceededModal from '../LimitExceededModal';
@@ -29,7 +28,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
   const toolConfigs: Record<string, any> = {
     'caption': {
       title: 'Caption Generator',
-      description: 'Create engaging social media captions',
+      description: 'Create engaging social media captions that drive interaction',
       fields: [
         { name: 'topic', label: 'Post Topic', type: 'text', required: true, placeholder: 'What is your post about?' },
         { name: 'platform', label: 'Platform', type: 'select', required: true, options: ['Instagram', 'Facebook', 'Twitter', 'LinkedIn', 'TikTok', 'General'] },
@@ -41,7 +40,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     },
     'hashtag': {
       title: 'Hashtag Generator',
-      description: 'Generate trending hashtags for your content',
+      description: 'Generate trending hashtags that boost your content visibility',
       fields: [
         { name: 'topic', label: 'Content Topic', type: 'text', required: true, placeholder: 'What is your content about?' },
         { name: 'platform', label: 'Platform', type: 'select', required: true, options: ['Instagram', 'Twitter', 'TikTok', 'LinkedIn', 'Facebook', 'YouTube'] },
@@ -150,35 +149,19 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
   };
 
   const handleGenerate = async () => {
-    console.log('Generate button clicked');
-    console.log('Can use tools:', canUseTools());
-    console.log('Remaining generations:', remainingGenerations);
-
-    // Check limits BEFORE attempting to generate
     if (!canUseTools()) {
-      console.log('Opening limit modal - no generations left');
       setLimitModalOpen(true);
       return;
     }
 
-    console.log('Starting content generation...');
     setIsGenerating(true);
     setGeneratedContent('');
 
-    let incrementedSuccessfully = false;
-
     try {
-      // Try to increment first - if this fails, don't proceed
       if (!incrementToolGenerations()) {
-        console.log('Failed to increment tool generations');
         setLimitModalOpen(true);
         return;
       }
-      incrementedSuccessfully = true;
-
-      console.log('Making API call to tools-generation function...');
-      console.log('Form data:', formData);
-      console.log('Tool type:', toolType);
 
       const { data, error } = await supabase.functions.invoke('tools-generation', {
         body: {
@@ -187,30 +170,21 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
         }
       });
 
-      console.log('API response received:', { data, error });
-
       if (error) {
-        console.error('Supabase function error:', error);
         throw new Error(error.message || 'Failed to generate content');
       }
 
       if (!data || !data.generatedContent) {
-        console.error('No content in response:', data);
         throw new Error('No content received from the server');
       }
 
-      console.log('Content generation successful');
       setGeneratedContent(data.generatedContent);
       
       toast({
-        title: "Content Generated Successfully!",
-        description: "Your content is ready to use",
+        title: "✨ Content Created Successfully!",
+        description: "Your professional content is ready to use",
       });
     } catch (error: any) {
-      console.error('Content generation failed:', error);
-      
-      // If generation failed and we had incremented, we should ideally restore the credit
-      // Since we can't easily restore, we'll just show an error
       toast({
         title: "Generation Failed",
         description: error.message || "Something went wrong. Please try again.",
@@ -227,7 +201,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
       setCopied(prev => ({ ...prev, [section]: true }));
       setTimeout(() => setCopied(prev => ({ ...prev, [section]: false })), 2000);
       toast({
-        title: "Copied Successfully!",
+        title: "✅ Copied Successfully!",
         description: "Content is now in your clipboard",
       });
     } catch (error) {
@@ -236,6 +210,13 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
         description: "Unable to copy content to clipboard",
         variant: "destructive",
       });
+    }
+  };
+
+  const copyAllHashtags = () => {
+    if (toolType === 'hashtag' && generatedContent) {
+      const hashtags = generatedContent.match(/#\w+/g)?.join(' ') || generatedContent;
+      copyToClipboard(hashtags, 'hashtags');
     }
   };
 
@@ -251,7 +232,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     localStorage.setItem('savedContent', JSON.stringify(content));
     
     toast({
-      title: "Content Saved!",
+      title: "💾 Content Saved!",
       description: "Content saved to your local storage",
     });
   };
@@ -260,7 +241,6 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
     const sections: { title: string; content: string; type: string }[] = [];
     
     if (toolType === 'caption') {
-      // Split content into caption variations and hashtags
       const lines = content.split('\n').filter(line => line.trim());
       let currentSection = '';
       let currentContent = '';
@@ -348,44 +328,47 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
 
   return (
     <div className="max-w-7xl mx-auto space-y-4 p-3 sm:p-4">
-      {/* Enhanced Header */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-6 mb-6">
+      {/* Enhanced Professional Header */}
+      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 p-8 mb-8 shadow-2xl">
         <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16 animate-pulse"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12 animate-bounce"></div>
         <div className="relative z-10">
-          <div className="flex items-center space-x-3 mb-4">
-            <Button onClick={onBack} variant="secondary" size="sm" className="shrink-0 bg-white/20 hover:bg-white/30 text-white border-0">
+          <div className="flex items-center space-x-4 mb-6">
+            <Button onClick={onBack} variant="secondary" size="sm" className="shrink-0 bg-white/20 hover:bg-white/30 text-white border-0 backdrop-blur-sm">
               ← Back
             </Button>
-            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
-              <Sparkles className="h-6 w-6 text-white" />
+            <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg animate-pulse">
+              <Sparkles className="h-7 w-7 text-white" />
             </div>
           </div>
           <div className="text-white">
-            <h2 className="text-2xl sm:text-3xl font-bold mb-2">{currentTool.title}</h2>
-            <p className="text-lg text-white/90 mb-4">{currentTool.description}</p>
-            <div className="flex items-center space-x-2 text-sm">
-              <Stars className="h-4 w-4" />
-              <span className="font-medium">AI-Powered Content Generation</span>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-3 animate-fade-in">{currentTool.title}</h2>
+            <p className="text-xl text-white/90 mb-6 leading-relaxed">{currentTool.description}</p>
+            <div className="flex items-center space-x-3 text-sm bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 inline-flex">
+              <Stars className="h-5 w-5 animate-spin" />
+              <span className="font-medium">Powered by Makab O1 AI</span>
+              <Zap className="h-5 w-5 text-yellow-300" />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Input Form */}
-        <Card className="order-2 lg:order-1 shadow-lg">
-          <CardHeader className="pb-4">
-            <CardTitle className="text-lg sm:text-xl flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
-                <Zap className="h-4 w-4 text-white" />
+        <Card className="order-2 lg:order-1 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-xl flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center shadow-lg">
+                <Zap className="h-5 w-5 text-white" />
               </div>
               <span>Input Details</span>
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-5">
             {currentTool.fields.map((field: any) => (
               <div key={field.name} className="space-y-2">
-                <Label htmlFor={field.name} className="text-sm font-medium">
+                <Label htmlFor={field.name} className="text-sm font-semibold text-gray-700">
                   {field.label}
                   {field.required && <span className="text-red-500 ml-1">*</span>}
                 </Label>
@@ -395,7 +378,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleInputChange(field.name, e.target.value)}
-                    className="w-full"
+                    className="w-full border-gray-200 focus:border-purple-500 focus:ring-purple-500 transition-all duration-300"
                   />
                 )}
                 {field.type === 'textarea' && (
@@ -404,7 +387,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     placeholder={field.placeholder}
                     value={formData[field.name] || ''}
                     onChange={(e) => handleInputChange(field.name, e.target.value)}
-                    className="w-full min-h-[80px]"
+                    className="w-full min-h-[80px] border-gray-200 focus:border-purple-500 focus:ring-purple-500 transition-all duration-300"
                   />
                 )}
                 {field.type === 'select' && (
@@ -412,7 +395,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     value={formData[field.name] || ''}
                     onValueChange={(value) => handleInputChange(field.name, value)}
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full border-gray-200 focus:border-purple-500 focus:ring-purple-500 transition-all duration-300">
                       <SelectValue placeholder={`Select ${field.label.toLowerCase()}`} />
                     </SelectTrigger>
                     <SelectContent>
@@ -428,12 +411,12 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
             ))}
             
             {/* Daily Usage */}
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-4">
-              <div className="flex items-center justify-center space-x-2 text-blue-600 mb-2">
-                <Stars className="h-5 w-5" />
-                <span className="font-semibold">Daily Usage</span>
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-5 shadow-inner">
+              <div className="flex items-center justify-center space-x-2 text-blue-600 mb-3">
+                <Stars className="h-5 w-5 animate-pulse" />
+                <span className="font-bold">Daily Usage</span>
               </div>
-              <p className="text-center text-blue-500 font-medium">
+              <p className="text-center text-blue-600 font-semibold text-lg">
                 {remainingGenerations} generations remaining today
               </p>
             </div>
@@ -441,19 +424,19 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
             <Button
               onClick={handleGenerate}
               disabled={!canGenerate || isGenerating}
-              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-4 text-lg font-medium transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg"
+              className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white py-6 text-xl font-bold transition-all duration-500 hover:scale-105 active:scale-95 shadow-2xl hover:shadow-purple-500/25 border-0"
             >
               {isGenerating ? (
                 <div className="flex items-center space-x-3">
                   <div className="animate-spin">
-                    <Sparkles className="h-5 w-5" />
+                    <Sparkles className="h-6 w-6" />
                   </div>
                   <span>Creating Magic...</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-3">
-                  <Zap className="h-5 w-5" />
-                  <span>Generate Content</span>
+                  <Zap className="h-6 w-6" />
+                  <span>Generate Professional Content</span>
                 </div>
               )}
             </Button>
@@ -461,22 +444,33 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
         </Card>
 
         {/* Generated Content */}
-        <Card className="order-1 lg:order-2 shadow-lg">
-          <CardHeader className="pb-4">
+        <Card className="order-1 lg:order-2 shadow-xl border-0 bg-white/80 backdrop-blur-sm">
+          <CardHeader className="pb-6">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg sm:text-xl flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center">
-                  <Sparkles className="h-4 w-4 text-white" />
+              <CardTitle className="text-xl flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center shadow-lg">
+                  <Sparkles className="h-5 w-5 text-white" />
                 </div>
-                <span>Generated Content</span>
+                <span>Professional Content</span>
               </CardTitle>
               {generatedContent && (
                 <div className="flex space-x-2">
+                  {toolType === 'hashtag' && (
+                    <Button
+                      onClick={copyAllHashtags}
+                      variant="outline"
+                      size="sm"
+                      className="p-2 transition-all duration-200 hover:scale-110 border-purple-200 hover:border-purple-400"
+                      title="Copy All Hashtags"
+                    >
+                      <Hash className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button
                     onClick={handleGenerate}
                     variant="outline"
                     size="sm"
-                    className="p-2 transition-all duration-200 hover:scale-110"
+                    className="p-2 transition-all duration-200 hover:scale-110 border-blue-200 hover:border-blue-400"
                     disabled={isGenerating}
                     title="Regenerate"
                   >
@@ -486,7 +480,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     onClick={() => copyToClipboard(generatedContent)}
                     variant="outline"
                     size="sm"
-                    className="p-2 transition-all duration-200 hover:scale-110"
+                    className="p-2 transition-all duration-200 hover:scale-110 border-green-200 hover:border-green-400"
                     title="Copy All"
                   >
                     {copied.all ? (
@@ -499,7 +493,7 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
                     onClick={saveContent}
                     variant="outline"
                     size="sm"
-                    className="p-2 transition-all duration-200 hover:scale-110"
+                    className="p-2 transition-all duration-200 hover:scale-110 border-gray-200 hover:border-gray-400"
                     title="Save"
                   >
                     <Save className="h-4 w-4" />
@@ -510,85 +504,86 @@ const ToolForm = ({ toolType, onBack }: ToolFormProps) => {
           </CardHeader>
           <CardContent>
             {isGenerating ? (
-              <div className="flex flex-col items-center justify-center h-64 space-y-8">
-                {/* Enhanced loading animation */}
+              <div className="flex flex-col items-center justify-center h-80 space-y-8">
+                {/* Premium Loading Animation */}
                 <div className="relative">
-                  <div className="absolute inset-0 animate-ping rounded-full h-20 w-20 border-4 border-blue-400 opacity-30"></div>
-                  <div className="absolute inset-2 animate-pulse rounded-full h-16 w-16 border-4 border-purple-400 opacity-40"></div>
-                  <div className="relative animate-spin rounded-full h-20 w-20 border-4 border-t-blue-600 border-r-purple-600 border-b-pink-600 border-l-indigo-600"></div>
-                  <div className="absolute inset-6 animate-bounce">
+                  <div className="absolute inset-0 animate-ping rounded-full h-24 w-24 border-4 border-blue-400 opacity-20"></div>
+                  <div className="absolute inset-2 animate-pulse rounded-full h-20 w-20 border-4 border-purple-400 opacity-30"></div>
+                  <div className="absolute inset-4 animate-bounce rounded-full h-16 w-16 border-4 border-pink-400 opacity-40"></div>
+                  <div className="relative animate-spin rounded-full h-24 w-24 border-4 border-t-blue-600 border-r-purple-600 border-b-pink-600 border-l-indigo-600"></div>
+                  <div className="absolute inset-8 animate-pulse">
                     <Sparkles className="h-8 w-8 text-blue-600" />
                   </div>
                 </div>
                 
-                {/* Animated text */}
-                <div className="text-center space-y-3">
-                  <h3 className="text-xl font-bold text-gray-800 animate-pulse">
-                    ✨ Crafting Your Content ✨
+                {/* Enhanced Loading Text */}
+                <div className="text-center space-y-4">
+                  <h3 className="text-2xl font-bold text-gray-800 animate-pulse bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    ✨ Crafting Your Professional Content ✨
                   </h3>
-                  <p className="text-gray-600">
-                    Our AI is working its magic...
+                  <p className="text-gray-600 text-lg">
+                    Makab O1 AI is working its magic...
                   </p>
                   
-                  {/* Animated progress dots */}
-                  <div className="flex justify-center space-x-2 mt-6">
-                    <div className="w-3 h-3 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce"></div>
-                    <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="w-3 h-3 bg-gradient-to-r from-pink-500 to-red-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
+                  {/* Professional Progress Animation */}
+                  <div className="flex justify-center space-x-3 mt-8">
+                    <div className="w-4 h-4 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full animate-bounce shadow-lg"></div>
+                    <div className="w-4 h-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce shadow-lg" style={{ animationDelay: '0.2s' }}></div>
+                    <div className="w-4 h-4 bg-gradient-to-r from-pink-500 to-red-500 rounded-full animate-bounce shadow-lg" style={{ animationDelay: '0.4s' }}></div>
                   </div>
                 </div>
                 
-                {/* Progress bar */}
-                <div className="w-full max-w-sm">
-                  <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
-                    <div className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full animate-pulse"></div>
+                {/* Premium Progress Bar */}
+                <div className="w-full max-w-md">
+                  <div className="h-3 bg-gray-200 rounded-full overflow-hidden shadow-inner">
+                    <div className="h-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full animate-pulse shadow-lg"></div>
                   </div>
                 </div>
               </div>
             ) : generatedContent ? (
-              <div className="space-y-4 animate-fade-in">
+              <div className="space-y-5 animate-fade-in">
                 {parseGeneratedContent(generatedContent).map((section, index) => (
-                  <div key={index} className="border border-gray-200 rounded-xl overflow-hidden shadow-sm bg-white">
-                    <div className="bg-gradient-to-r from-gray-50 to-blue-50 px-4 py-3 border-b border-gray-200 flex items-center justify-between">
-                      <h4 className="font-semibold text-gray-700 flex items-center space-x-2">
-                        <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
-                        <span>{section.title}</span>
+                  <div key={index} className="border-2 border-gray-100 rounded-2xl overflow-hidden shadow-lg bg-gradient-to-br from-white to-gray-50 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
+                    <div className="bg-gradient-to-r from-gray-50 via-blue-50 to-purple-50 px-6 py-4 border-b-2 border-gray-100 flex items-center justify-between">
+                      <h4 className="font-bold text-gray-800 flex items-center space-x-3">
+                        <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 animate-pulse"></div>
+                        <span className="text-lg">{section.title}</span>
                       </h4>
                       <Button
                         onClick={() => copyToClipboard(section.content, `section-${index}`)}
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0 hover:bg-blue-100 transition-all duration-200 hover:scale-110"
+                        className="h-10 w-10 p-0 hover:bg-blue-100 transition-all duration-200 hover:scale-110 rounded-xl"
                         title="Copy this section"
                       >
                         {copied[`section-${index}`] ? (
-                          <Check className="h-4 w-4 text-green-600" />
+                          <Check className="h-5 w-5 text-green-600" />
                         ) : (
-                          <Copy className="h-4 w-4 text-gray-600" />
+                          <Copy className="h-5 w-5 text-gray-600" />
                         )}
                       </Button>
                     </div>
-                    <div className="p-4 bg-white">
+                    <div className="p-6 bg-white">
                       <pre className="whitespace-pre-wrap text-sm text-gray-800 leading-relaxed font-medium">
                         {section.content}
                       </pre>
                     </div>
                   </div>
                 ))}
-                <div className="text-center bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-xl p-4">
-                  <div className="flex items-center justify-center space-x-2 text-green-600">
-                    <Check className="h-5 w-5" />
-                    <span className="font-semibold">Content Generated Successfully!</span>
+                <div className="text-center bg-gradient-to-r from-green-50 to-blue-50 border-2 border-green-200 rounded-2xl p-6 shadow-lg">
+                  <div className="flex items-center justify-center space-x-3 text-green-600 mb-2">
+                    <Check className="h-6 w-6" />
+                    <span className="font-bold text-lg">Professional Content Created!</span>
                   </div>
-                  <p className="text-sm text-gray-600 mt-1">Use the copy buttons to copy individual sections</p>
+                  <p className="text-sm text-gray-600">Use the copy buttons to copy individual sections or copy all at once</p>
                 </div>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-48 text-gray-500 space-y-4">
-                <div className="text-5xl">✨</div>
-                <div className="text-center space-y-2">
-                  <p className="text-lg font-medium">Ready to Create Amazing Content?</p>
-                  <p className="text-sm text-gray-400">Fill out the form and hit generate to get started!</p>
+              <div className="flex flex-col items-center justify-center h-64 text-gray-500 space-y-6">
+                <div className="text-6xl animate-bounce">✨</div>
+                <div className="text-center space-y-3">
+                  <p className="text-xl font-semibold">Ready to Create Professional Content?</p>
+                  <p className="text-sm text-gray-400">Fill out the form and hit generate to get started with Makab O1!</p>
                 </div>
               </div>
             )}
