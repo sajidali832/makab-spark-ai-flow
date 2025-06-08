@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, Download, Star, Bell, ArrowRight } from 'lucide-react';
+import { CheckCircle, Download, Star, Bell } from 'lucide-react';
 
 const CourseCollectedScreen = () => {
   return (
@@ -84,23 +84,14 @@ const CourseCollectedScreen = () => {
           </CardContent>
         </Card>
 
-        {/* Action Buttons */}
+        {/* Action Button */}
         <div className="space-y-4 animate-fade-in" style={{ animationDelay: '0.8s' }}>
           <Button
             onClick={() => window.open('https://drive.google.com/file/d/1jWn0sOP5bREXUH3G8lpyJhVEvn2D573V/view?usp=drivesdk', '_blank')}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg mr-4"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
           >
             <Download className="h-5 w-5 mr-2" />
             Re-download Course
-          </Button>
-          
-          <Button
-            variant="outline"
-            className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8 py-3 text-lg"
-            onClick={() => window.location.reload()}
-          >
-            Browse More Courses
-            <ArrowRight className="h-5 w-5 ml-2" />
           </Button>
         </div>
 

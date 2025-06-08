@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { X, Download, Clock } from 'lucide-react';
+import { X, Download, Clock, AlertTriangle } from 'lucide-react';
 
 interface AdModalProps {
   onComplete: () => void;
@@ -11,8 +11,9 @@ interface AdModalProps {
 
 const AdModal = ({ onComplete, onClose }: AdModalProps) => {
   const [currentAd, setCurrentAd] = useState(1);
-  const [countdown, setCountdown] = useState(9); // Increased to 9 seconds
+  const [countdown, setCountdown] = useState(9);
   const [canSkip, setCanSkip] = useState(false);
+  const [showWarning, setShowWarning] = useState(true);
   const totalAds = 8;
 
   useEffect(() => {
@@ -30,38 +31,40 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
   }, [currentAd]);
 
   useEffect(() => {
-    // Set atOptions before loading the script
-    (window as any).atOptions = {
-      'key': 'd1df4d0571ff45346fa5cd749b0678a0',
-      'format': 'iframe',
-      'height': 250,
-      'width': 300,
-      'params': {}
-    };
+    if (!showWarning) {
+      // Set atOptions before loading the script
+      (window as any).atOptions = {
+        'key': 'd1df4d0571ff45346fa5cd749b0678a0',
+        'format': 'iframe',
+        'height': 250,
+        'width': 300,
+        'params': {}
+      };
 
-    // Load Adsterra ad script for each new ad
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = '//www.highperformanceformat.com/d1df4d0571ff45346fa5cd749b0678a0/invoke.js';
-    
-    const adContainer = document.getElementById(`ad-container-${currentAd}`);
-    if (adContainer) {
-      // Clear previous ad content
-      adContainer.innerHTML = '';
-      adContainer.appendChild(script);
-    }
-
-    return () => {
-      if (script.parentNode) {
-        script.parentNode.removeChild(script);
+      // Load Adsterra ad script for each new ad
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = '//www.highperformanceformat.com/d1df4d0571ff45346fa5cd749b0678a0/invoke.js';
+      
+      const adContainer = document.getElementById(`ad-container-${currentAd}`);
+      if (adContainer) {
+        // Clear previous ad content
+        adContainer.innerHTML = '';
+        adContainer.appendChild(script);
       }
-    };
-  }, [currentAd]);
+
+      return () => {
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+      };
+    }
+  }, [currentAd, showWarning]);
 
   const handleNextAd = () => {
     if (currentAd < totalAds) {
       setCurrentAd(currentAd + 1);
-      setCountdown(9); // Reset to 9 seconds
+      setCountdown(9);
       setCanSkip(false);
     } else {
       // All ads completed, download PDF
@@ -75,7 +78,62 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
     onComplete();
   };
 
+  const handleAcceptWarning = () => {
+    setShowWarning(false);
+  };
+
   const progress = ((currentAd - 1) / totalAds) * 100;
+
+  if (showWarning) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl max-w-md w-full p-6 relative">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onClose}
+            className="absolute top-4 right-4 text-gray-500 hover:bg-gray-100"
+          >
+            <X className="h-5 w-5" />
+          </Button>
+          
+          <div className="text-center">
+            <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+              <AlertTriangle className="h-8 w-8 text-red-600" />
+            </div>
+            
+            <h3 className="text-xl font-bold text-gray-800 mb-3">18+ Content Warning</h3>
+            
+            <p className="text-gray-600 mb-6 leading-relaxed">
+              The advertisements you are about to view may contain adult content. 
+              By proceeding, you confirm that you are 18 years of age or older.
+            </p>
+            
+            <p className="text-sm text-gray-500 mb-6">
+              Children should not view this content. Please ensure you meet the age requirement before continuing.
+            </p>
+            
+            <div className="space-y-3">
+              <Button
+                onClick={handleAcceptWarning}
+                className="w-full bg-red-600 hover:bg-red-700 text-white py-3"
+              >
+                I am 18+ and accept
+              </Button>
+              
+              <Button
+                variant="outline"
+                onClick={onClose}
+                className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 py-3"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">
