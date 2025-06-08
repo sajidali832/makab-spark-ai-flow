@@ -30,11 +30,6 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
   }, [currentAd]);
 
   useEffect(() => {
-    // Load Adsterra ad script for each new ad
-    const script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = '//www.highperformanceformat.com/d1df4d0571ff45346fa5cd749b0678a0/invoke.js';
-    
     // Set atOptions before loading the script
     (window as any).atOptions = {
       'key': 'd1df4d0571ff45346fa5cd749b0678a0',
@@ -44,6 +39,11 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
       'params': {}
     };
 
+    // Load Adsterra ad script for each new ad
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = '//www.highperformanceformat.com/d1df4d0571ff45346fa5cd749b0678a0/invoke.js';
+    
     const adContainer = document.getElementById(`ad-container-${currentAd}`);
     if (adContainer) {
       // Clear previous ad content
