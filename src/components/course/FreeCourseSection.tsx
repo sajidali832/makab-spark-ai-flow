@@ -80,7 +80,7 @@ const FreeCourseSection = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-8 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header with Course Image */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <Badge className="mb-4 bg-green-100 text-green-800 border-green-200">
             100% FREE COURSE
           </Badge>
@@ -102,7 +102,7 @@ const FreeCourseSection = () => {
             </div>
           </div>
 
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 mb-4">
             Build Your AI Startup
           </h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto mb-6">
@@ -129,10 +129,10 @@ const FreeCourseSection = () => {
           </Button>
 
           {/* First Banner Ad Location */}
-          <BannerAd className="mb-6" />
+          <BannerAd className="my-4 sm:my-6" />
 
           {/* Red Alert Box with 18+ Warning */}
-          <Alert className="border-red-200 bg-red-50 border-2 max-w-3xl mx-auto">
+          <Alert className="border-red-200 bg-red-50 border-2 max-w-3xl mx-auto w-full">
             <AlertTriangle className="h-5 w-5 text-red-600" />
             <AlertDescription className="text-red-800">
               <div className="space-y-3">
@@ -166,7 +166,7 @@ const FreeCourseSection = () => {
 
         {/* Benefits Section */}
         <div className="mb-12">
-          <h3 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">
+          <h3 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6 sm:mb-8">
             What You'll Learn
           </h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
@@ -193,11 +193,11 @@ const FreeCourseSection = () => {
         </div>
 
         {/* Second Banner Ad Location */}
-        <BannerAd className="mb-12" />
+        <BannerAd className="my-6 sm:my-8 lg:my-12" />
 
         {/* Reviews Section */}
         <div className="mb-12">
-          <h3 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-8">
+          <h3 className="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6 sm:mb-8">
             What Students Say
           </h3>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
