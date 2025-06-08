@@ -31,24 +31,28 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
 
   useEffect(() => {
     // Load Adsterra ad script for each new ad
-    <script type="text/javascript">
-	atOptions = {
-		'key' : 'd1df4d0571ff45346fa5cd749b0678a0',
-		'format' : 'iframe',
-		'height' : 250,
-		'width' : 300,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/d1df4d0571ff45346fa5cd749b0678a0/invoke.js"></script>
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = '//www.highperformanceformat.com/d1df4d0571ff45346fa5cd749b0678a0/invoke.js';
+    
+    // Set atOptions before loading the script
+    (window as any).atOptions = {
+      'key': 'd1df4d0571ff45346fa5cd749b0678a0',
+      'format': 'iframe',
+      'height': 250,
+      'width': 300,
+      'params': {}
+    };
 
     const adContainer = document.getElementById(`ad-container-${currentAd}`);
     if (adContainer) {
+      // Clear previous ad content
+      adContainer.innerHTML = '';
       adContainer.appendChild(script);
     }
 
     return () => {
-      if (adContainer && script.parentNode) {
+      if (script.parentNode) {
         script.parentNode.removeChild(script);
       }
     };
@@ -106,7 +110,8 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
             {/* Adsterra Ad Container */}
             <div 
               id={`ad-container-${currentAd}`}
-              className="mb-6 min-h-[200px] bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden"
+              className="mb-6 min-h-[250px] bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden"
+              style={{ minWidth: '300px', minHeight: '250px' }}
             >
               <div className="text-gray-500 text-center">
                 <p className="text-lg font-semibold mb-2">Advertisement Loading...</p>
