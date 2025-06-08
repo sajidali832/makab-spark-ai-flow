@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { X, Download, Clock, AlertTriangle } from 'lucide-react';
+import { X, Download, Clock } from 'lucide-react';
 
 interface AdModalProps {
   onComplete: () => void;
@@ -13,55 +13,50 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
   const [currentAd, setCurrentAd] = useState(1);
   const [countdown, setCountdown] = useState(9);
   const [canSkip, setCanSkip] = useState(false);
-  const [showWarning, setShowWarning] = useState(true);
   const totalAds = 8;
 
   useEffect(() => {
-    if (!showWarning) {
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            setCanSkip(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          setCanSkip(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
-      return () => clearInterval(timer);
-    }
-  }, [currentAd, showWarning]);
+    return () => clearInterval(timer);
+  }, [currentAd]);
 
   useEffect(() => {
-    if (!showWarning) {
-      // Set atOptions before loading the script
-      (window as any).atOptions = {
-        'key': 'd1df4d0571ff45346fa5cd749b0678a0',
-        'format': 'iframe',
-        'height': 250,
-        'width': 300,
-        'params': {}
-      };
+    // Set atOptions before loading the script
+    (window as any).atOptions = {
+      'key': 'd1df4d0571ff45346fa5cd749b0678a0',
+      'format': 'iframe',
+      'height': 250,
+      'width': 300,
+      'params': {}
+    };
 
-      // Load Adsterra ad script for each new ad
-      const script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = '//www.highperformanceformat.com/d1df4d0571ff45346fa5cd749b0678a0/invoke.js';
-      
-      const adContainer = document.getElementById(`ad-container-${currentAd}`);
-      if (adContainer) {
-        // Clear previous ad content
-        adContainer.innerHTML = '';
-        adContainer.appendChild(script);
-      }
-
-      return () => {
-        if (script.parentNode) {
-          script.parentNode.removeChild(script);
-        }
-      };
+    // Load Adsterra ad script for each new ad
+    const script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = '//www.highperformanceformat.com/d1df4d0571ff45346fa5cd749b0678a0/invoke.js';
+    
+    const adContainer = document.getElementById(`ad-container-${currentAd}`);
+    if (adContainer) {
+      // Clear previous ad content
+      adContainer.innerHTML = '';
+      adContainer.appendChild(script);
     }
-  }, [currentAd, showWarning]);
+
+    return () => {
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+    };
+  }, [currentAd]);
 
   const handleNextAd = () => {
     if (currentAd < totalAds) {
@@ -80,75 +75,7 @@ const AdModal = ({ onComplete, onClose }: AdModalProps) => {
     onComplete();
   };
 
-  const handleAcceptWarning = () => {
-    setShowWarning(false);
-  };
-
   const progress = ((currentAd - 1) / totalAds) * 100;
-
-  if (showWarning) {
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-95 z-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl max-w-lg w-full p-8 relative shadow-2xl border-2 border-red-200">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-500 hover:bg-gray-100"
-          >
-            <X className="h-5 w-5" />
-          </Button>
-          
-          <div className="text-center">
-            <div className="mx-auto w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mb-6 animate-pulse">
-              <AlertTriangle className="h-10 w-10 text-red-600" />
-            </div>
-            
-            <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6 mb-6">
-              <h3 className="text-2xl font-bold text-red-800 mb-4">⚠️ Adult Content Warning</h3>
-              
-              <div className="space-y-3 text-left">
-                <p className="text-red-700 font-semibold">
-                  🔞 This content is restricted to adults only (18+)
-                </p>
-                
-                <p className="text-red-600 leading-relaxed">
-                  The advertisements you are about to view contain adult material that may not be suitable for minors.
-                </p>
-                
-                <div className="bg-red-100 border border-red-300 rounded-lg p-4">
-                  <p className="text-red-800 text-sm font-medium">
-                    ⚡ Important Notice: Children and minors should NOT proceed beyond this point.
-                  </p>
-                </div>
-                
-                <p className="text-red-600 text-sm">
-                  By clicking "I am 18+ and Accept", you confirm that you meet the age requirement and consent to viewing adult content.
-                </p>
-              </div>
-            </div>
-            
-            <div className="space-y-3">
-              <Button
-                onClick={handleAcceptWarning}
-                className="w-full bg-red-600 hover:bg-red-700 text-white py-4 text-lg font-semibold rounded-xl"
-              >
-                🔞 I am 18+ and Accept
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={onClose}
-                className="w-full border-2 border-gray-300 text-gray-700 hover:bg-gray-50 py-4 text-lg font-semibold rounded-xl"
-              >
-                ❌ Cancel & Exit
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4">

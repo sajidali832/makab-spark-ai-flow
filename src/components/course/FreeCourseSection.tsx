@@ -4,9 +4,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Star, Download, FileText, Users, TrendingUp, Lightbulb, CheckCircle } from 'lucide-react';
+import { Star, Download, FileText, Users, TrendingUp, Lightbulb, CheckCircle, AlertTriangle } from 'lucide-react';
 import AdModal from './AdModal';
 import CourseCollectedScreen from './CourseCollectedScreen';
+import BannerAd from './BannerAd';
 
 const FreeCourseSection = () => {
   const [showAdModal, setShowAdModal] = useState(false);
@@ -127,20 +128,35 @@ const FreeCourseSection = () => {
             Access Free Course
           </Button>
 
-          {/* Red Alert Box */}
+          {/* First Banner Ad Location */}
+          <BannerAd className="mb-6" />
+
+          {/* Red Alert Box with 18+ Warning */}
           <Alert className="border-red-200 bg-red-50 border-2 max-w-3xl mx-auto">
+            <AlertTriangle className="h-5 w-5 text-red-600" />
             <AlertDescription className="text-red-800">
-              <div className="flex items-start space-x-3">
-                <div className="flex-shrink-0 mt-1">
-                  <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+              <div className="space-y-3">
+                <div className="flex items-start space-x-3">
+                  <div className="flex-shrink-0 mt-1">
+                    <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+                  </div>
+                  <div>
+                    <p className="font-semibold mb-2">🎯 Important Notice:</p>
+                    <p className="text-sm leading-relaxed">
+                      We're providing this premium course absolutely FREE! Since we don't earn from this course, 
+                      we show a few ads to cover our costs and keep providing quality content. 
+                      You'll watch 8 quick ads to access the PDF - this helps us continue offering 
+                      free educational resources. Thank you for your understanding! 🚀
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-semibold mb-2">🎯 Important Notice:</p>
-                  <p className="text-sm leading-relaxed">
-                    We're providing this premium course absolutely FREE! Since we don't earn from this course, 
-                    we show a few ads to cover our costs and keep providing quality content. 
-                    You'll watch 8 quick ads to access the PDF - this helps us continue offering 
-                    free educational resources. Thank you for your understanding! 🚀
+                
+                <div className="bg-red-100 border border-red-300 rounded-lg p-4 mt-3">
+                  <p className="font-semibold text-red-800 mb-2">⚠️ Adult Content Warning (18+)</p>
+                  <p className="text-red-700 text-sm leading-relaxed">
+                    🔞 The advertisements contain adult material. Only users 18+ should proceed. 
+                    Children and minors should NOT view this content. By clicking "Access Free Course", 
+                    you confirm you are 18+ and consent to viewing adult advertisements.
                   </p>
                 </div>
               </div>
@@ -175,6 +191,9 @@ const FreeCourseSection = () => {
             ))}
           </div>
         </div>
+
+        {/* Second Banner Ad Location */}
+        <BannerAd className="mb-12" />
 
         {/* Reviews Section */}
         <div className="mb-12">
