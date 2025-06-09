@@ -94,17 +94,35 @@ const ChatInterface = () => {
           content: msg.content
         }));
 
-      const { data, error } = await supabase.functions.invoke('chat-completion', {
-        body: { messages: apiMessages }
-      });
+      // Check if user is asking about the creator/CEO
+      const userMessage = conversationHistory[conversationHistory.length - 1]?.content.toLowerCase() || '';
+      const isAskingAboutCreator = userMessage.includes('who built') || 
+                                   userMessage.includes('who created') || 
+                                   userMessage.includes('who made') || 
+                                   userMessage.includes('ceo') || 
+                                   userMessage.includes('founder') || 
+                                   userMessage.includes('owner') ||
+                                   userMessage.includes('developer');
 
-      if (error) {
-        throw new Error(error.message);
+      let responseText = '';
+      
+      if (isAskingAboutCreator) {
+        responseText = "I was created by Sajid, who is the CEO and founder of this platform. He built the first version of Makab AI and continues to lead the development with his talented team. Sajid had the vision to make AI accessible and helpful for everyone, and that's exactly what we've achieved here! 🚀";
+      } else {
+        const { data, error } = await supabase.functions.invoke('chat-completion', {
+          body: { messages: apiMessages }
+        });
+
+        if (error) {
+          throw new Error(error.message);
+        }
+
+        responseText = data.generatedText;
       }
 
       const actualResponse: Message = {
         id: messageId,
-        content: data.generatedText,
+        content: responseText,
         role: 'assistant',
         timestamp: new Date(),
         isThinking: false
@@ -187,14 +205,14 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="flex h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col backdrop-blur-sm">
         {/* Header */}
-        <header className="flex items-center justify-between p-2 sm:p-4 border-b border-gray-100 bg-white/80 backdrop-blur-sm">
+        <header className="flex items-center justify-between p-2 sm:p-4 border-b border-gray-200/50 bg-white/80 backdrop-blur-md shadow-sm">
           <div className="flex items-center space-x-2 sm:space-x-3">
             <Button
               variant="ghost"
@@ -213,7 +231,7 @@ const ChatInterface = () => {
           </div>
           
           <div className="flex items-center space-x-2">
-            <div className="hidden sm:flex items-center space-x-1 text-xs text-gray-500 bg-gray-100 rounded-full px-3 py-1">
+            <div className="hidden sm:flex items-center space-x-1 text-xs text-gray-500 bg-gray-100/80 rounded-full px-3 py-1 backdrop-blur-sm">
               <span>{remainingMessages}/6 messages left</span>
             </div>
             <Button
@@ -229,19 +247,19 @@ const ChatInterface = () => {
         </header>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-3 sm:space-y-6">
+        <div className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4 sm:space-y-6 bg-gradient-to-b from-transparent to-gray-50/30">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-3 sm:space-y-4 px-4">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl sm:rounded-3xl flex items-center justify-center">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-lg">
                 <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl" />
               </div>
               <h2 className="text-lg sm:text-2xl font-bold text-gray-800">
                 Hi! I'm Makab 👋
               </h2>
               <p className="text-sm sm:text-base text-gray-600 max-w-md">
-                Your AI assistant for conversations and content creation! ✨
+                Your AI assistant created by Sajid for conversations and content creation! ✨
               </p>
-              <div className="text-sm text-gray-500 bg-blue-50 rounded-lg p-3">
+              <div className="text-sm text-gray-500 bg-blue-50/80 border border-blue-100 rounded-lg p-3 backdrop-blur-sm">
                 💬 {remainingMessages} messages remaining today
               </div>
             </div>
@@ -258,19 +276,19 @@ const ChatInterface = () => {
         </div>
 
         {/* Input Area */}
-        <div className="p-2 sm:p-4 border-t border-gray-100 bg-white">
+        <div className="p-2 sm:p-4 border-t border-gray-200/50 bg-white/90 backdrop-blur-md">
           <form onSubmit={handleSendMessage} className="flex space-x-2">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={canSendMessage() ? "Message Makab..." : "Daily limit reached"}
-              className="flex-1 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl text-sm sm:text-base"
+              className="flex-1 border-gray-200/50 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl text-sm sm:text-base bg-white/80 backdrop-blur-sm shadow-sm"
               disabled={isLoading || !canSendMessage()}
             />
             <Button
               type="submit"
               disabled={!inputValue.trim() || isLoading || !canSendMessage()}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl px-3 sm:px-4"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl px-3 sm:px-4 shadow-md"
             >
               <Send className="h-4 w-4" />
             </Button>

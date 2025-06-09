@@ -48,9 +48,19 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
 
   if (message.role === 'user') {
     return (
-      <div className="flex justify-end">
-        <div className="max-w-[85%] sm:max-w-[80%] bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-md px-3 py-2 sm:px-4 sm:py-3 animate-fade-in">
-          <p className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</p>
+      <div className="flex justify-end group">
+        <div className="flex items-end space-x-2 max-w-[85%] sm:max-w-[80%]">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={copyToClipboard}
+            className="opacity-0 group-hover:opacity-100 transition-opacity h-6 px-2 text-gray-400 hover:text-gray-600"
+          >
+            <Copy className="h-3 w-3" />
+          </Button>
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-md px-3 py-2 sm:px-4 sm:py-3 animate-fade-in">
+            <p className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</p>
+          </div>
         </div>
       </div>
     );
@@ -63,7 +73,7 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
       </div>
       
       <div className="flex-1 space-y-1 sm:space-y-2">
-        <div className="max-w-[85%] sm:max-w-[80%] bg-gray-50 rounded-2xl rounded-bl-md px-3 py-2 sm:px-4 sm:py-3">
+        <div className="max-w-[85%] sm:max-w-[80%] bg-white border border-gray-100 rounded-2xl rounded-bl-md px-3 py-2 sm:px-4 sm:py-3 shadow-sm">
           {message.isThinking ? (
             <div className="flex items-center space-x-2 text-gray-600">
               <div className="flex space-x-1">
