@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Copy, ArrowLeft } from 'lucide-react';
+import { Copy, ArrowLeft, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import LimitExceededModal from '../LimitExceededModal';
@@ -194,99 +194,127 @@ const ToolForm = ({ tool }: ToolFormProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4">
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Minimized Header */}
-        <div className="text-center space-y-2 py-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <div className="max-w-4xl mx-auto p-4 space-y-6">
+        {/* Compact Header */}
+        <div className="flex items-center justify-between py-4">
           <Button
             variant="ghost"
             onClick={() => window.history.back()}
-            className="absolute left-4 top-4 h-8 w-8 p-0"
+            className="h-10 w-10 p-0 rounded-full"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h2 className="text-xl font-semibold text-gray-800">{tool.title}</h2>
-          <p className="text-sm text-gray-600">{tool.description}</p>
+          <div className="text-center flex-1 mx-4">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              {tool.title}
+            </h1>
+            <p className="text-sm text-gray-600 mt-1">{tool.description}</p>
+          </div>
+          <div className="w-10" />
         </div>
 
-        {/* Form Section */}
-        <div className="bg-white/90 border border-gray-200/60 rounded-2xl p-6 shadow-lg backdrop-blur-sm">
-          <div className="space-y-4">
-            {tool.inputs.map((input) => (
-              <div key={input.name} className="space-y-2">
-                <Label htmlFor={input.name} className="text-sm font-medium text-gray-700">
-                  {input.label}
-                </Label>
-                {input.type === 'text' && (
-                  <Input
-                    id={input.name}
-                    placeholder={input.placeholder}
-                    value={formData[input.name] || ''}
-                    onChange={(e) => handleInputChange(input.name, e.target.value)}
-                    className="w-full border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl"
-                  />
-                )}
-                {input.type === 'textarea' && (
-                  <Textarea
-                    id={input.name}
-                    placeholder={input.placeholder}
-                    value={formData[input.name] || ''}
-                    onChange={(e) => handleInputChange(input.name, e.target.value)}
-                    className="w-full min-h-[100px] border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl"
-                  />
-                )}
-                {input.type === 'select' && (
-                  <Select
-                    value={formData[input.name] || ''}
-                    onValueChange={(value) => handleInputChange(input.name, value)}
-                  >
-                    <SelectTrigger className="border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl">
-                      <SelectValue placeholder={input.placeholder} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {input.options?.map((option) => (
-                        <SelectItem key={option} value={option}>
-                          {option}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-2 gap-6">
+          {/* Form Section */}
+          <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-3xl p-6 shadow-xl">
+            <div className="flex items-center space-x-2 mb-6">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <Sparkles className="h-4 w-4 text-white" />
               </div>
-            ))}
+              <h2 className="text-lg font-semibold text-gray-800">Create Content</h2>
+            </div>
+            
+            <div className="space-y-5">
+              {tool.inputs.map((input) => (
+                <div key={input.name} className="space-y-2">
+                  <Label htmlFor={input.name} className="text-sm font-medium text-gray-700">
+                    {input.label}
+                  </Label>
+                  {input.type === 'text' && (
+                    <Input
+                      id={input.name}
+                      placeholder={input.placeholder}
+                      value={formData[input.name] || ''}
+                      onChange={(e) => handleInputChange(input.name, e.target.value)}
+                      className="w-full border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl h-12"
+                    />
+                  )}
+                  {input.type === 'textarea' && (
+                    <Textarea
+                      id={input.name}
+                      placeholder={input.placeholder}
+                      value={formData[input.name] || ''}
+                      onChange={(e) => handleInputChange(input.name, e.target.value)}
+                      className="w-full min-h-[120px] border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl"
+                    />
+                  )}
+                  {input.type === 'select' && (
+                    <Select
+                      value={formData[input.name] || ''}
+                      onValueChange={(value) => handleInputChange(input.name, value)}
+                    >
+                      <SelectTrigger className="border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl h-12">
+                        <SelectValue placeholder={input.placeholder} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {input.options?.map((option) => (
+                          <SelectItem key={option} value={option}>
+                            {option}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            <Button
+              onClick={generateContent}
+              disabled={isLoading || !canUseTools()}
+              className="w-full mt-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl h-14 text-lg font-semibold shadow-lg"
+            >
+              {isLoading ? (
+                <div className="flex items-center space-x-3">
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <span>Generating Amazing Content...</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2">
+                  <Sparkles className="h-5 w-5" />
+                  <span>Generate Content</span>
+                </div>
+              )}
+            </Button>
           </div>
 
-          <Button
-            onClick={generateContent}
-            disabled={isLoading || !canUseTools()}
-            className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl h-12"
-          >
-            {isLoading ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 text-yellow-500">
-                  <svg className="animate-spin" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
+          {/* Generated Content Section */}
+          {generatedContent && (
+            <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-3xl p-6 shadow-xl">
+              <div className="flex items-center space-x-2 mb-6">
+                <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
+                  <Copy className="h-4 w-4 text-white" />
                 </div>
-                <span>Generating...</span>
-              </div>
-            ) : (
-              'Generate Content'
-            )}
-          </Button>
-        </div>
-
-        {/* Generated Content Section - At Bottom */}
-        {generatedContent && (
-          <div className="bg-white/90 border border-gray-200/60 rounded-2xl p-6 shadow-lg backdrop-blur-sm">
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-lg font-medium text-gray-800">Generated Content</h3>
+                <h3 className="text-lg font-semibold text-gray-800">Generated Content</h3>
               </div>
               {renderGeneratedContent()}
             </div>
-          </div>
-        )}
+          )}
+
+          {/* Placeholder when no content */}
+          {!generatedContent && (
+            <div className="bg-white/80 backdrop-blur-sm border border-gray-200/40 rounded-3xl p-6 shadow-lg flex items-center justify-center">
+              <div className="text-center space-y-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center mx-auto">
+                  <Sparkles className="h-8 w-8 text-gray-500" />
+                </div>
+                <p className="text-gray-500 text-lg">Your generated content will appear here</p>
+                <p className="text-gray-400 text-sm">Fill out the form and click generate to get started</p>
+              </div>
+            </div>
+          )}
+        </div>
 
         <LimitExceededModal
           isOpen={limitModalOpen}
