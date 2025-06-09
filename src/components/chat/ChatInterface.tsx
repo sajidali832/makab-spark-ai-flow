@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -205,58 +206,58 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col backdrop-blur-sm">
         {/* Header */}
-        <header className="flex items-center justify-between p-2 sm:p-4 border-b border-gray-200/50 bg-white/80 backdrop-blur-md shadow-sm">
-          <div className="flex items-center space-x-2 sm:space-x-3">
+        <header className="flex items-center justify-between p-3 border-b border-gray-200/60 bg-white/90 backdrop-blur-md shadow-sm">
+          <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setIsSidebarOpen(true)}
               className="lg:hidden h-8 w-8 p-0"
             >
-              <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Menu className="h-4 w-4" />
             </Button>
-            <div className="flex items-center space-x-1 sm:space-x-2">
-              <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg" />
-              <span className="font-bold text-lg sm:text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <div className="flex items-center space-x-2">
+              <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-7 h-7 rounded-lg" />
+              <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 MAKAB
               </span>
             </div>
           </div>
           
           <div className="flex items-center space-x-2">
-            <div className="hidden sm:flex items-center space-x-1 text-xs text-gray-500 bg-gray-100/80 rounded-full px-3 py-1 backdrop-blur-sm">
+            <div className="flex items-center space-x-1 text-xs text-gray-500 bg-gray-100/80 rounded-full px-3 py-1.5 backdrop-blur-sm">
               <span>{remainingMessages}/6 messages left</span>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={startNewChat}
-              className="h-8 w-8 sm:h-auto sm:w-auto p-1 sm:p-2"
+              className="h-8 px-3"
             >
-              <Plus className="h-4 w-4" />
-              <span className="hidden sm:inline ml-1">New Chat</span>
+              <Plus className="h-4 w-4 mr-1" />
+              New Chat
             </Button>
           </div>
         </header>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-4 sm:space-y-6 bg-gradient-to-b from-transparent to-gray-50/30">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-transparent via-gray-50/20 to-slate-50/40">
           {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center space-y-3 sm:space-y-4 px-4">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-lg">
-                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-12 h-12 sm:w-16 sm:h-16 rounded-xl sm:rounded-2xl" />
+            <div className="flex flex-col items-center justify-center h-full text-center space-y-4 px-4">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-14 h-14 rounded-xl" />
               </div>
-              <h2 className="text-lg sm:text-2xl font-bold text-gray-800">
+              <h2 className="text-2xl font-bold text-gray-800">
                 Hi! I'm Makab 👋
               </h2>
-              <p className="text-sm sm:text-base text-gray-600 max-w-md">
+              <p className="text-gray-600 max-w-md">
                 Your AI assistant created by Sajid for conversations and content creation! ✨
               </p>
               <div className="text-sm text-gray-500 bg-blue-50/80 border border-blue-100 rounded-lg p-3 backdrop-blur-sm">
@@ -276,19 +277,19 @@ const ChatInterface = () => {
         </div>
 
         {/* Input Area */}
-        <div className="p-2 sm:p-4 border-t border-gray-200/50 bg-white/90 backdrop-blur-md">
-          <form onSubmit={handleSendMessage} className="flex space-x-2">
+        <div className="p-4 border-t border-gray-200/60 bg-white/95 backdrop-blur-md">
+          <form onSubmit={handleSendMessage} className="flex space-x-3">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={canSendMessage() ? "Message Makab..." : "Daily limit reached"}
-              className="flex-1 border-gray-200/50 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl text-sm sm:text-base bg-white/80 backdrop-blur-sm shadow-sm"
+              className="flex-1 border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl bg-white/90 backdrop-blur-sm shadow-sm h-11"
               disabled={isLoading || !canSendMessage()}
             />
             <Button
               type="submit"
               disabled={!inputValue.trim() || isLoading || !canSendMessage()}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl px-3 sm:px-4 shadow-md"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl px-4 shadow-md h-11"
             >
               <Send className="h-4 w-4" />
             </Button>
