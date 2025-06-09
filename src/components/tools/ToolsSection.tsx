@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -114,11 +115,71 @@ const ToolsSection = () => {
     },
   ];
 
+  const getToolDefinition = (toolId: string) => {
+    const baseInputs = {
+      'script-generator': [
+        { name: 'topic', label: 'Video Topic', type: 'text' as const, placeholder: 'Enter your video topic...' },
+        { name: 'duration', label: 'Duration', type: 'select' as const, options: ['30 seconds', '1 minute', '2 minutes', '5 minutes'], placeholder: 'Select duration' },
+        { name: 'style', label: 'Style', type: 'select' as const, options: ['Educational', 'Entertainment', 'Tutorial', 'Review'], placeholder: 'Select style' }
+      ],
+      'blog-generator': [
+        { name: 'topic', label: 'Blog Topic', type: 'text' as const, placeholder: 'Enter your blog topic...' },
+        { name: 'length', label: 'Length', type: 'select' as const, options: ['Short (300 words)', 'Medium (600 words)', 'Long (1000+ words)'], placeholder: 'Select length' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your target audience?' }
+      ],
+      'reel-ideas': [
+        { name: 'niche', label: 'Your Niche', type: 'text' as const, placeholder: 'e.g., fitness, cooking, travel...' },
+        { name: 'mood', label: 'Mood/Tone', type: 'select' as const, options: ['Fun', 'Educational', 'Inspiring', 'Trending'], placeholder: 'Select mood' }
+      ],
+      'engagement-questions': [
+        { name: 'topic', label: 'Story Topic', type: 'text' as const, placeholder: 'What is your story about?' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who are you targeting?' }
+      ],
+      'caption': [
+        { name: 'topic', label: 'Post Topic', type: 'text' as const, placeholder: 'What is your post about?' },
+        { name: 'tone', label: 'Tone', type: 'select' as const, options: ['Professional', 'Casual', 'Funny', 'Inspiring'], placeholder: 'Select tone' },
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'Facebook', 'LinkedIn', 'Twitter'], placeholder: 'Select platform' }
+      ],
+      'hashtag': [
+        { name: 'topic', label: 'Content Topic', type: 'text' as const, placeholder: 'What is your content about?' },
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'TikTok', 'Twitter', 'LinkedIn'], placeholder: 'Select platform' }
+      ],
+      'idea': [
+        { name: 'niche', label: 'Your Niche/Industry', type: 'text' as const, placeholder: 'e.g., fitness, technology, food...' },
+        { name: 'contentType', label: 'Content Type', type: 'select' as const, options: ['Video', 'Blog Post', 'Social Media', 'Email'], placeholder: 'Select content type' }
+      ],
+      'youtube': [
+        { name: 'niche', label: 'Channel Niche', type: 'text' as const, placeholder: 'What is your channel about?' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your target audience?' }
+      ],
+      'bio': [
+        { name: 'profession', label: 'Profession/Role', type: 'text' as const, placeholder: 'e.g., Software Developer, Artist...' },
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'Twitter', 'LinkedIn', 'TikTok'], placeholder: 'Select platform' },
+        { name: 'personality', label: 'Personality', type: 'select' as const, options: ['Professional', 'Creative', 'Funny', 'Inspirational'], placeholder: 'Select style' }
+      ]
+    };
+
+    const toolData = tools.find(t => t.id === toolId);
+    if (!toolData) return null;
+
+    return {
+      id: toolId,
+      title: toolData.name,
+      description: toolData.description,
+      inputs: baseInputs[toolId as keyof typeof baseInputs] || []
+    };
+  };
+
   if (selectedTool) {
+    const toolDefinition = getToolDefinition(selectedTool);
+    if (!toolDefinition) {
+      setSelectedTool(null);
+      return null;
+    }
+
     return (
       <ToolForm 
-        toolType={selectedTool}
-        onBack={() => setSelectedTool(null)} 
+        tool={toolDefinition}
       />
     );
   }
