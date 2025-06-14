@@ -28,89 +28,86 @@ serve(async (req) => {
     
     switch (toolId) {
       case 'script-generator':
-        prompt = `Create a ${inputs.duration} video script about "${inputs.topic}" for ${inputs.platform}. 
+        prompt = `Create a complete ${inputs.duration} video script about "${inputs.topic}" for ${inputs.platform}. 
         Tone: ${inputs.tone}
         Audience: ${inputs.audience}
         Style: ${inputs.style}
         Keywords: ${inputs.keywords || 'None'}
         Call-to-Action: ${inputs.cta || 'Subscribe and like'}
         
-        Write a complete, ready-to-use script with:
-        - Engaging hook/opening (first 5 seconds)
-        - Clear structure with timestamps
+        Generate ONLY the complete script with:
+        - Hook/opening (0-5 seconds)
+        - Main content with clear structure
         - Natural dialogue/narration
-        - Smooth transitions between sections
-        - Strong call-to-action at the end
+        - Smooth transitions
+        - Strong ending with CTA
         
-        Format it professionally with clear sections and timing cues.`
+        Format with timestamps. No explanations, just the ready-to-use script.`
         break
 
       case 'blog-generator':
-        prompt = `Write a ${inputs.length} blog post about "${inputs.topic}".
+        prompt = `Write a complete ${inputs.length} blog post about "${inputs.topic}".
         Tone: ${inputs.tone}
         Audience: ${inputs.audience}
         Structure: ${inputs.structure}
         SEO Keywords: ${inputs.keywords || 'None'}
         Call-to-Action: ${inputs.cta || 'None'}
         
-        Create a complete blog post with:
+        Generate ONLY the complete blog post with:
         - Compelling headline
-        - Introduction that hooks readers
+        - Introduction
         - Well-structured body with subheadings
-        - Conclusion with clear CTA
-        - SEO-optimized content
+        - Conclusion with CTA
         
-        Make it publish-ready and engaging.`
+        No explanations, just the ready-to-publish blog post.`
         break
 
       case 'reel-ideas':
-        prompt = `Generate creative reel ideas for ${inputs.niche} content on ${inputs.platform}.
+        prompt = `Generate 10 specific reel ideas for ${inputs.niche} content on ${inputs.platform}.
         Target Audience: ${inputs.audience}
         Trend Type: ${inputs.trendType}
         Content Goals: ${inputs.goals}
         Style: ${inputs.style}
         Duration: ${inputs.duration}
         
-        Provide 10 specific, actionable reel ideas with:
-        - Clear concept description
-        - Hook/opening line
-        - Visual elements needed
-        - Trending audio suggestions
-        - Hashtag recommendations
+        For each idea provide ONLY:
+        1. Clear concept title
+        2. Hook/opening line
+        3. Visual elements needed
+        4. Trending audio suggestion
+        5. 5 relevant hashtags
         
-        Make each idea detailed and ready to execute.`
+        No explanations, just the 10 ready-to-execute ideas.`
         break
 
       case 'engagement-questions':
-        prompt = `Create ${inputs.quantity} engagement questions for ${inputs.contentType} about ${inputs.topic}.
-        Question Type: ${inputs.questionType}
+        prompt = `Create ${inputs.quantity} ${inputs.questionType} engagement questions for ${inputs.contentType} about ${inputs.topic}.
         Target Audience: ${inputs.audience}
         Goal: ${inputs.engagementGoal}
         Industry: ${inputs.industry || 'General'}
         
-        Generate varied, engaging questions that:
+        Generate ONLY the questions that:
         - Encourage responses and interaction
         - Are relevant to the audience
         - Drive the specified engagement goal
-        - Are platform-appropriate
         
-        Format each question clearly and provide context for use.`
+        No explanations, just the ready-to-use questions.`
         break
 
       case 'caption':
-        prompt = `Write engaging social media captions for ${inputs.platform} about "${inputs.topic}".
+        prompt = `Write 3 engaging social media captions for ${inputs.platform} about "${inputs.topic}".
         Tone: ${inputs.tone}
         Audience: ${inputs.audience}
         Call-to-Action: ${inputs.cta || 'None'}
         Keywords: ${inputs.keywords || 'None'}
         Length: ${inputs.length}
         
-        Create 3 different caption variations:
-        - Short and punchy version
-        - Medium length with storytelling
-        - Longer detailed version
+        Generate ONLY:
+        1. Short and punchy version
+        2. Medium length with storytelling
+        3. Longer detailed version
         
-        Include relevant emojis and formatting for each platform.`
+        Include relevant emojis. No explanations, just the ready-to-use captions.`
         break
 
       case 'hashtag':
@@ -119,13 +116,13 @@ serve(async (req) => {
         Audience: ${inputs.audience}
         Mix Type: ${inputs.mix}
         
-        Provide hashtags in these categories:
+        Provide ONLY hashtags in these categories:
         - High-volume trending hashtags (3-5)
-        - Niche-specific hashtags (5-7)
+        - Niche-specific hashtags (5-7) 
         - Long-tail hashtags (5-8)
         - Location-based (if relevant)
         
-        Format them ready to copy-paste and include usage tips.`
+        Format: One hashtag per line starting with #. No explanations.`
         break
 
       case 'idea':
@@ -134,36 +131,35 @@ serve(async (req) => {
         Audience: ${inputs.audience}
         Goals: ${inputs.goals}
         
-        Create diverse, actionable content ideas with:
-        - Clear title/concept
-        - Brief description
-        - Content format suggestion
-        - Engagement strategy
-        - Posting tips
+        For each idea provide ONLY:
+        1. Clear title/concept
+        2. Brief description (1-2 sentences)
+        3. Content format suggestion
+        4. Engagement strategy
         
-        Make each idea specific and ready to execute.`
+        No explanations, just the ready-to-execute ideas.`
         break
 
       case 'youtube':
-        prompt = `Generate YouTube channel ideas for ${inputs.niche} niche.
+        prompt = `Generate YouTube channel strategy for ${inputs.niche} niche.
         Target Audience: ${inputs.audience}
         Content Style: ${inputs.contentStyle}
         Experience Level: ${inputs.experience}
         Goals: ${inputs.goals}
         Upload Frequency: ${inputs.frequency}
         
-        Provide:
+        Provide ONLY:
         - 5 specific channel concepts
-        - Content series ideas for each
+        - 10 video series ideas
         - Monetization strategies
         - Growth tactics
         - Equipment recommendations
         
-        Make it comprehensive and actionable.`
+        No explanations, just the actionable strategy.`
         break
 
       case 'bio':
-        prompt = `Create a compelling bio for ${inputs.platform}.
+        prompt = `Create 3 compelling bios for ${inputs.platform}.
         Profession: ${inputs.profession}
         Personality: ${inputs.personality}
         Achievements: ${inputs.achievements || 'None specified'}
@@ -171,16 +167,16 @@ serve(async (req) => {
         Call-to-Action: ${inputs.cta || 'None'}
         Emoji Style: ${inputs.emojiStyle}
         
-        Write 3 bio variations:
-        - Professional version
-        - Creative/personality-focused version
-        - Balanced professional + personal version
+        Generate ONLY:
+        1. Professional version
+        2. Creative/personality-focused version  
+        3. Balanced professional + personal version
         
-        Optimize for the specific platform and include proper formatting.`
+        No explanations, just the ready-to-use bios.`
         break
 
       default:
-        prompt = `Generate helpful content based on the user's request for ${toolId} with the following details: ${JSON.stringify(inputs)}`
+        prompt = `Generate helpful content for ${toolId} with details: ${JSON.stringify(inputs)}. Provide only the requested content without explanations.`
     }
 
     console.log('Sending request to Gemini API...');
@@ -198,7 +194,7 @@ serve(async (req) => {
             role: "user",
             parts: [
               {
-                text: `You are a professional content creator and marketing expert. Generate high-quality, actionable content that users can immediately use. Be specific, creative, and provide value. Do not explain what you can do - just deliver the requested content directly. Format everything clearly and professionally. Here is the request: ${prompt}`
+                text: `You are a professional content creator. Generate high-quality, actionable content that users can immediately use. Be specific and creative. IMPORTANT: Generate ONLY the requested content without any explanations, introductions, or meta-commentary. Users want ready-to-use content, not explanations about what you can do. Here is the request: ${prompt}`
               }
             ]
           }

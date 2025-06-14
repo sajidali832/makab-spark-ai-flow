@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -27,6 +26,7 @@ interface Tool {
   available: boolean;
   gradient: string;
   description: string;
+  category: string;
 }
 
 const ToolsSection = () => {
@@ -38,80 +38,90 @@ const ToolsSection = () => {
       name: 'Script Generator', 
       icon: FileText, 
       available: true, 
-      gradient: 'from-purple-500 to-pink-500',
-      description: 'Write compelling video scripts'
+      gradient: 'from-purple-500 via-purple-600 to-pink-500',
+      description: 'Create professional video scripts',
+      category: 'Video'
     },
     { 
       id: 'blog-generator', 
       name: 'Blog Post Generator', 
       icon: BookOpen, 
       available: true, 
-      gradient: 'from-teal-500 to-blue-500',
-      description: 'Create engaging blog content'
+      gradient: 'from-teal-500 via-cyan-600 to-blue-500',
+      description: 'Write compelling blog content',
+      category: 'Writing'
     },
     { 
       id: 'reel-ideas', 
-      name: 'Reel Idea Generator', 
+      name: 'Reel Ideas', 
       icon: Video, 
       available: true, 
-      gradient: 'from-pink-500 to-violet-500',
-      description: 'Generate viral reel concepts'
+      gradient: 'from-pink-500 via-rose-600 to-violet-500',
+      description: 'Generate viral reel concepts',
+      category: 'Video'
     },
     { 
       id: 'engagement-questions', 
-      name: 'Engagement Question Generator', 
+      name: 'Story Questions', 
       icon: HelpCircle, 
       available: true, 
-      gradient: 'from-orange-500 to-red-500',
-      description: 'Create interactive story questions'
+      gradient: 'from-orange-500 via-red-500 to-pink-500',
+      description: 'Create interactive questions',
+      category: 'Engagement'
     },
     { 
       id: 'caption', 
       name: 'Caption Generator', 
       icon: MessageSquare, 
       available: true, 
-      gradient: 'from-blue-500 to-cyan-500',
-      description: 'Create engaging social media captions'
+      gradient: 'from-blue-500 via-indigo-600 to-cyan-500',
+      description: 'Write engaging captions',
+      category: 'Social'
     },
     { 
       id: 'hashtag', 
       name: 'Hashtag Generator', 
       icon: Hash, 
       available: true, 
-      gradient: 'from-green-500 to-emerald-500',
-      description: 'Generate trending hashtags'
+      gradient: 'from-green-500 via-emerald-600 to-teal-500',
+      description: 'Generate trending hashtags',
+      category: 'Social'
     },
     { 
       id: 'idea', 
-      name: 'Idea Generator', 
+      name: 'Content Ideas', 
       icon: Lightbulb, 
       available: true, 
-      gradient: 'from-yellow-500 to-orange-500',
-      description: 'Spark creative content ideas'
+      gradient: 'from-yellow-500 via-amber-600 to-orange-500',
+      description: 'Spark creative content ideas',
+      category: 'Ideas'
     },
     { 
       id: 'youtube', 
-      name: 'YouTube Channel Ideas', 
+      name: 'YouTube Ideas', 
       icon: Youtube, 
       available: true, 
-      gradient: 'from-red-500 to-rose-500',
-      description: 'Build your YouTube presence'
+      gradient: 'from-red-500 via-red-600 to-rose-500',
+      description: 'Build your YouTube channel',
+      category: 'Video'
     },
     { 
       id: 'bio', 
       name: 'Bio Generator', 
       icon: User, 
       available: true, 
-      gradient: 'from-indigo-500 to-purple-500',
-      description: 'Craft perfect profile bios'
+      gradient: 'from-indigo-500 via-purple-600 to-blue-500',
+      description: 'Craft perfect profile bios',
+      category: 'Profile'
     },
     { 
       id: 'instagram', 
-      name: 'Instagram Post Generator', 
+      name: 'Instagram Posts', 
       icon: Instagram, 
       available: false, 
       gradient: 'from-gray-400 to-gray-500',
-      description: 'Coming soon - Instagram content'
+      description: 'Coming soon - Instagram content',
+      category: 'Social'
     },
   ];
 
@@ -223,75 +233,92 @@ const ToolsSection = () => {
     );
   }
 
+  const categoryColors = {
+    Video: 'from-red-100 to-pink-100',
+    Writing: 'from-blue-100 to-cyan-100',
+    Social: 'from-green-100 to-emerald-100',
+    Engagement: 'from-orange-100 to-yellow-100',
+    Ideas: 'from-purple-100 to-indigo-100',
+    Profile: 'from-violet-100 to-purple-100'
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-3 sm:p-6">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-3 sm:p-4 lg:p-6">
+      <div className="max-w-7xl mx-auto space-y-6">
         {/* Enhanced Header */}
-        <div className="text-center space-y-6 py-8">
-          <div className="flex justify-center mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl flex items-center justify-center shadow-2xl animate-pulse">
-              <Sparkles className="h-10 w-10 text-white" />
+        <div className="text-center space-y-4 py-6">
+          <div className="flex justify-center mb-4">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-3xl flex items-center justify-center shadow-2xl">
+              <Sparkles className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
             </div>
           </div>
-          <div className="space-y-4">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+          <div className="space-y-3">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
               AI Content Tools
             </h1>
-            <p className="text-gray-600 text-lg sm:text-xl max-w-3xl mx-auto leading-relaxed">
+            <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
               Transform your ideas into engaging content with our powerful AI-powered tools
             </p>
             <div className="flex items-center justify-center space-x-3 text-blue-600">
-              <Star className="h-5 w-5 fill-current" />
-              <span className="text-sm font-semibold text-gray-700">Premium Quality</span>
-              <Zap className="h-5 w-5 fill-current text-yellow-500" />
-              <span className="text-sm font-semibold text-gray-700">Lightning Fast</span>
-              <Sparkles className="h-5 w-5" />
+              <Star className="h-4 w-4 fill-current" />
+              <span className="text-xs sm:text-sm font-semibold text-gray-700">Premium Quality</span>
+              <Zap className="h-4 w-4 fill-current text-yellow-500" />
+              <span className="text-xs sm:text-sm font-semibold text-gray-700">Lightning Fast</span>
+              <Sparkles className="h-4 w-4" />
             </div>
           </div>
         </div>
         
         {/* Enhanced Tools Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
-              <Card key={tool.id} className="group hover:shadow-2xl transition-all duration-500 hover:scale-105 border-0 shadow-xl overflow-hidden bg-white/90 backdrop-blur-sm">
+              <Card key={tool.id} className="group hover:shadow-2xl transition-all duration-300 hover:scale-105 border-0 shadow-lg overflow-hidden bg-white/95 backdrop-blur-sm">
                 <CardContent className="p-0">
                   <Button
                     variant="ghost"
-                    className="w-full h-auto p-6 rounded-2xl flex flex-col space-y-4"
+                    className="w-full h-auto p-4 sm:p-6 rounded-2xl flex flex-col space-y-3 sm:space-y-4"
                     onClick={() => tool.available && setSelectedTool(tool.id)}
                     disabled={!tool.available}
                   >
                     <div className="relative">
-                      <div className={`w-16 h-16 sm:w-20 sm:h-20 rounded-3xl flex items-center justify-center bg-gradient-to-br ${tool.gradient} text-white shadow-2xl group-hover:shadow-3xl transition-all duration-500 ${!tool.available ? 'grayscale' : ''}`}>
-                        <Icon className="h-8 w-8 sm:h-10 sm:w-10" />
+                      <div className={`w-14 h-14 sm:w-16 sm:h-16 lg:w-18 lg:h-18 rounded-2xl sm:rounded-3xl flex items-center justify-center bg-gradient-to-br ${tool.gradient} text-white shadow-xl group-hover:shadow-2xl transition-all duration-300 ${!tool.available ? 'grayscale' : ''}`}>
+                        <Icon className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8" />
                       </div>
                       {tool.available && (
-                        <div className="absolute -top-2 -right-2 w-7 h-7 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
-                          <Zap className="h-4 w-4 text-white" />
+                        <div className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center shadow-lg">
+                          <Zap className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-white" />
+                        </div>
+                      )}
+                      {!tool.available && (
+                        <div className="absolute -top-1 -right-1 w-5 h-5 sm:w-6 sm:h-6 bg-gray-400 rounded-full flex items-center justify-center">
+                          <span className="text-xs text-white">•••</span>
                         </div>
                       )}
                     </div>
                     
-                    <div className="text-center space-y-3">
-                      <h3 className={`font-bold text-lg ${tool.available ? 'text-gray-800' : 'text-gray-400'}`}>
+                    <div className="text-center space-y-2">
+                      <div className={`inline-block px-2 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${categoryColors[tool.category as keyof typeof categoryColors] || 'from-gray-100 to-gray-200'} text-gray-700`}>
+                        {tool.category}
+                      </div>
+                      <h3 className={`font-bold text-base sm:text-lg ${tool.available ? 'text-gray-800' : 'text-gray-400'}`}>
                         {tool.name}
                       </h3>
-                      <p className={`text-sm leading-relaxed ${tool.available ? 'text-gray-600' : 'text-gray-400'}`}>
+                      <p className={`text-xs sm:text-sm leading-relaxed ${tool.available ? 'text-gray-600' : 'text-gray-400'}`}>
                         {tool.description}
                       </p>
                       {!tool.available && (
-                        <div className="bg-gray-100 rounded-full px-4 py-2 mt-3">
+                        <div className="bg-gray-100 rounded-full px-3 py-1 mt-2">
                           <p className="text-xs text-gray-500 font-medium">Coming Soon</p>
                         </div>
                       )}
                     </div>
                     
                     {tool.available && (
-                      <div className="flex items-center space-x-2 text-purple-600 group-hover:text-purple-700 transition-colors pt-2">
-                        <span className="text-sm font-medium">Try Now</span>
-                        <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                      <div className="flex items-center justify-center space-x-2 text-purple-600 group-hover:text-purple-700 transition-colors pt-1">
+                        <span className="text-xs sm:text-sm font-medium">Try Now</span>
+                        <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 group-hover:translate-x-1 transition-transform" />
                       </div>
                     )}
                   </Button>
@@ -302,33 +329,33 @@ const ToolsSection = () => {
         </div>
         
         {/* Enhanced Features Section */}
-        <div className="text-center py-8 space-y-6">
-          <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full px-8 py-4 shadow-lg">
-            <Sparkles className="h-6 w-6 text-blue-600" />
-            <span className="text-lg font-bold text-gray-800">All Tools Available Now</span>
-            <Star className="h-5 w-5 text-yellow-500 fill-current" />
+        <div className="text-center py-6 space-y-4">
+          <div className="inline-flex items-center space-x-2 sm:space-x-3 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full px-4 sm:px-6 py-2 sm:py-3 shadow-lg">
+            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+            <span className="text-sm sm:text-base font-bold text-gray-800">All Tools Available Now</span>
+            <Star className="h-4 w-4 text-yellow-500 fill-current" />
           </div>
           
           {/* Stats */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto mt-8">
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
-              <div className="text-2xl font-bold text-blue-600">9+</div>
-              <div className="text-sm text-gray-600">AI Tools</div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto mt-6">
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-3 shadow-lg">
+              <div className="text-xl sm:text-2xl font-bold text-blue-600">9+</div>
+              <div className="text-xs sm:text-sm text-gray-600">AI Tools</div>
             </div>
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
-              <div className="text-2xl font-bold text-purple-600">∞</div>
-              <div className="text-sm text-gray-600">Possibilities</div>
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-3 shadow-lg">
+              <div className="text-xl sm:text-2xl font-bold text-purple-600">∞</div>
+              <div className="text-xs sm:text-sm text-gray-600">Possibilities</div>
             </div>
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-4 shadow-lg">
-              <div className="text-2xl font-bold text-pink-600">100%</div>
-              <div className="text-sm text-gray-600">AI Powered</div>
+            <div className="bg-white/70 backdrop-blur-sm rounded-xl p-3 shadow-lg">
+              <div className="text-xl sm:text-2xl font-bold text-pink-600">100%</div>
+              <div className="text-xs sm:text-sm text-gray-600">AI Powered</div>
             </div>
           </div>
         </div>
 
         {/* Enhanced Footer */}
-        <div className="text-center py-6">
-          <p className="text-sm text-gray-500 bg-white/80 backdrop-blur-sm rounded-full px-6 py-3 inline-block shadow-lg">
+        <div className="text-center py-4">
+          <p className="text-xs sm:text-sm text-gray-500 bg-white/80 backdrop-blur-sm rounded-full px-4 sm:px-6 py-2 sm:py-3 inline-block shadow-lg">
             Made with ❤️ by <span className="font-semibold text-purple-600">Sajid</span>
           </p>
         </div>
