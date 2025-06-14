@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Plus, Menu, Send, Sparkles, Mic, MicOff, Moon, Sun, Download, Copy } from 'lucide-react';
+import { Plus, Menu, Send, Sparkles, Mic, MicOff, Moon, Sun } from 'lucide-react';
 import ChatMessage from './ChatMessage';
 import Sidebar from './Sidebar';
 import PWAInstallPrompt from '../PWAInstallPrompt';
@@ -9,8 +9,6 @@ import LimitExceededModal from '../LimitExceededModal';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
 import { useDarkMode } from '@/hooks/useDarkMode';
-import { useToast } from '@/hooks/use-toast';
-import { exportMessagesAsText, copyMessagesToClipboard } from '@/utils/messageExport';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
@@ -34,7 +32,6 @@ const ChatInterface = () => {
   const { canSendMessage, incrementChatMessages, remainingMessages } = useDailyLimits();
   const { isListening, transcript, startListening, stopListening, clearTranscript, isSupported } = useVoiceInput();
   const { isDarkMode, toggleDarkMode } = useDarkMode();
-  const { toast } = useToast();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -250,37 +247,6 @@ const ChatInterface = () => {
     setConversationId(null);
   };
 
-  const handleExportChat = () => {
-    if (messages.length === 0) {
-      toast({
-        title: "No messages to export",
-        description: "Start a conversation first",
-      });
-      return;
-    }
-    exportMessagesAsText(messages);
-    toast({
-      title: "Chat exported!",
-      description: "Downloaded as text file",
-    });
-  };
-
-  const handleCopyChat = async () => {
-    if (messages.length === 0) {
-      toast({
-        title: "No messages to copy",
-        description: "Start a conversation first",
-      });
-      return;
-    }
-    
-    const success = await copyMessagesToClipboard(messages);
-    toast({
-      title: success ? "Copied!" : "Failed to copy",
-      description: success ? "Chat copied to clipboard" : "Please try again",
-    });
-  };
-
   const handleVoiceToggle = () => {
     if (isListening) {
       stopListening();
@@ -330,26 +296,6 @@ const ChatInterface = () => {
               className="h-7 w-7 p-0 rounded-lg"
             >
               {isDarkMode ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleCopyChat}
-              className="h-7 w-7 p-0 rounded-lg"
-              disabled={messages.length === 0}
-            >
-              <Copy className="h-3 w-3" />
-            </Button>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleExportChat}
-              className="h-7 w-7 p-0 rounded-lg"
-              disabled={messages.length === 0}
-            >
-              <Download className="h-3 w-3" />
             </Button>
             
             <Button

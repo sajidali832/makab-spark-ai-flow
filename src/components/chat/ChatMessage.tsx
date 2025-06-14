@@ -1,7 +1,6 @@
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Copy, RotateCcw, Square } from 'lucide-react';
+import { RotateCcw, Square } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
@@ -20,18 +19,6 @@ interface ChatMessageProps {
 const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
   const { toast } = useToast();
 
-  const copyToClipboard = async () => {
-    try {
-      await navigator.clipboard.writeText(message.content);
-      toast({
-        title: "Copied!",
-        description: "Message copied to clipboard",
-      });
-    } catch (err) {
-      console.error('Failed to copy:', err);
-    }
-  };
-
   const regenerateResponse = () => {
     toast({
       title: "Regenerating...",
@@ -48,16 +35,8 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
 
   if (message.role === 'user') {
     return (
-      <div className="flex justify-end group">
-        <div className="flex items-end space-x-1 max-w-[85%] sm:max-w-[80%]">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={copyToClipboard}
-            className="opacity-0 group-hover:opacity-100 transition-opacity h-5 px-1 text-gray-400 hover:text-gray-600"
-          >
-            <Copy className="h-3 w-3" />
-          </Button>
+      <div className="flex justify-end">
+        <div className="max-w-[85%] sm:max-w-[80%]">
           <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl rounded-br-md px-3 py-2 animate-fade-in">
             <p className="whitespace-pre-wrap text-sm">{message.content}</p>
           </div>
@@ -90,15 +69,6 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
         
         {!message.isThinking && (
           <div className="flex items-center space-x-1">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={copyToClipboard}
-              className="h-5 px-1 text-gray-500 hover:text-gray-700"
-            >
-              <Copy className="h-3 w-3" />
-            </Button>
-            
             <Button
               variant="ghost"
               size="sm"
