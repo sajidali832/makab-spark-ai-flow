@@ -9,11 +9,11 @@ const FreeCourse = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex">
+    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-purple-50">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-auto">
+      <div className="flex-1 flex flex-col h-screen">
         {/* Top Navigation Bar for Mobile */}
         <div className="lg:hidden flex items-center justify-between p-3 sm:p-4 bg-white border-b border-gray-200">
           <Button
@@ -32,7 +32,7 @@ const FreeCourse = () => {
           </div>
         </div>
 
-        {/* Free Course Content */}
+        {/* Free Course Content - ensure scroll */}
         <div className="flex-1 overflow-y-auto">
           <FreeCourseSection />
         </div>

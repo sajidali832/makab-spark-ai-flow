@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -70,7 +69,7 @@ const FreeCourseSection = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-4 px-3 sm:py-8 sm:px-4">
+    <div className="bg-gradient-to-br from-blue-50 to-purple-50 py-4 px-3 sm:py-8 sm:px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header with Course Image */}
         <div className="text-center mb-6 sm:mb-8">
