@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import LimitExceededModal from '../LimitExceededModal';
+import { useNavigate } from 'react-router-dom';
 
 interface Template {
   id: string;
@@ -25,6 +25,7 @@ const QuickTemplates = () => {
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const { toast } = useToast();
   const { canUseTools, incrementToolGenerations } = useDailyLimits();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadTemplates();
@@ -142,13 +143,13 @@ const QuickTemplates = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4">
-      <div className="max-w-6xl mx-auto space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <div className="max-w-6xl mx-auto p-4 space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between py-4">
           <Button
             variant="ghost"
-            onClick={() => window.history.back()}
+            onClick={() => navigate('/tools')}
             className="h-10 w-10 p-0 rounded-full hover:bg-white/80"
           >
             <ArrowLeft className="h-5 w-5" />
