@@ -9,7 +9,6 @@ import LimitExceededModal from '../LimitExceededModal';
 import AnnouncementModal from '../AnnouncementModal';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
-import { useDarkMode } from '@/hooks/useDarkMode';
 import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
@@ -32,7 +31,6 @@ const ChatInterface = () => {
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const { canSendMessage, incrementChatMessages, remainingMessages } = useDailyLimits();
   const { isListening, transcript, startListening, stopListening, clearTranscript, isSupported } = useVoiceInput();
-  const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -257,14 +255,14 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 safe-top safe-bottom transition-colors duration-300">
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 safe-top safe-bottom transition-colors duration-300">
       {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col backdrop-blur-sm relative">
         {/* Compact Header */}
-        <header className="flex items-center justify-between p-2 sm:p-3 border-b border-gray-200/60 dark:border-gray-700/60 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md shadow-sm sticky top-0 z-10">
+        <header className="flex items-center justify-between p-2 sm:p-3 border-b border-gray-200/60 bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-10">
           <div className="flex items-center space-x-2">
             <Button
               variant="ghost"
@@ -285,25 +283,15 @@ const ChatInterface = () => {
           </div>
           
           <div className="flex items-center space-x-1 sm:space-x-2">
-            <div className="flex items-center space-x-1 text-xs text-gray-500 dark:text-gray-400 bg-gray-100/80 dark:bg-gray-700/80 rounded-full px-2 py-1 backdrop-blur-sm">
+            <div className="flex items-center space-x-1 text-xs text-gray-500 bg-gray-100/80 rounded-full px-2 py-1 backdrop-blur-sm">
               <Sparkles className="h-3 w-3 text-blue-500" />
               <span>{remainingMessages}/6</span>
             </div>
-            
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleDarkMode}
-              className="h-7 w-7 p-0 rounded-lg"
-            >
-              {isDarkMode ? <Sun className="h-3 w-3" /> : <Moon className="h-3 w-3" />}
-            </Button>
-            
             <Button
               variant="ghost"
               size="sm"
               onClick={startNewChat}
-              className="h-7 px-2 rounded-lg bg-blue-50 dark:bg-blue-900/30 hover:bg-blue-100 dark:hover:bg-blue-900/50 text-blue-600 dark:text-blue-400 text-xs"
+              className="h-7 px-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs"
             >
               <Plus className="h-3 w-3 mr-1" />
               New
@@ -312,7 +300,7 @@ const ChatInterface = () => {
         </header>
 
         {/* Messages Area - with proper mobile spacing */}
-        <div className="flex-1 overflow-y-auto pb-16 sm:pb-20 bg-gradient-to-b from-transparent via-gray-50/20 dark:via-gray-800/20 to-slate-50/40 dark:to-gray-900/40">
+        <div className="flex-1 overflow-y-auto pb-16 sm:pb-20 bg-gradient-to-b from-transparent via-gray-50/20 to-slate-50/40">
           <div className="p-2 sm:p-3 space-y-3 min-h-full">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center space-y-4 px-4">
@@ -320,16 +308,16 @@ const ChatInterface = () => {
                   <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl" />
                 </div>
                 <div className="space-y-3">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
                     Hi! I'm Makab 👋
                   </h2>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base max-w-sm leading-relaxed">
+                  <p className="text-gray-600 text-sm sm:text-base max-w-sm leading-relaxed">
                     Your AI assistant created by Sajid for conversations and content creation! ✨
                   </p>
-                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-3 backdrop-blur-sm">
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-3 backdrop-blur-sm">
                     <div className="flex items-center justify-center space-x-2">
                       <Sparkles className="h-4 w-4 text-blue-500" />
-                      <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                      <span className="text-xs font-semibold text-gray-700">
                         💬 {remainingMessages} messages remaining today
                       </span>
                     </div>
@@ -350,14 +338,14 @@ const ChatInterface = () => {
         </div>
 
         {/* Fixed Input Area for Mobile */}
-        <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto p-2 sm:p-3 border-t border-gray-200/60 dark:border-gray-700/60 bg-white/95 dark:bg-gray-800/95 backdrop-blur-md safe-bottom z-20">
+        <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto p-2 sm:p-3 border-t border-gray-200/60 bg-white/95 backdrop-blur-md safe-bottom z-20">
           <form onSubmit={handleSendMessage} className="flex space-x-2 max-w-full">
             <Input
               ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={canSendMessage() ? "Message Makab..." : "Daily limit reached"}
-              className="flex-1 border-gray-200/60 dark:border-gray-600 focus:border-blue-500 focus:ring-blue-500/20 rounded-lg bg-white/90 dark:bg-gray-700/90 backdrop-blur-sm shadow-sm h-9 sm:h-10 text-sm dark:text-gray-200 dark:placeholder-gray-400"
+              className="flex-1 border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm h-9 sm:h-10 text-sm text-gray-800 placeholder-gray-400"
               disabled={isLoading || !canSendMessage()}
               style={{ fontSize: '16px' }}
             />
@@ -370,7 +358,7 @@ const ChatInterface = () => {
                 className={`h-9 sm:h-10 w-9 sm:w-10 rounded-lg shadow-md min-w-[36px] flex-shrink-0 ${
                   isListening 
                     ? 'bg-red-500 hover:bg-red-600 text-white' 
-                    : 'bg-gray-100 dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 text-gray-600 dark:text-gray-300'
+                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
                 }`}
               >
                 {isListening ? <MicOff className="h-3 w-3 sm:h-4 sm:w-4" /> : <Mic className="h-3 w-3 sm:h-4 sm:w-4" />}
@@ -387,13 +375,13 @@ const ChatInterface = () => {
           </form>
           
           {!canSendMessage() && (
-            <p className="text-center text-xs text-red-500 dark:text-red-400 mt-1">
+            <p className="text-center text-xs text-red-500 mt-1">
               Daily limit reached. Resets at midnight.
             </p>
           )}
           
           {isListening && (
-            <p className="text-center text-xs text-blue-500 dark:text-blue-400 mt-1 animate-pulse">
+            <p className="text-center text-xs text-blue-500 mt-1 animate-pulse">
               🎤 Listening... Speak now
             </p>
           )}
