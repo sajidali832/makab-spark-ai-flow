@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { MessageSquare, Trash2, Eye, Copy, Calendar, Sparkles } from 'lucide-react';
+import { MessageSquare, Trash2, Eye, Copy, Calendar, Sparkles, Clock } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
@@ -165,6 +164,80 @@ const ChatHistorySection = () => {
     }
   };
 
+  if (selectedConversation) {
+    return (
+      <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 max-w-4xl mx-auto">
+        <div className="flex items-center space-x-3">
+          <Button variant="ghost" size="sm" onClick={() => setSelectedConversation(null)} className="hover:bg-blue-50">
+            ← Back
+          </Button>
+          <h2 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            View Conversation
+          </h2>
+        </div>
+
+        <Card className="border-0 shadow-xl">
+          <CardHeader className="p-4 sm:p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20">
+            <CardTitle className="flex items-center justify-between text-sm sm:text-base">
+              <div className="flex items-center space-x-3">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                  <MessageSquare className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
+                </div>
+                <span className="font-semibold dark:text-gray-200">{selectedConversation.title}</span>
+              </div>
+              <div className="flex space-x-2">
+                <Button variant="ghost" size="sm" onClick={copyFullConversation} className="hover:bg-green-50">
+                  <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={() => {
+                    deleteConversation(selectedConversation.id);
+                    setSelectedConversation(null);
+                  }}
+                  className="hover:bg-red-50 text-red-600"
+                >
+                  <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                </Button>
+              </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-3 sm:space-y-4 max-h-96 overflow-y-auto">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`p-3 sm:p-4 rounded-lg ${
+                    message.role === 'user'
+                      ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'
+                      : 'bg-gray-50 dark:bg-gray-800 border-l-4 border-gray-400'
+                  }`}
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-1">
+                    <span className="font-medium text-xs sm:text-sm dark:text-gray-200">
+                      {message.role === 'user' ? 'You' : 'Assistant'}
+                    </span>
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      {new Date(message.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="text-xs sm:text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words">{message.content}</div>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
+              <div className="flex items-center space-x-2">
+                <Clock className="h-3 w-3" />
+                <span>Created: {new Date(selectedConversation.created_at).toLocaleString()}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -174,142 +247,134 @@ const ChatHistorySection = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-2 sm:p-4">
-      <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
-        {/* Header */}
-        <div className="text-center space-y-3 sm:space-y-4 py-4 sm:py-6">
-          <div className="flex justify-center mb-3 sm:mb-4">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-2xl">
-              <MessageSquare className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
-            </div>
+    <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 max-w-6xl mx-auto">
+      <div className="text-center space-y-2">
+        <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          Chats History 💬
+        </h2>
+        {isLoading && (
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
           </div>
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-            Chats History
-          </h2>
-          <p className="text-sm sm:text-base lg:text-lg text-gray-600 max-w-2xl mx-auto px-4">
-            View, copy, and manage your chat conversations
-          </p>
-          <div className="flex items-center justify-center space-x-1 text-blue-500">
-            <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
-            <span className="text-xs sm:text-sm font-semibold text-gray-700">All Conversations</span>
+        )}
+      </div>
+      
+      {conversations.length === 0 && !isLoading ? (
+        <div className="text-center py-12 sm:py-16">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800 rounded-full flex items-center justify-center mx-auto mb-6">
+            <MessageSquare className="w-8 h-8 sm:w-10 sm:h-10 text-gray-400" />
           </div>
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-2">No chat history yet 💬</h3>
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 max-w-md mx-auto">Start a conversation to see your chat history here.</p>
         </div>
-
-        {conversations.length === 0 ? (
-          <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-            <CardContent className="flex flex-col items-center justify-center py-8 sm:py-12">
-              <MessageSquare className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400 mb-3 sm:mb-4" />
-              <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-2">No chat history yet</h3>
-              <p className="text-sm sm:text-base text-gray-500 text-center px-4">
-                Start a conversation to see your chat history here.
-              </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="space-y-3 sm:space-y-4">
-            {conversations.map((conversation) => (
-              <Card key={conversation.id} className="group hover:shadow-2xl transition-all duration-300 border-0 shadow-lg bg-white/80 backdrop-blur-sm">
-                <CardHeader className="pb-2 sm:pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="text-sm sm:text-base lg:text-lg mb-2 truncate pr-2">{conversation.title}</CardTitle>
-                      <div className="flex flex-col sm:flex-row sm:items-center text-xs sm:text-sm text-gray-500 space-y-1 sm:space-y-0 sm:space-x-4">
-                        <div className="flex items-center">
-                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          {conversations.map((conversation) => (
+            <Card key={conversation.id} className="group hover:shadow-xl transition-all duration-300 hover:scale-105 border-0 shadow-lg">
+              <CardContent className="p-4 sm:p-6">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center shadow-lg">
+                        <MessageSquare className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+                      </div>
+                      <div>
+                        <span className="text-xs sm:text-sm font-semibold bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
+                          Chat
+                        </span>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           {new Date(conversation.created_at).toLocaleDateString()}
-                        </div>
-                        <div className="flex items-center">
-                          <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                          {conversation.message_count} messages
-                        </div>
+                        </p>
                       </div>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="flex flex-wrap gap-2">
-                    <Button
+                  
+                  <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 line-clamp-3 leading-relaxed">
+                    {conversation.title.substring(0, 120)}...
+                  </p>
+                  
+                  <div className="flex justify-between items-center pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
                       onClick={() => viewConversation(conversation)}
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center text-xs sm:text-sm"
+                      className="flex-1 hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400"
                     >
-                      <Eye className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                      <Eye className="h-4 w-4 mr-1" />
                       View
                     </Button>
-                    <Button
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
                       onClick={() => copyConversation(conversation)}
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center text-xs sm:text-sm"
+                      className="hover:bg-green-50 dark:hover:bg-green-900/20 text-green-600 dark:text-green-400"
                     >
-                      <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                      Copy
+                      <Copy className="h-4 w-4" />
                     </Button>
-                    <Button
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
                       onClick={() => deleteConversation(conversation.id)}
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center text-xs sm:text-sm text-red-600 hover:text-red-700"
+                      className="hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
                     >
-                      <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                      Delete
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className="text-center py-4">
-          <p className="text-xs text-gray-500 bg-white/60 backdrop-blur-sm rounded-full px-4 py-2 inline-block shadow-lg">
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+      
+      {conversations.length > 0 && (
+        <div className="text-center mt-8">
+          <p className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-800 rounded-full px-4 py-2 inline-block">
             Made with ❤️ by Sajid
           </p>
         </div>
+      )}
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-4xl max-h-[80vh] overflow-y-auto mx-2">
-            <DialogHeader>
-              <DialogTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <span className="text-sm sm:text-base truncate pr-2">{selectedConversation?.title}</span>
-                <Button
-                  onClick={copyFullConversation}
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center text-xs sm:text-sm"
-                >
-                  <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                  Copy All
-                </Button>
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-3 sm:space-y-4 mt-4">
-              {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`p-3 sm:p-4 rounded-lg ${
-                    message.role === 'user'
-                      ? 'bg-blue-50 border-l-4 border-blue-500'
-                      : 'bg-gray-50 border-l-4 border-gray-400'
-                  }`}
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-1">
-                    <span className="font-medium text-xs sm:text-sm">
-                      {message.role === 'user' ? 'You' : 'Assistant'}
-                    </span>
-                    <span className="text-xs text-gray-500">
-                      {new Date(message.created_at).toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="text-xs sm:text-sm text-gray-800 whitespace-pre-wrap break-words">{message.content}</div>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-xs sm:max-w-lg md:max-w-2xl lg:max-w-4xl max-h-[80vh] overflow-y-auto mx-2">
+          <DialogHeader>
+            <DialogTitle className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 dark:text-gray-200">
+              <span className="text-sm sm:text-base truncate pr-2">{selectedConversation?.title}</span>
+              <Button
+                onClick={copyFullConversation}
+                variant="outline"
+                size="sm"
+                className="flex items-center text-xs sm:text-sm"
+              >
+                <Copy className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
+                Copy All
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3 sm:space-y-4 mt-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`p-3 sm:p-4 rounded-lg ${
+                  message.role === 'user'
+                    ? 'bg-blue-50 dark:bg-blue-900/20 border-l-4 border-blue-500'
+                    : 'bg-gray-50 dark:bg-gray-800 border-l-4 border-gray-400'
+                }`}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2 gap-1">
+                  <span className="font-medium text-xs sm:text-sm dark:text-gray-200">
+                    {message.role === 'user' ? 'You' : 'Assistant'}
+                  </span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {new Date(message.created_at).toLocaleString()}
+                  </span>
                 </div>
-              ))}
-            </div>
-          </DialogContent>
-        </Dialog>
-      </div>
+                <div className="text-xs sm:text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap break-words">{message.content}</div>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
