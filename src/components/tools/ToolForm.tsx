@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +36,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
   const [savedItems, setSavedItems] = useState<string[]>([]);
   const [copySuccess, setCopySuccess] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [regenerateSuccess, setRegenerateSuccess] = useState(false);
   const { toast } = useToast();
   const { canUseTools, incrementToolGenerations } = useDailyLimits();
 
@@ -77,14 +79,12 @@ const ToolForm = ({ tool }: ToolFormProps) => {
     try {
       const user = JSON.parse(localStorage.getItem('makab_user') || '{}');
       if (user.id) {
-        // Save to Supabase
-        const { error } = await supabase.from('tool_history').insert({
+        // Save to Supabase using the existing tool_generations table
+        const { error } = await supabase.from('tool_generations').insert({
           user_id: user.id,
-          tool_id: tool.id,
-          tool_name: tool.title,
-          inputs: formData,
-          output: content,
-          created_at: new Date().toISOString()
+          tool_type: tool.title,
+          input_data: formData,
+          generated_content: content
         });
 
         if (error) {
@@ -150,6 +150,11 @@ const ToolForm = ({ tool }: ToolFormProps) => {
 
       if (error) throw error;
       setGeneratedContent(data.content);
+
+      if (isRegeneration) {
+        setRegenerateSuccess(true);
+        setTimeout(() => setRegenerateSuccess(false), 2000);
+      }
     } catch (error) {
       console.error('Error generating content:', error);
       toast({
@@ -194,7 +199,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
         variant="outline"
         onClick={() => copyToClipboard(textToCopy || generatedContent)}
         className={`h-10 w-10 p-0 transition-all duration-200 ${
-          copySuccess ? 'bg-green-50 border-green-200 scale-110' : 'hover:scale-105'
+          copySuccess ? 'bg-green-50 border-green-200 scale-110' : 'hover:scale-105 hover:bg-blue-50'
         }`}
         title="Copy"
       >
@@ -208,16 +213,22 @@ const ToolForm = ({ tool }: ToolFormProps) => {
         variant="outline"
         onClick={regenerateContent}
         disabled={isLoading || isRegenerating}
-        className="h-10 w-10 p-0 hover:scale-105 transition-all duration-200"
+        className={`h-10 w-10 p-0 transition-all duration-200 ${
+          regenerateSuccess ? 'bg-green-50 border-green-200 scale-110' : 'hover:scale-105 hover:bg-purple-50'
+        }`}
         title="Regenerate"
       >
-        <RefreshCw className={`h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
+        {regenerateSuccess ? (
+          <Check className="h-4 w-4 text-green-600" />
+        ) : (
+          <RefreshCw className={`h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
+        )}
       </Button>
       <Button
         variant="outline"
         onClick={saveContent}
         className={`h-10 w-10 p-0 transition-all duration-200 ${
-          saveSuccess ? 'bg-green-50 border-green-200 scale-110' : 'hover:scale-105'
+          saveSuccess ? 'bg-green-50 border-green-200 scale-110' : 'hover:scale-105 hover:bg-green-50'
         }`}
         title="Save"
       >
