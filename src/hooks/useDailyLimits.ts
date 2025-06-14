@@ -7,8 +7,8 @@ interface DailyLimits {
   lastReset: string;
 }
 
-const CHAT_LIMIT = 6;
-const TOOLS_LIMIT = 3;
+const CHAT_LIMIT = 10;
+const TOOLS_LIMIT = 6;
 
 export const useDailyLimits = () => {
   const [limits, setLimits] = useState<DailyLimits>(() => {

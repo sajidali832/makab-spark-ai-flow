@@ -32,26 +32,26 @@ const LimitExceededModal = ({ isOpen, onClose, type }: LimitExceededModalProps) 
             )}
           </div>
           
-          <AlertDialogTitle className="text-xl font-bold text-gray-800">
+          <AlertDialogTitle className="text-xl font-bold text-red-600">
             Daily Limit Reached! 🚫
           </AlertDialogTitle>
           
           <AlertDialogDescription className="text-center space-y-3">
-            <p className="text-gray-600">
-              You've used all your {type === 'chat' ? 'chat messages (6)' : 'tool generations (3)'} for today.
+            <p className="text-red-500">
+              You've used all your {type === 'chat' ? 'chat messages (10)' : 'tool generations (6)'} for today.
             </p>
             
-            <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-4 border border-blue-200">
-              <div className="flex items-center justify-center space-x-2 text-blue-700">
+            <div className="bg-gradient-to-r from-red-50 to-pink-50 rounded-2xl p-4 border border-red-200">
+              <div className="flex items-center justify-center space-x-2 text-red-700">
                 <Clock className="h-5 w-5" />
                 <span className="font-semibold">Reset in: {getTimeUntilMidnight()}</span>
               </div>
-              <p className="text-sm text-blue-600 mt-2">
+              <p className="text-sm text-red-600 mt-2">
                 Your limits will reset at midnight (12:00 AM)
               </p>
             </div>
             
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-red-500">
               Come back tomorrow to continue using Makab! ✨
             </p>
           </AlertDialogDescription>
@@ -60,7 +60,7 @@ const LimitExceededModal = ({ isOpen, onClose, type }: LimitExceededModalProps) 
         <div className="flex justify-center mt-6">
           <Button
             onClick={onClose}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8"
+            className="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-8"
           >
             Got it!
           </Button>
