@@ -15,7 +15,12 @@ import {
   Zap,
   BookOpen,
   Video,
-  HelpCircle
+  HelpCircle,
+  Mail,
+  MessageCircle,
+  Linkedin,
+  Image,
+  Search
 } from 'lucide-react';
 import ToolForm from './ToolForm';
 
@@ -115,6 +120,51 @@ const ToolsSection = () => {
       category: 'Profile'
     },
     { 
+      id: 'email-subject', 
+      name: 'Email Subject Lines', 
+      icon: Mail, 
+      available: true, 
+      gradient: 'from-emerald-500 via-teal-600 to-cyan-500',
+      description: 'Create compelling email subjects',
+      category: 'Marketing'
+    },
+    { 
+      id: 'thread-generator', 
+      name: 'Thread Generator', 
+      icon: MessageCircle, 
+      available: true, 
+      gradient: 'from-violet-500 via-purple-600 to-indigo-500',
+      description: 'Generate engaging thread content',
+      category: 'Social'
+    },
+    { 
+      id: 'linkedin-post', 
+      name: 'LinkedIn Post', 
+      icon: Linkedin, 
+      available: true, 
+      gradient: 'from-blue-600 via-blue-700 to-indigo-600',
+      description: 'Professional LinkedIn content',
+      category: 'Professional'
+    },
+    { 
+      id: 'image-prompt', 
+      name: 'Image Prompt', 
+      icon: Image, 
+      available: true, 
+      gradient: 'from-pink-500 via-rose-600 to-red-500',
+      description: 'AI image generation prompts',
+      category: 'Creative'
+    },
+    { 
+      id: 'seo-title', 
+      name: 'SEO Title Generator', 
+      icon: Search, 
+      available: true, 
+      gradient: 'from-green-600 via-emerald-700 to-teal-600',
+      description: 'Optimize titles for search',
+      category: 'SEO'
+    },
+    { 
       id: 'instagram', 
       name: 'Instagram Posts', 
       icon: Instagram, 
@@ -205,6 +255,51 @@ const ToolsSection = () => {
         { name: 'interests', label: 'Interests/Hobbies', type: 'text' as const, placeholder: 'Your interests or hobbies...' },
         { name: 'cta', label: 'Call-to-Action', type: 'select' as const, options: ['Visit website', 'DM for inquiries', 'Check link in bio', 'Email me', 'Follow for tips', 'Custom'], placeholder: 'Select CTA' },
         { name: 'emojiStyle', label: 'Emoji Style', type: 'select' as const, options: ['Minimal', 'Moderate', 'Heavy', 'None'], placeholder: 'Select emoji usage' }
+      ],
+      'email-subject': [
+        { name: 'emailType', label: 'Email Type', type: 'select' as const, options: ['Newsletter', 'Promotional', 'Welcome', 'Follow-up', 'Event', 'Product Launch', 'Re-engagement'], placeholder: 'Select email type' },
+        { name: 'topic', label: 'Email Topic/Content', type: 'text' as const, placeholder: 'What is your email about?' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who are you emailing?' },
+        { name: 'tone', label: 'Tone', type: 'select' as const, options: ['Professional', 'Friendly', 'Urgent', 'Casual', 'Exciting', 'Informative'], placeholder: 'Select tone' },
+        { name: 'goal', label: 'Primary Goal', type: 'select' as const, options: ['Open Rate', 'Click Through', 'Drive Sales', 'Build Awareness', 'Inform', 'Engage'], placeholder: 'Select goal' },
+        { name: 'keywords', label: 'Keywords (optional)', type: 'text' as const, placeholder: 'Important keywords to include...' },
+        { name: 'quantity', label: 'Number of Subject Lines', type: 'select' as const, options: ['5', '10', '15', '20'], placeholder: 'How many options?' }
+      ],
+      'thread-generator': [
+        { name: 'topic', label: 'Thread Topic', type: 'text' as const, placeholder: 'What is your thread about?' },
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Twitter/X', 'LinkedIn', 'Instagram Stories', 'Facebook'], placeholder: 'Select platform' },
+        { name: 'threadLength', label: 'Thread Length', type: 'select' as const, options: ['Short (3-5 posts)', 'Medium (6-10 posts)', 'Long (11-15 posts)', 'Extended (16-20 posts)'], placeholder: 'Select length' },
+        { name: 'purpose', label: 'Thread Purpose', type: 'select' as const, options: ['Educational', 'Storytelling', 'Tips & Advice', 'Opinion/Commentary', 'How-to Guide', 'Personal Experience'], placeholder: 'Select purpose' },
+        { name: 'tone', label: 'Tone', type: 'select' as const, options: ['Professional', 'Casual', 'Inspirational', 'Humorous', 'Authoritative', 'Personal'], placeholder: 'Select tone' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your audience?' },
+        { name: 'cta', label: 'Call-to-Action', type: 'select' as const, options: ['Follow for more', 'Share this thread', 'Comment your thoughts', 'Visit link', 'Subscribe', 'Custom'], placeholder: 'Select CTA' }
+      ],
+      'linkedin-post': [
+        { name: 'topic', label: 'Post Topic', type: 'text' as const, placeholder: 'What do you want to post about?' },
+        { name: 'postType', label: 'Post Type', type: 'select' as const, options: ['Professional Update', 'Industry Insight', 'Personal Story', 'Tips & Advice', 'Achievement', 'Opinion Piece', 'Company News'], placeholder: 'Select post type' },
+        { name: 'tone', label: 'Tone', type: 'select' as const, options: ['Professional', 'Thought Leadership', 'Personal', 'Inspirational', 'Educational', 'Conversational'], placeholder: 'Select tone' },
+        { name: 'length', label: 'Post Length', type: 'select' as const, options: ['Short (1-2 paragraphs)', 'Medium (3-4 paragraphs)', 'Long (5-6 paragraphs)'], placeholder: 'Select length' },
+        { name: 'industry', label: 'Industry/Field', type: 'text' as const, placeholder: 'Your industry or field...' },
+        { name: 'audience', label: 'Target Audience', type: 'select' as const, options: ['Professionals in my field', 'Job seekers', 'Entrepreneurs', 'Industry leaders', 'General business audience', 'Potential clients'], placeholder: 'Select audience' },
+        { name: 'cta', label: 'Call-to-Action', type: 'select' as const, options: ['Comment your thoughts', 'Share this post', 'Connect with me', 'Visit my profile', 'DM for more info', 'Custom'], placeholder: 'Select CTA' }
+      ],
+      'image-prompt': [
+        { name: 'subject', label: 'Main Subject', type: 'text' as const, placeholder: 'What should be the main focus of the image?' },
+        { name: 'style', label: 'Art Style', type: 'select' as const, options: ['Photorealistic', 'Digital Art', 'Oil Painting', 'Watercolor', 'Cartoon/Anime', 'Sketch', 'Abstract', 'Vintage', 'Modern'], placeholder: 'Select art style' },
+        { name: 'mood', label: 'Mood/Atmosphere', type: 'select' as const, options: ['Bright & Cheerful', 'Dark & Moody', 'Peaceful & Calm', 'Dynamic & Energetic', 'Mysterious', 'Romantic', 'Professional'], placeholder: 'Select mood' },
+        { name: 'setting', label: 'Setting/Background', type: 'text' as const, placeholder: 'Describe the environment or background...' },
+        { name: 'colors', label: 'Color Palette', type: 'select' as const, options: ['Vibrant & Colorful', 'Monochrome', 'Warm tones', 'Cool tones', 'Pastel', 'High contrast', 'Natural colors'], placeholder: 'Select color palette' },
+        { name: 'perspective', label: 'Camera Angle', type: 'select' as const, options: ['Close-up', 'Wide shot', 'Bird\'s eye view', 'Low angle', 'Eye level', 'Portrait', 'Landscape'], placeholder: 'Select angle' },
+        { name: 'details', label: 'Additional Details', type: 'textarea' as const, placeholder: 'Any specific details, objects, or elements to include...' }
+      ],
+      'seo-title': [
+        { name: 'topic', label: 'Content Topic', type: 'text' as const, placeholder: 'What is your content about?' },
+        { name: 'contentType', label: 'Content Type', type: 'select' as const, options: ['Blog Post', 'Product Page', 'Service Page', 'Homepage', 'Category Page', 'Video', 'Guide/Tutorial'], placeholder: 'Select content type' },
+        { name: 'keywords', label: 'Primary Keywords', type: 'text' as const, placeholder: 'Main keywords you want to rank for...' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is searching for this content?' },
+        { name: 'intent', label: 'Search Intent', type: 'select' as const, options: ['Informational', 'Commercial', 'Navigational', 'Transactional'], placeholder: 'Select search intent' },
+        { name: 'titleStyle', label: 'Title Style', type: 'select' as const, options: ['How-to', 'List/Number', 'Question', 'Problem/Solution', 'Comparison', 'Guide', 'Review'], placeholder: 'Select style' },
+        { name: 'quantity', label: 'Number of Titles', type: 'select' as const, options: ['5', '10', '15', '20'], placeholder: 'How many titles?' }
       ]
     };
 
@@ -239,7 +334,11 @@ const ToolsSection = () => {
     Social: 'from-green-100 to-emerald-100',
     Engagement: 'from-orange-100 to-yellow-100',
     Ideas: 'from-purple-100 to-indigo-100',
-    Profile: 'from-violet-100 to-purple-100'
+    Profile: 'from-violet-100 to-purple-100',
+    Marketing: 'from-emerald-100 to-teal-100',
+    Professional: 'from-blue-100 to-indigo-100',
+    Creative: 'from-pink-100 to-rose-100',
+    SEO: 'from-green-100 to-emerald-100'
   };
 
   return (
@@ -332,14 +431,14 @@ const ToolsSection = () => {
         <div className="text-center py-6 space-y-4">
           <div className="inline-flex items-center space-x-2 sm:space-x-3 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full px-4 sm:px-6 py-2 sm:py-3 shadow-lg">
             <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-            <span className="text-sm sm:text-base font-bold text-gray-800">All Tools Available Now</span>
+            <span className="text-sm sm:text-base font-bold text-gray-800">14+ Tools Available Now</span>
             <Star className="h-4 w-4 text-yellow-500 fill-current" />
           </div>
           
           {/* Stats */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-xl mx-auto mt-6">
             <div className="bg-white/70 backdrop-blur-sm rounded-xl p-3 shadow-lg">
-              <div className="text-xl sm:text-2xl font-bold text-blue-600">9+</div>
+              <div className="text-xl sm:text-2xl font-bold text-blue-600">14+</div>
               <div className="text-xs sm:text-sm text-gray-600">AI Tools</div>
             </div>
             <div className="bg-white/70 backdrop-blur-sm rounded-xl p-3 shadow-lg">

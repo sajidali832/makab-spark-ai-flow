@@ -175,6 +175,97 @@ serve(async (req) => {
         No explanations, just the ready-to-use bios.`
         break
 
+      case 'email-subject':
+        prompt = `Create ${inputs.quantity} compelling email subject lines for ${inputs.emailType} emails about "${inputs.topic}".
+        Target Audience: ${inputs.audience}
+        Tone: ${inputs.tone}
+        Primary Goal: ${inputs.goal}
+        Keywords: ${inputs.keywords || 'None'}
+        
+        Generate ONLY subject lines that:
+        - Are under 50 characters when possible
+        - Create urgency or curiosity
+        - Are relevant to the audience
+        - Drive the specified goal
+        
+        Format: One subject line per line. No explanations.`
+        break
+
+      case 'thread-generator':
+        prompt = `Create a ${inputs.threadLength} thread for ${inputs.platform} about "${inputs.topic}".
+        Purpose: ${inputs.purpose}
+        Tone: ${inputs.tone}
+        Audience: ${inputs.audience}
+        Call-to-Action: ${inputs.cta}
+        
+        Generate ONLY the complete thread with:
+        - Strong opening tweet/post
+        - Logical flow between posts
+        - Engaging content in each post
+        - Clear numbering (1/X format)
+        - Strong closing with CTA
+        
+        Format each post clearly. No explanations, just the ready-to-post thread.`
+        break
+
+      case 'linkedin-post':
+        prompt = `Write a ${inputs.length} LinkedIn post about "${inputs.topic}".
+        Post Type: ${inputs.postType}
+        Tone: ${inputs.tone}
+        Industry: ${inputs.industry}
+        Target Audience: ${inputs.audience}
+        Call-to-Action: ${inputs.cta}
+        
+        Generate ONLY a complete LinkedIn post with:
+        - Attention-grabbing opening
+        - Professional insights or value
+        - Personal touch when appropriate
+        - Clear structure with line breaks
+        - Strong call-to-action
+        
+        No explanations, just the ready-to-publish post.`
+        break
+
+      case 'image-prompt':
+        prompt = `Create a detailed AI image generation prompt based on:
+        Subject: ${inputs.subject}
+        Art Style: ${inputs.style}
+        Mood: ${inputs.mood}
+        Setting: ${inputs.setting}
+        Colors: ${inputs.colors}
+        Camera Angle: ${inputs.perspective}
+        Additional Details: ${inputs.details || 'None'}
+        
+        Generate ONLY a comprehensive, detailed prompt that includes:
+        - Clear subject description
+        - Specific art style instructions
+        - Mood and atmosphere details
+        - Setting and background elements
+        - Color palette specifications
+        - Camera angle and composition
+        - Technical quality keywords
+        
+        Format as a single, detailed prompt ready for AI image generation. No explanations.`
+        break
+
+      case 'seo-title':
+        prompt = `Generate ${inputs.quantity} SEO-optimized titles for ${inputs.contentType} about "${inputs.topic}".
+        Primary Keywords: ${inputs.keywords}
+        Target Audience: ${inputs.audience}
+        Search Intent: ${inputs.intent}
+        Title Style: ${inputs.titleStyle}
+        
+        Create titles that:
+        - Include primary keywords naturally
+        - Are 50-60 characters when possible
+        - Match the search intent
+        - Appeal to the target audience
+        - Follow the specified style
+        - Are click-worthy and descriptive
+        
+        Format: One title per line. No explanations, just SEO-optimized titles.`
+        break
+
       default:
         prompt = `Generate helpful content for ${toolId} with details: ${JSON.stringify(inputs)}. Provide only the requested content without explanations.`
     }
