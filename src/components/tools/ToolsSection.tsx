@@ -6,54 +6,80 @@ import { Heart, Zap, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ToolForm from './ToolForm';
 
+const tools = [
+  {
+    id: 'caption',
+    title: 'Caption Generator',
+    description: 'Generate engaging captions for your social media posts',
+    icon: '📝',
+    color: 'from-blue-500 to-cyan-500',
+    inputs: [
+      { name: 'topic', label: 'Topic / About', type: 'textarea' as const, placeholder: 'e.g., My trip to the Swiss Alps, a new product launch...' },
+      { name: 'tone', label: 'Tone', type: 'select' as const, options: ['Casual', 'Professional', 'Witty', 'Inspirational', 'Friendly'], placeholder: 'Select a tone' }
+    ]
+  },
+  {
+    id: 'hashtag',
+    title: 'Hashtag Generator',
+    description: 'Create relevant hashtags to boost your post visibility',
+    icon: '#️⃣',
+    color: 'from-green-500 to-emerald-500',
+    inputs: [
+      { name: 'topic', label: 'Topic / Keywords', type: 'textarea' as const, placeholder: 'e.g., sustainable fashion, travel photography' }
+    ]
+  },
+  {
+    id: 'thread-generator',
+    title: 'Thread Generator',
+    description: 'Create engaging Twitter/X threads that tell a story',
+    icon: '🧵',
+    color: 'from-purple-500 to-indigo-500',
+    inputs: [
+      { name: 'topic', label: 'Main topic of the thread', type: 'textarea' as const, placeholder: 'e.g., The history of AI, 10 tips for better productivity...' },
+      { name: 'length', label: 'Thread Length', type: 'select' as const, options: ['Short (3-4 tweets)', 'Medium (5-7 tweets)', 'Long (8+ tweets)'], placeholder: 'Select length' }
+    ]
+  },
+  {
+    id: 'story-ideas',
+    title: 'Story Ideas',
+    description: 'Get creative ideas for your Instagram and Facebook stories',
+    icon: '💡',
+    color: 'from-orange-500 to-red-500',
+    inputs: [
+      { name: 'topic', label: 'Topic / Theme', type: 'text' as const, placeholder: 'e.g., behind the scenes, Q&A session, daily routine' }
+    ]
+  },
+  {
+    id: 'bio-generator',
+    title: 'Bio Generator',
+    description: 'Create compelling bios for your social media profiles',
+    icon: '👤',
+    color: 'from-pink-500 to-rose-500',
+    inputs: [
+      { name: 'name', label: 'Your Name / Brand Name', type: 'text' as const, placeholder: 'e.g., John Doe, Sparkle Creations' },
+      { name: 'description', label: 'What do you do?', type: 'textarea' as const, placeholder: 'e.g., I help startups with marketing. We sell handmade jewelry.' },
+      { name: 'keywords', label: 'Keywords', type: 'text' as const, placeholder: 'e.g., marketer, artist, developer' }
+    ]
+  },
+  {
+    id: 'ad-copy',
+    title: 'Ad Copy Generator',
+    description: 'Generate persuasive ad copy for your marketing campaigns',
+    icon: '🎯',
+    color: 'from-teal-500 to-cyan-500',
+    inputs: [
+      { name: 'product', label: 'Product / Service Name', type: 'text' as const, placeholder: 'e.g., CleanBee Vacuum, Pro-Web Design Services' },
+      { name: 'description', label: 'Product / Service Description', type: 'textarea' as const, placeholder: 'Describe what it is and its main benefits.' },
+      { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'e.g., busy homeowners, small business owners' }
+    ]
+  }
+];
+
 const ToolsSection = () => {
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  const tools = [
-    {
-      id: 'caption',
-      name: 'Caption Generator',
-      description: 'Generate engaging captions for your social media posts',
-      icon: '📝',
-      color: 'from-blue-500 to-cyan-500'
-    },
-    {
-      id: 'hashtag',
-      name: 'Hashtag Generator',
-      description: 'Create relevant hashtags to boost your post visibility',
-      icon: '#️⃣',
-      color: 'from-green-500 to-emerald-500'
-    },
-    {
-      id: 'thread-generator',
-      name: 'Thread Generator',
-      description: 'Create engaging Twitter/X threads that tell a story',
-      icon: '🧵',
-      color: 'from-purple-500 to-indigo-500'
-    },
-    {
-      id: 'story-ideas',
-      name: 'Story Ideas',
-      description: 'Get creative ideas for your Instagram and Facebook stories',
-      icon: '💡',
-      color: 'from-orange-500 to-red-500'
-    },
-    {
-      id: 'bio-generator',
-      name: 'Bio Generator',
-      description: 'Create compelling bios for your social media profiles',
-      icon: '👤',
-      color: 'from-pink-500 to-rose-500'
-    },
-    {
-      id: 'ad-copy',
-      name: 'Ad Copy Generator',
-      description: 'Generate persuasive ad copy for your marketing campaigns',
-      icon: '🎯',
-      color: 'from-teal-500 to-cyan-500'
-    }
-  ];
+  
+  const selectedToolData = tools.find(tool => tool.id === selectedTool);
 
   const quickAccessItems = [
     {
@@ -78,7 +104,7 @@ const ToolsSection = () => {
     }
   ];
 
-  if (selectedTool) {
+  if (selectedTool && selectedToolData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4">
         <div className="max-w-4xl mx-auto">
@@ -91,7 +117,7 @@ const ToolsSection = () => {
               ← Back to Tools
             </Button>
           </div>
-          <ToolForm toolId={selectedTool} />
+          <ToolForm tool={selectedToolData} />
         </div>
       </div>
     );
@@ -162,7 +188,7 @@ const ToolsSection = () => {
                 </CardHeader>
                 <CardContent className="pt-0">
                   <CardTitle className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-gray-900 transition-colors">
-                    {tool.name}
+                    {tool.title}
                   </CardTitle>
                   <p className="text-gray-600 text-sm leading-relaxed">
                     {tool.description}
