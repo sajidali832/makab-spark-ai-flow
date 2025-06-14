@@ -16,7 +16,7 @@ import {
   Quote,
   Text,
   Image,
-  Hashtag,
+  Hash,
   BookOpenText,
   Video,
   Instagram,
@@ -29,7 +29,7 @@ import {
 
 const TOOLS_LIST = [
   { icon: Pencil, name: "Caption Generator", desc: "Create catchy captions for any occasion." },
-  { icon: Hashtag, name: "Hashtag Finder", desc: "Find trending and relevant hashtags." },
+  { icon: Hash, name: "Hashtag Finder", desc: "Find trending and relevant hashtags." },
   { icon: Quote, name: "Quote Creator", desc: "Generate unique quotes and sayings." },
   { icon: Video, name: "Video Script", desc: "Get ready-to-use video scripts." },
   { icon: Instagram, name: "Instagram Bio", desc: "Perfect Insta bios for your profile." },
