@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { RotateCcw, Square } from 'lucide-react';
+import { RotateCcw, Square, Copy } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Message {
@@ -33,6 +33,22 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
     });
   };
 
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(message.content);
+      toast({
+        title: "Copied!",
+        description: "Message copied to clipboard",
+      });
+    } catch (err) {
+      toast({
+        title: "Copy failed",
+        description: "Unable to copy to clipboard",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (message.role === 'user') {
     return (
       <div className="flex justify-end">
@@ -52,9 +68,9 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
       </div>
       
       <div className="flex-1 space-y-1">
-        <div className="max-w-[85%] sm:max-w-[80%] bg-white border border-gray-100 rounded-xl rounded-bl-md px-3 py-2 shadow-sm">
+        <div className="max-w-[85%] sm:max-w-[80%] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl rounded-bl-md px-3 py-2 shadow-sm">
           {message.isThinking ? (
-            <div className="flex items-center space-x-2 text-gray-600">
+            <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
               <div className="flex space-x-1">
                 <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-600 rounded-full animate-pulse"></div>
                 <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-purple-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
@@ -63,7 +79,7 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
               <span className="text-xs">Thinking...</span>
             </div>
           ) : (
-            <p className="whitespace-pre-wrap text-gray-800 text-sm">{message.content}</p>
+            <p className="whitespace-pre-wrap text-gray-800 dark:text-gray-200 text-sm">{message.content}</p>
           )}
         </div>
         
@@ -72,8 +88,17 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
             <Button
               variant="ghost"
               size="sm"
+              onClick={copyToClipboard}
+              className="h-5 px-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+            >
+              <Copy className="h-3 w-3" />
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={regenerateResponse}
-              className="h-5 px-1 text-gray-500 hover:text-gray-700"
+              className="h-5 px-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
             >
               <RotateCcw className="h-3 w-3" />
             </Button>
@@ -83,7 +108,7 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={stopResponse}
-                className="h-5 px-1 text-gray-500 hover:text-gray-700"
+                className="h-5 px-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
               >
                 <Square className="h-3 w-3" />
               </Button>
