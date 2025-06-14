@@ -1,10 +1,11 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Copy, ArrowLeft, Sparkles, Loader2, RefreshCw, Save, Download } from 'lucide-react';
+import { Copy, ArrowLeft, Sparkles, Loader2, RefreshCw, Save } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import LimitExceededModal from '../LimitExceededModal';
@@ -76,25 +77,6 @@ const ToolForm = ({ tool }: ToolFormProps) => {
         variant: "destructive",
       });
     }
-  };
-
-  const downloadContent = () => {
-    if (!generatedContent) return;
-    
-    const blob = new Blob([generatedContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${tool.id}-content.txt`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    toast({
-      title: "Downloaded!",
-      description: "Content downloaded as text file",
-    });
   };
 
   const generateContent = async () => {
@@ -171,35 +153,27 @@ const ToolForm = ({ tool }: ToolFormProps) => {
             <Button
               variant="outline"
               onClick={() => copyToClipboard(generatedContent)}
-              className="flex-1 min-w-0"
+              className="h-10 w-10 p-0"
+              title="Copy"
             >
-              <Copy className="h-4 w-4 mr-2" />
-              Copy Code
+              <Copy className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               onClick={regenerateContent}
               disabled={isLoading}
-              className="flex-1 min-w-0"
+              className="h-10 w-10 p-0"
+              title="Regenerate"
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Regenerate
+              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
             <Button
               variant="outline"
               onClick={saveContent}
-              className="flex-1 min-w-0"
+              className="h-10 w-10 p-0"
+              title="Save"
             >
-              <Save className="h-4 w-4 mr-2" />
-              Save
-            </Button>
-            <Button
-              variant="outline"
-              onClick={downloadContent}
-              className="flex-1 min-w-0"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Download
+              <Save className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -220,6 +194,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
                   size="sm"
                   onClick={() => copyToClipboard(hashtag)}
                   className="ml-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Copy"
                 >
                   <Copy className="h-3 w-3" />
                 </Button>
@@ -231,27 +206,27 @@ const ToolForm = ({ tool }: ToolFormProps) => {
             <Button
               variant="outline"
               onClick={() => copyToClipboard(hashtags.join(' '))}
-              className="flex-1 min-w-0"
+              className="h-10 w-10 p-0"
+              title="Copy All"
             >
-              <Copy className="h-4 w-4 mr-2" />
-              Copy All
+              <Copy className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               onClick={regenerateContent}
               disabled={isLoading}
-              className="flex-1 min-w-0"
+              className="h-10 w-10 p-0"
+              title="Regenerate"
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Regenerate
+              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
             <Button
               variant="outline"
               onClick={saveContent}
-              className="flex-1 min-w-0"
+              className="h-10 w-10 p-0"
+              title="Save"
             >
-              <Save className="h-4 w-4 mr-2" />
-              Save
+              <Save className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -271,6 +246,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
                 size="sm"
                 onClick={() => copyToClipboard(caption)}
                 className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                title="Copy"
               >
                 <Copy className="h-3 w-3" />
               </Button>
@@ -281,35 +257,27 @@ const ToolForm = ({ tool }: ToolFormProps) => {
             <Button
               variant="outline"
               onClick={() => copyToClipboard(generatedContent)}
-              className="flex-1 min-w-0"
+              className="h-10 w-10 p-0"
+              title="Copy All"
             >
-              <Copy className="h-4 w-4 mr-2" />
-              Copy All
+              <Copy className="h-4 w-4" />
             </Button>
             <Button
               variant="outline"
               onClick={regenerateContent}
               disabled={isLoading}
-              className="flex-1 min-w-0"
+              className="h-10 w-10 p-0"
+              title="Regenerate"
             >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Regenerate
+              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
             </Button>
             <Button
               variant="outline"
               onClick={saveContent}
-              className="flex-1 min-w-0"
+              className="h-10 w-10 p-0"
+              title="Save"
             >
-              <Save className="h-4 w-4 mr-2" />
-              Save
-            </Button>
-            <Button
-              variant="outline"
-              onClick={downloadContent}
-              className="flex-1 min-w-0"
-            >
-              <Download className="h-4 w-4 mr-2" />
-              Download
+              <Save className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -326,6 +294,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
             size="sm"
             onClick={() => copyToClipboard(generatedContent)}
             className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            title="Copy"
           >
             <Copy className="h-3 w-3" />
           </Button>
@@ -335,35 +304,27 @@ const ToolForm = ({ tool }: ToolFormProps) => {
           <Button
             variant="outline"
             onClick={() => copyToClipboard(generatedContent)}
-            className="flex-1 min-w-0"
+            className="h-10 w-10 p-0"
+            title="Copy"
           >
-            <Copy className="h-4 w-4 mr-2" />
-            Copy
+            <Copy className="h-4 w-4" />
           </Button>
           <Button
             variant="outline"
             onClick={regenerateContent}
             disabled={isLoading}
-            className="flex-1 min-w-0"
+            className="h-10 w-10 p-0"
+            title="Regenerate"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            Regenerate
+            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
           </Button>
           <Button
             variant="outline"
             onClick={saveContent}
-            className="flex-1 min-w-0"
+            className="h-10 w-10 p-0"
+            title="Save"
           >
-            <Save className="h-4 w-4 mr-2" />
-            Save
-          </Button>
-          <Button
-            variant="outline"
-            onClick={downloadContent}
-            className="flex-1 min-w-0"
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Download
+            <Save className="h-4 w-4" />
           </Button>
         </div>
       </div>
