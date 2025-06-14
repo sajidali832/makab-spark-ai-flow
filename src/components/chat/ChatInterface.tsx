@@ -158,6 +158,32 @@ const ChatInterface = () => {
     }
   };
 
+  const handleRegenerate = async (messageId: string) => {
+    // Find the message to regenerate
+    const messageIndex = messages.findIndex(msg => msg.id === messageId);
+    if (messageIndex === -1) return;
+
+    // Get all messages up to the one before the message to regenerate
+    const messageToRegenerate = messages[messageIndex];
+    if (messageToRegenerate.role !== 'assistant') return;
+
+    // Find the last user message before this assistant message
+    const conversationHistory = messages.slice(0, messageIndex);
+    
+    // Remove the current assistant message
+    setMessages(prev => prev.filter(msg => msg.id !== messageId));
+    
+    // Regenerate the response
+    await callChatAPI(conversationHistory);
+  };
+
+  const handleStopGeneration = () => {
+    setCurrentThinkingId(null);
+    setIsLoading(false);
+    // Remove any thinking messages
+    setMessages(prev => prev.filter(msg => !msg.isThinking));
+  };
+
   // Voice input effect
   useEffect(() => {
     if (transcript) {
@@ -330,6 +356,8 @@ const ChatInterface = () => {
                   key={message.id} 
                   message={message}
                   isCurrentlyThinking={currentThinkingId === message.id}
+                  onRegenerate={() => handleRegenerate(message.id)}
+                  onStop={handleStopGeneration}
                 />
               ))
             )}

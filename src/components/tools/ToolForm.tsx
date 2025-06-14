@@ -1,11 +1,10 @@
-
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Copy, ArrowLeft, Sparkles, Loader2, RefreshCw, Save } from 'lucide-react';
+import { Copy, ArrowLeft, Sparkles, Loader2, RefreshCw, Save, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import LimitExceededModal from '../LimitExceededModal';
@@ -31,10 +30,25 @@ const ToolForm = ({ tool }: ToolFormProps) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [generatedContent, setGeneratedContent] = useState<string>('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isRegenerating, setIsRegenerating] = useState(false);
   const [limitModalOpen, setLimitModalOpen] = useState(false);
   const [savedItems, setSavedItems] = useState<string[]>([]);
+  const [copySuccess, setCopySuccess] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
   const { toast } = useToast();
   const { canUseTools, incrementToolGenerations } = useDailyLimits();
+
+  // Load saved items on component mount
+  useEffect(() => {
+    const saved = localStorage.getItem(`saved-${tool.id}`);
+    if (saved) {
+      try {
+        setSavedItems(JSON.parse(saved));
+      } catch (err) {
+        console.error('Failed to load saved items:', err);
+      }
+    }
+  }, [tool.id]);
 
   const handleInputChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -43,6 +57,8 @@ const ToolForm = ({ tool }: ToolFormProps) => {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
       toast({
         title: "Copied!",
         description: "Content copied to clipboard",
@@ -57,17 +73,40 @@ const ToolForm = ({ tool }: ToolFormProps) => {
     }
   };
 
-  const saveContent = async () => {
-    if (!generatedContent) return;
-    
+  const saveToHistory = async (content: string) => {
     try {
-      const savedList = [...savedItems, generatedContent];
-      setSavedItems(savedList);
-      localStorage.setItem(`saved-${tool.id}`, JSON.stringify(savedList));
+      const user = JSON.parse(localStorage.getItem('makab_user') || '{}');
+      if (user.id) {
+        // Save to Supabase
+        const { error } = await supabase.from('tool_history').insert({
+          user_id: user.id,
+          tool_id: tool.id,
+          tool_name: tool.title,
+          inputs: formData,
+          output: content,
+          created_at: new Date().toISOString()
+        });
+
+        if (error) {
+          console.error('Failed to save to database:', error);
+          // Fallback to local storage
+          const savedList = [...savedItems, content];
+          setSavedItems(savedList);
+          localStorage.setItem(`saved-${tool.id}`, JSON.stringify(savedList));
+        }
+      } else {
+        // Save to local storage if no user
+        const savedList = [...savedItems, content];
+        setSavedItems(savedList);
+        localStorage.setItem(`saved-${tool.id}`, JSON.stringify(savedList));
+      }
+
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 2000);
       
       toast({
         title: "Saved!",
-        description: "Content saved locally",
+        description: "Content saved to history",
       });
     } catch (err) {
       console.error('Failed to save:', err);
@@ -79,7 +118,12 @@ const ToolForm = ({ tool }: ToolFormProps) => {
     }
   };
 
-  const generateContent = async () => {
+  const saveContent = async () => {
+    if (!generatedContent) return;
+    await saveToHistory(generatedContent);
+  };
+
+  const generateContent = async (isRegeneration = false) => {
     if (!canUseTools()) {
       setLimitModalOpen(true);
       return;
@@ -90,7 +134,12 @@ const ToolForm = ({ tool }: ToolFormProps) => {
       return;
     }
 
-    setIsLoading(true);
+    if (isRegeneration) {
+      setIsRegenerating(true);
+    } else {
+      setIsLoading(true);
+    }
+
     try {
       const { data, error } = await supabase.functions.invoke('tools-generation', {
         body: {
@@ -110,11 +159,12 @@ const ToolForm = ({ tool }: ToolFormProps) => {
       });
     } finally {
       setIsLoading(false);
+      setIsRegenerating(false);
     }
   };
 
   const regenerateContent = () => {
-    generateContent();
+    generateContent(true);
   };
 
   const isCodeContent = (content: string) => {
@@ -138,6 +188,48 @@ const ToolForm = ({ tool }: ToolFormProps) => {
     return codePatterns.some(pattern => pattern.test(content));
   };
 
+  const renderActionButtons = (textToCopy?: string) => (
+    <div className="flex flex-wrap gap-2">
+      <Button
+        variant="outline"
+        onClick={() => copyToClipboard(textToCopy || generatedContent)}
+        className={`h-10 w-10 p-0 transition-all duration-200 ${
+          copySuccess ? 'bg-green-50 border-green-200 scale-110' : 'hover:scale-105'
+        }`}
+        title="Copy"
+      >
+        {copySuccess ? (
+          <Check className="h-4 w-4 text-green-600" />
+        ) : (
+          <Copy className="h-4 w-4" />
+        )}
+      </Button>
+      <Button
+        variant="outline"
+        onClick={regenerateContent}
+        disabled={isLoading || isRegenerating}
+        className="h-10 w-10 p-0 hover:scale-105 transition-all duration-200"
+        title="Regenerate"
+      >
+        <RefreshCw className={`h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
+      </Button>
+      <Button
+        variant="outline"
+        onClick={saveContent}
+        className={`h-10 w-10 p-0 transition-all duration-200 ${
+          saveSuccess ? 'bg-green-50 border-green-200 scale-110' : 'hover:scale-105'
+        }`}
+        title="Save"
+      >
+        {saveSuccess ? (
+          <Check className="h-4 w-4 text-green-600" />
+        ) : (
+          <Save className="h-4 w-4" />
+        )}
+      </Button>
+    </div>
+  );
+
   const renderGeneratedContent = () => {
     if (!generatedContent) return null;
 
@@ -148,34 +240,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
           <div className="w-full overflow-hidden">
             <CodeBlock code={generatedContent} language="javascript" />
           </div>
-          
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              onClick={() => copyToClipboard(generatedContent)}
-              className="h-10 w-10 p-0"
-              title="Copy"
-            >
-              <Copy className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={regenerateContent}
-              disabled={isLoading}
-              className="h-10 w-10 p-0"
-              title="Regenerate"
-            >
-              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={saveContent}
-              className="h-10 w-10 p-0"
-              title="Save"
-            >
-              <Save className="h-4 w-4" />
-            </Button>
-          </div>
+          {renderActionButtons()}
         </div>
       );
     }
@@ -193,7 +258,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
                   variant="ghost"
                   size="sm"
                   onClick={() => copyToClipboard(hashtag)}
-                  className="ml-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="ml-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
                   title="Copy"
                 >
                   <Copy className="h-3 w-3" />
@@ -201,34 +266,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
               </div>
             ))}
           </div>
-          
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              onClick={() => copyToClipboard(hashtags.join(' '))}
-              className="h-10 w-10 p-0"
-              title="Copy All"
-            >
-              <Copy className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={regenerateContent}
-              disabled={isLoading}
-              className="h-10 w-10 p-0"
-              title="Regenerate"
-            >
-              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={saveContent}
-              className="h-10 w-10 p-0"
-              title="Save"
-            >
-              <Save className="h-4 w-4" />
-            </Button>
-          </div>
+          {renderActionButtons(hashtags.join(' '))}
         </div>
       );
     }
@@ -245,46 +283,19 @@ const ToolForm = ({ tool }: ToolFormProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => copyToClipboard(caption)}
-                className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
                 title="Copy"
               >
                 <Copy className="h-3 w-3" />
               </Button>
             </div>
           ))}
-          
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant="outline"
-              onClick={() => copyToClipboard(generatedContent)}
-              className="h-10 w-10 p-0"
-              title="Copy All"
-            >
-              <Copy className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={regenerateContent}
-              disabled={isLoading}
-              className="h-10 w-10 p-0"
-              title="Regenerate"
-            >
-              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-            </Button>
-            <Button
-              variant="outline"
-              onClick={saveContent}
-              className="h-10 w-10 p-0"
-              title="Save"
-            >
-              <Save className="h-4 w-4" />
-            </Button>
-          </div>
+          {renderActionButtons()}
         </div>
       );
     }
 
-    // Default content display for other tools (scripts, blogs, etc.)
+    // Default content display for other tools
     return (
       <div className="space-y-4 w-full">
         <div className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-xl p-4 relative group hover:from-gray-100 hover:to-slate-100 transition-all duration-200 w-full overflow-hidden">
@@ -293,40 +304,13 @@ const ToolForm = ({ tool }: ToolFormProps) => {
             variant="ghost"
             size="sm"
             onClick={() => copyToClipboard(generatedContent)}
-            className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110"
             title="Copy"
           >
             <Copy className="h-3 w-3" />
           </Button>
         </div>
-        
-        <div className="flex flex-wrap gap-2">
-          <Button
-            variant="outline"
-            onClick={() => copyToClipboard(generatedContent)}
-            className="h-10 w-10 p-0"
-            title="Copy"
-          >
-            <Copy className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="outline"
-            onClick={regenerateContent}
-            disabled={isLoading}
-            className="h-10 w-10 p-0"
-            title="Regenerate"
-          >
-            <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
-          </Button>
-          <Button
-            variant="outline"
-            onClick={saveContent}
-            className="h-10 w-10 p-0"
-            title="Save"
-          >
-            <Save className="h-4 w-4" />
-          </Button>
-        </div>
+        {renderActionButtons()}
       </div>
     );
   };
@@ -407,8 +391,8 @@ const ToolForm = ({ tool }: ToolFormProps) => {
           </div>
 
           <Button
-            onClick={generateContent}
-            disabled={isLoading || !canUseTools()}
+            onClick={() => generateContent(false)}
+            disabled={isLoading || isRegenerating || !canUseTools()}
             className="w-full mt-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl h-11 sm:h-12 text-sm sm:text-base font-semibold shadow-lg transition-all duration-200"
           >
             {isLoading ? (
@@ -433,6 +417,12 @@ const ToolForm = ({ tool }: ToolFormProps) => {
                 <Copy className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
               </div>
               <h3 className="text-base sm:text-lg font-semibold text-gray-800">Generated Content</h3>
+              {isRegenerating && (
+                <div className="flex items-center space-x-1 text-blue-600">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="text-xs">Regenerating...</span>
+                </div>
+              )}
             </div>
             <div className="w-full overflow-hidden">
               {renderGeneratedContent()}

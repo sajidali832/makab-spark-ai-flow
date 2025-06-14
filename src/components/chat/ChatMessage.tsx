@@ -1,7 +1,8 @@
 
 import { Button } from '@/components/ui/button';
-import { RotateCcw, Square, Copy } from 'lucide-react';
+import { RotateCcw, Square, Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
 
 interface Message {
   id: string;
@@ -14,28 +15,39 @@ interface Message {
 interface ChatMessageProps {
   message: Message;
   isCurrentlyThinking?: boolean;
+  onRegenerate?: () => void;
+  onStop?: () => void;
 }
 
-const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
+const ChatMessage = ({ message, isCurrentlyThinking, onRegenerate, onStop }: ChatMessageProps) => {
   const { toast } = useToast();
+  const [copySuccess, setCopySuccess] = useState(false);
 
   const regenerateResponse = () => {
-    toast({
-      title: "Regenerating...",
-      description: "Creating a new response",
-    });
+    if (onRegenerate) {
+      onRegenerate();
+      toast({
+        title: "Regenerating...",
+        description: "Creating a new response",
+      });
+    }
   };
 
   const stopResponse = () => {
-    toast({
-      title: "Stopped",
-      description: "Response generation stopped",
-    });
+    if (onStop) {
+      onStop();
+      toast({
+        title: "Stopped",
+        description: "Response generation stopped",
+      });
+    }
   };
 
   const copyToClipboard = async () => {
     try {
       await navigator.clipboard.writeText(message.content);
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
       toast({
         title: "Copied!",
         description: "Message copied to clipboard",
@@ -68,9 +80,9 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
       </div>
       
       <div className="flex-1 space-y-1">
-        <div className="max-w-[85%] sm:max-w-[80%] bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-xl rounded-bl-md px-3 py-2 shadow-sm">
+        <div className="max-w-[85%] sm:max-w-[80%] bg-white border border-gray-100 rounded-xl rounded-bl-md px-3 py-2 shadow-sm">
           {message.isThinking ? (
-            <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
+            <div className="flex items-center space-x-2 text-gray-600">
               <div className="flex space-x-1">
                 <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-600 rounded-full animate-pulse"></div>
                 <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-purple-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
@@ -79,7 +91,7 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
               <span className="text-xs">Thinking...</span>
             </div>
           ) : (
-            <p className="whitespace-pre-wrap text-gray-800 dark:text-gray-200 text-sm">{message.content}</p>
+            <p className="whitespace-pre-wrap text-gray-800 text-sm">{message.content}</p>
           )}
         </div>
         
@@ -89,16 +101,18 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
               variant="ghost"
               size="sm"
               onClick={copyToClipboard}
-              className="h-5 px-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className={`h-5 px-1 text-gray-500 hover:text-gray-700 transition-all duration-200 ${
+                copySuccess ? 'text-green-600 scale-110' : ''
+              }`}
             >
-              <Copy className="h-3 w-3" />
+              {copySuccess ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
             </Button>
             
             <Button
               variant="ghost"
               size="sm"
               onClick={regenerateResponse}
-              className="h-5 px-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="h-5 px-1 text-gray-500 hover:text-gray-700 hover:scale-110 transition-all duration-200"
             >
               <RotateCcw className="h-3 w-3" />
             </Button>
@@ -108,7 +122,7 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={stopResponse}
-                className="h-5 px-1 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                className="h-5 px-1 text-gray-500 hover:text-red-600 hover:scale-110 transition-all duration-200"
               >
                 <Square className="h-3 w-3" />
               </Button>
