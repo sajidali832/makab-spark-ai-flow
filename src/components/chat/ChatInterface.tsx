@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -206,14 +205,14 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 safe-top safe-bottom">
       {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col backdrop-blur-sm">
+      <div className="flex-1 flex flex-col backdrop-blur-sm relative">
         {/* Enhanced Header */}
-        <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200/60 bg-white/95 backdrop-blur-md shadow-sm">
+        <header className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200/60 bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-10">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
@@ -252,56 +251,59 @@ const ChatInterface = () => {
           </div>
         </header>
 
-        {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-4 bg-gradient-to-b from-transparent via-gray-50/20 to-slate-50/40">
-          {messages.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center space-y-6 px-4">
-              <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl animate-pulse">
-                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl" />
-              </div>
-              <div className="space-y-4">
-                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800">
-                  Hi! I'm Makab 👋
-                </h2>
-                <p className="text-gray-600 text-base sm:text-lg max-w-md leading-relaxed">
-                  Your AI assistant created by Sajid for conversations and content creation! ✨
-                </p>
-                <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-2xl p-4 backdrop-blur-sm">
-                  <div className="flex items-center justify-center space-x-2">
-                    <Sparkles className="h-5 w-5 text-blue-500" />
-                    <span className="text-sm font-semibold text-gray-700">
-                      💬 {remainingMessages} messages remaining today
-                    </span>
+        {/* Messages Area - with proper mobile spacing */}
+        <div className="flex-1 overflow-y-auto pb-20 sm:pb-24 bg-gradient-to-b from-transparent via-gray-50/20 to-slate-50/40">
+          <div className="p-3 sm:p-4 space-y-4 min-h-full">
+            {messages.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-center space-y-6 px-4">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl animate-pulse">
+                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-12 h-12 sm:w-16 sm:h-16 rounded-2xl" />
+                </div>
+                <div className="space-y-4">
+                  <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800">
+                    Hi! I'm Makab 👋
+                  </h2>
+                  <p className="text-gray-600 text-base sm:text-lg max-w-md leading-relaxed">
+                    Your AI assistant created by Sajid for conversations and content creation! ✨
+                  </p>
+                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-2xl p-4 backdrop-blur-sm">
+                    <div className="flex items-center justify-center space-x-2">
+                      <Sparkles className="h-5 w-5 text-blue-500" />
+                      <span className="text-sm font-semibold text-gray-700">
+                        💬 {remainingMessages} messages remaining today
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            messages.map((message) => (
-              <ChatMessage 
-                key={message.id} 
-                message={message}
-                isCurrentlyThinking={currentThinkingId === message.id}
-              />
-            ))
-          )}
-          <div ref={messagesEndRef} />
+            ) : (
+              messages.map((message) => (
+                <ChatMessage 
+                  key={message.id} 
+                  message={message}
+                  isCurrentlyThinking={currentThinkingId === message.id}
+                />
+              ))
+            )}
+            <div ref={messagesEndRef} />
+          </div>
         </div>
 
-        {/* Enhanced Input Area */}
-        <div className="p-3 sm:p-4 border-t border-gray-200/60 bg-white/95 backdrop-blur-md">
-          <form onSubmit={handleSendMessage} className="flex space-x-2 sm:space-x-3">
+        {/* Fixed Input Area for Mobile */}
+        <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto p-3 sm:p-4 border-t border-gray-200/60 bg-white/95 backdrop-blur-md safe-bottom z-20">
+          <form onSubmit={handleSendMessage} className="flex space-x-2 sm:space-x-3 max-w-full">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={canSendMessage() ? "Message Makab..." : "Daily limit reached"}
               className="flex-1 border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl sm:rounded-2xl bg-white/90 backdrop-blur-sm shadow-sm h-11 sm:h-12 text-sm sm:text-base"
               disabled={isLoading || !canSendMessage()}
+              style={{ fontSize: '16px' }}
             />
             <Button
               type="submit"
               disabled={!inputValue.trim() || isLoading || !canSendMessage()}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl sm:rounded-2xl px-3 sm:px-4 shadow-md h-11 sm:h-12 min-w-[44px] sm:min-w-[48px]"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl sm:rounded-2xl px-3 sm:px-4 shadow-md h-11 sm:h-12 min-w-[44px] sm:min-w-[48px] flex-shrink-0"
             >
               <Send className="h-4 w-4 sm:h-5 sm:w-5" />
             </Button>
