@@ -6,6 +6,7 @@ import ChatMessage from './ChatMessage';
 import Sidebar from './Sidebar';
 import PWAInstallPrompt from '../PWAInstallPrompt';
 import LimitExceededModal from '../LimitExceededModal';
+import AnnouncementModal from '../AnnouncementModal';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
 import { useDarkMode } from '@/hooks/useDarkMode';
@@ -408,6 +409,9 @@ const ChatInterface = () => {
         onClose={() => setLimitModalOpen(false)}
         type="chat"
       />
+
+      {/* Announcement Modal */}
+      <AnnouncementModal />
     </div>
   );
 };

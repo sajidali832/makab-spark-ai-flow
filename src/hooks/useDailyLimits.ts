@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 interface DailyLimits {
@@ -7,8 +6,8 @@ interface DailyLimits {
   lastReset: string;
 }
 
-const CHAT_LIMIT = 10;
-const TOOLS_LIMIT = 6;
+const CHAT_LIMIT = 10;  // Updated from 6 to 10
+const TOOLS_LIMIT = 6;  // Updated from 3 to 6
 
 export const useDailyLimits = () => {
   const [limits, setLimits] = useState<DailyLimits>(() => {
