@@ -12,6 +12,8 @@ import History from "./pages/History";
 import ChatHistory from "./pages/ChatHistory";
 import Profile from "./pages/Profile";
 import About from "./pages/About";
+import Favorites from "./pages/Favorites";
+import Templates from "./pages/Templates";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +33,8 @@ const App = () => (
           <Route path="/chat-history" element={<ChatHistory />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/about" element={<About />} />
+          <Route path="/favorites" element={<Favorites />} />
+          <Route path="/templates" element={<Templates />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
