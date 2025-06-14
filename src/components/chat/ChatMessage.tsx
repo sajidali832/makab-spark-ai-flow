@@ -49,17 +49,17 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
   if (message.role === 'user') {
     return (
       <div className="flex justify-end group">
-        <div className="flex items-end space-x-2 max-w-[85%] sm:max-w-[80%]">
+        <div className="flex items-end space-x-1 max-w-[85%] sm:max-w-[80%]">
           <Button
             variant="ghost"
             size="sm"
             onClick={copyToClipboard}
-            className="opacity-0 group-hover:opacity-100 transition-opacity h-6 px-2 text-gray-400 hover:text-gray-600"
+            className="opacity-0 group-hover:opacity-100 transition-opacity h-5 px-1 text-gray-400 hover:text-gray-600"
           >
             <Copy className="h-3 w-3" />
           </Button>
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-2xl rounded-br-md px-3 py-2 sm:px-4 sm:py-3 animate-fade-in">
-            <p className="whitespace-pre-wrap text-sm sm:text-base">{message.content}</p>
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl rounded-br-md px-3 py-2 animate-fade-in">
+            <p className="whitespace-pre-wrap text-sm">{message.content}</p>
           </div>
         </div>
       </div>
@@ -67,34 +67,34 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
   }
 
   return (
-    <div className="flex justify-start space-x-2 sm:space-x-3 animate-fade-in">
-      <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-        <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-4 h-4 sm:w-6 sm:h-6 rounded-full" />
+    <div className="flex justify-start space-x-2 animate-fade-in">
+      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+        <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-3 h-3 sm:w-4 sm:h-4 rounded-full" />
       </div>
       
-      <div className="flex-1 space-y-1 sm:space-y-2">
-        <div className="max-w-[85%] sm:max-w-[80%] bg-white border border-gray-100 rounded-2xl rounded-bl-md px-3 py-2 sm:px-4 sm:py-3 shadow-sm">
+      <div className="flex-1 space-y-1">
+        <div className="max-w-[85%] sm:max-w-[80%] bg-white border border-gray-100 rounded-xl rounded-bl-md px-3 py-2 shadow-sm">
           {message.isThinking ? (
             <div className="flex items-center space-x-2 text-gray-600">
               <div className="flex space-x-1">
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-pulse"></div>
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-purple-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-600 rounded-full animate-pulse"></div>
+                <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-purple-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
               </div>
-              <span className="text-xs sm:text-sm">Thinking...</span>
+              <span className="text-xs">Thinking...</span>
             </div>
           ) : (
-            <p className="whitespace-pre-wrap text-gray-800 text-sm sm:text-base">{message.content}</p>
+            <p className="whitespace-pre-wrap text-gray-800 text-sm">{message.content}</p>
           )}
         </div>
         
         {!message.isThinking && (
-          <div className="flex items-center space-x-1 sm:space-x-2">
+          <div className="flex items-center space-x-1">
             <Button
               variant="ghost"
               size="sm"
               onClick={copyToClipboard}
-              className="h-6 px-2 sm:h-7 text-gray-500 hover:text-gray-700"
+              className="h-5 px-1 text-gray-500 hover:text-gray-700"
             >
               <Copy className="h-3 w-3" />
             </Button>
@@ -103,7 +103,7 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
               variant="ghost"
               size="sm"
               onClick={regenerateResponse}
-              className="h-6 px-2 sm:h-7 text-gray-500 hover:text-gray-700"
+              className="h-5 px-1 text-gray-500 hover:text-gray-700"
             >
               <RotateCcw className="h-3 w-3" />
             </Button>
@@ -113,7 +113,7 @@ const ChatMessage = ({ message, isCurrentlyThinking }: ChatMessageProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={stopResponse}
-                className="h-6 px-2 sm:h-7 text-gray-500 hover:text-gray-700"
+                className="h-5 px-1 text-gray-500 hover:text-gray-700"
               >
                 <Square className="h-3 w-3" />
               </Button>
