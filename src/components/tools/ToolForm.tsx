@@ -1,11 +1,10 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Copy, ArrowLeft, Sparkles, Loader2, RefreshCw, Save, Check } from 'lucide-react';
+import { Copy, ArrowLeft, Sparkles, Loader2, RefreshCw, Save, Check, Heart } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import LimitExceededModal from '../LimitExceededModal';
@@ -37,6 +36,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
   const [copySuccess, setCopySuccess] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [regenerateSuccess, setRegenerateSuccess] = useState(false);
+  const [favoriteSuccess, setFavoriteSuccess] = useState(false);
   const { toast } = useToast();
   const { canUseTools, incrementToolGenerations } = useDailyLimits();
 
@@ -172,6 +172,45 @@ const ToolForm = ({ tool }: ToolFormProps) => {
     generateContent(true);
   };
 
+  const addToFavorites = async () => {
+    if (!generatedContent) return;
+
+    try {
+      const user = JSON.parse(localStorage.getItem('makab_user') || '{}');
+      if (user.id) {
+        const { error } = await supabase.from('favorites').insert({
+          user_id: user.id,
+          content_id: crypto.randomUUID(),
+          content_type: tool.title,
+          content_preview: generatedContent.substring(0, 200) + (generatedContent.length > 200 ? '...' : '')
+        });
+
+        if (error) throw error;
+
+        setFavoriteSuccess(true);
+        setTimeout(() => setFavoriteSuccess(false), 2000);
+        
+        toast({
+          title: "Added to Favorites!",
+          description: "Content saved to your favorites collection",
+        });
+      } else {
+        toast({
+          title: "Login Required",
+          description: "Please login to save favorites",
+          variant: "destructive",
+        });
+      }
+    } catch (err) {
+      console.error('Failed to add to favorites:', err);
+      toast({
+        title: "Error",
+        description: "Failed to add to favorites",
+        variant: "destructive",
+      });
+    }
+  };
+
   const isCodeContent = (content: string) => {
     // Check if content contains code patterns
     const codePatterns = [
@@ -222,6 +261,20 @@ const ToolForm = ({ tool }: ToolFormProps) => {
           <Check className="h-4 w-4 text-green-600" />
         ) : (
           <RefreshCw className={`h-4 w-4 ${isRegenerating ? 'animate-spin' : ''}`} />
+        )}
+      </Button>
+      <Button
+        variant="outline"
+        onClick={addToFavorites}
+        className={`h-10 w-10 p-0 transition-all duration-200 ${
+          favoriteSuccess ? 'bg-pink-50 border-pink-200 scale-110' : 'hover:scale-105 hover:bg-pink-50'
+        }`}
+        title="Add to Favorites"
+      >
+        {favoriteSuccess ? (
+          <Check className="h-4 w-4 text-green-600" />
+        ) : (
+          <Heart className="h-4 w-4 text-pink-600" />
         )}
       </Button>
       <Button

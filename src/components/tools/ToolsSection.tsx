@@ -20,7 +20,9 @@ import {
   MessageCircle,
   Linkedin,
   Image,
-  Search
+  Search,
+  Heart,
+  Layout
 } from 'lucide-react';
 import ToolForm from './ToolForm';
 
@@ -366,6 +368,47 @@ const ToolsSection = () => {
               <Sparkles className="h-4 w-4" />
             </div>
           </div>
+        </div>
+        
+        {/* Quick Access Section */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+          <Card className="group hover:shadow-xl transition-all duration-300 hover:scale-105 border-0 shadow-lg overflow-hidden bg-gradient-to-r from-blue-50 to-purple-50">
+            <CardContent className="p-0">
+              <Button
+                variant="ghost"
+                className="w-full h-auto p-6 rounded-2xl flex items-center space-x-4"
+                onClick={() => window.location.href = '/templates'}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center text-white shadow-lg">
+                  <Layout className="h-6 w-6" />
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className="font-bold text-gray-800 text-lg">Quick Templates</h3>
+                  <p className="text-gray-600 text-sm">Ready-to-use content templates</p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card className="group hover:shadow-xl transition-all duration-300 hover:scale-105 border-0 shadow-lg overflow-hidden bg-gradient-to-r from-pink-50 to-red-50">
+            <CardContent className="p-0">
+              <Button
+                variant="ghost"
+                className="w-full h-auto p-6 rounded-2xl flex items-center space-x-4"
+                onClick={() => window.location.href = '/favorites'}
+              >
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-pink-600 to-red-600 flex items-center justify-center text-white shadow-lg">
+                  <Heart className="h-6 w-6" />
+                </div>
+                <div className="flex-1 text-left">
+                  <h3 className="font-bold text-gray-800 text-lg">My Favorites</h3>
+                  <p className="text-gray-600 text-sm">Your saved content collection</p>
+                </div>
+                <ArrowRight className="h-5 w-5 text-gray-400 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </CardContent>
+          </Card>
         </div>
         
         {/* Enhanced Tools Grid */}
