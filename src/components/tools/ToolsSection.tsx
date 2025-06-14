@@ -119,43 +119,82 @@ const ToolsSection = () => {
     const baseInputs = {
       'script-generator': [
         { name: 'topic', label: 'Video Topic', type: 'text' as const, placeholder: 'Enter your video topic...' },
-        { name: 'duration', label: 'Duration', type: 'select' as const, options: ['30 seconds', '1 minute', '2 minutes', '5 minutes'], placeholder: 'Select duration' },
-        { name: 'style', label: 'Style', type: 'select' as const, options: ['Educational', 'Entertainment', 'Tutorial', 'Review'], placeholder: 'Select style' }
+        { name: 'duration', label: 'Duration', type: 'select' as const, options: ['30 seconds', '1 minute', '2 minutes', '5 minutes', '10+ minutes'], placeholder: 'Select duration' },
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['YouTube', 'TikTok', 'Instagram Reels', 'Facebook', 'LinkedIn'], placeholder: 'Select platform' },
+        { name: 'tone', label: 'Tone', type: 'select' as const, options: ['Professional', 'Casual', 'Funny', 'Inspiring', 'Educational', 'Dramatic'], placeholder: 'Select tone' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your target audience?' },
+        { name: 'style', label: 'Style', type: 'select' as const, options: ['Educational', 'Entertainment', 'Tutorial', 'Review', 'Storytelling', 'Documentary'], placeholder: 'Select style' },
+        { name: 'keywords', label: 'Keywords (optional)', type: 'text' as const, placeholder: 'SEO keywords to include...' },
+        { name: 'cta', label: 'Call-to-Action', type: 'select' as const, options: ['Subscribe', 'Like & Share', 'Visit Website', 'Download App', 'Custom'], placeholder: 'Select CTA' }
       ],
       'blog-generator': [
         { name: 'topic', label: 'Blog Topic', type: 'text' as const, placeholder: 'Enter your blog topic...' },
-        { name: 'length', label: 'Length', type: 'select' as const, options: ['Short (300 words)', 'Medium (600 words)', 'Long (1000+ words)'], placeholder: 'Select length' },
-        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your target audience?' }
+        { name: 'length', label: 'Length', type: 'select' as const, options: ['Short (300-500 words)', 'Medium (600-1000 words)', 'Long (1000-2000 words)', 'Very Long (2000+ words)'], placeholder: 'Select length' },
+        { name: 'tone', label: 'Tone', type: 'select' as const, options: ['Professional', 'Conversational', 'Academic', 'Friendly', 'Authoritative', 'Humorous'], placeholder: 'Select tone' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your target audience?' },
+        { name: 'structure', label: 'Structure', type: 'select' as const, options: ['How-to Guide', 'Listicle', 'Opinion Piece', 'Case Study', 'News Article', 'Review'], placeholder: 'Select structure' },
+        { name: 'keywords', label: 'SEO Keywords', type: 'text' as const, placeholder: 'Main keywords for SEO...' },
+        { name: 'cta', label: 'Call-to-Action', type: 'text' as const, placeholder: 'What action should readers take?' }
       ],
       'reel-ideas': [
         { name: 'niche', label: 'Your Niche', type: 'text' as const, placeholder: 'e.g., fitness, cooking, travel...' },
-        { name: 'mood', label: 'Mood/Tone', type: 'select' as const, options: ['Fun', 'Educational', 'Inspiring', 'Trending'], placeholder: 'Select mood' }
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram Reels', 'TikTok', 'YouTube Shorts', 'Facebook Reels'], placeholder: 'Select platform' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who are you targeting?' },
+        { name: 'trendType', label: 'Trend Type', type: 'select' as const, options: ['Dance', 'Comedy', 'Educational', 'Behind-the-scenes', 'Transformation', 'Challenge'], placeholder: 'Select trend type' },
+        { name: 'goals', label: 'Content Goals', type: 'select' as const, options: ['Viral reach', 'Engagement', 'Education', 'Entertainment', 'Brand awareness', 'Sales'], placeholder: 'Select goal' },
+        { name: 'style', label: 'Style', type: 'select' as const, options: ['Fun', 'Educational', 'Inspiring', 'Trending', 'Professional', 'Casual'], placeholder: 'Select style' },
+        { name: 'duration', label: 'Duration', type: 'select' as const, options: ['15 seconds', '30 seconds', '60 seconds', '90 seconds'], placeholder: 'Select duration' }
       ],
       'engagement-questions': [
         { name: 'topic', label: 'Story Topic', type: 'text' as const, placeholder: 'What is your story about?' },
-        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who are you targeting?' }
+        { name: 'contentType', label: 'Content Type', type: 'select' as const, options: ['Instagram Stories', 'TikTok', 'YouTube Community', 'Facebook Stories', 'LinkedIn'], placeholder: 'Select content type' },
+        { name: 'questionType', label: 'Question Type', type: 'select' as const, options: ['This or That', 'Yes/No', 'Multiple Choice', 'Open-ended', 'Rating Scale'], placeholder: 'Select question type' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who are you targeting?' },
+        { name: 'engagementGoal', label: 'Engagement Goal', type: 'select' as const, options: ['Increase comments', 'Drive DMs', 'Build community', 'Get feedback', 'Start conversation'], placeholder: 'Select goal' },
+        { name: 'quantity', label: 'Number of Questions', type: 'select' as const, options: ['5', '10', '15', '20'], placeholder: 'How many questions?' },
+        { name: 'industry', label: 'Industry (optional)', type: 'text' as const, placeholder: 'Your industry/niche...' }
       ],
       'caption': [
         { name: 'topic', label: 'Post Topic', type: 'text' as const, placeholder: 'What is your post about?' },
-        { name: 'tone', label: 'Tone', type: 'select' as const, options: ['Professional', 'Casual', 'Funny', 'Inspiring'], placeholder: 'Select tone' },
-        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'Facebook', 'LinkedIn', 'Twitter'], placeholder: 'Select platform' }
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'Facebook', 'LinkedIn', 'Twitter', 'TikTok'], placeholder: 'Select platform' },
+        { name: 'tone', label: 'Tone', type: 'select' as const, options: ['Professional', 'Casual', 'Funny', 'Inspiring', 'Educational', 'Promotional'], placeholder: 'Select tone' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your target audience?' },
+        { name: 'length', label: 'Caption Length', type: 'select' as const, options: ['Short (1-2 sentences)', 'Medium (3-5 sentences)', 'Long (paragraph)', 'Very Long (story format)'], placeholder: 'Select length' },
+        { name: 'cta', label: 'Call-to-Action', type: 'select' as const, options: ['Like & Share', 'Comment below', 'Visit link in bio', 'Tag a friend', 'Save this post', 'Custom'], placeholder: 'Select CTA' },
+        { name: 'keywords', label: 'Keywords (optional)', type: 'text' as const, placeholder: 'Important keywords to include...' }
       ],
       'hashtag': [
         { name: 'topic', label: 'Content Topic', type: 'text' as const, placeholder: 'What is your content about?' },
-        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'TikTok', 'Twitter', 'LinkedIn'], placeholder: 'Select platform' }
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'TikTok', 'Twitter', 'LinkedIn', 'YouTube'], placeholder: 'Select platform' },
+        { name: 'niche', label: 'Niche/Industry', type: 'text' as const, placeholder: 'Your niche or industry...' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who are you targeting?' },
+        { name: 'count', label: 'Number of Hashtags', type: 'select' as const, options: ['15', '20', '25', '30'], placeholder: 'How many hashtags?' },
+        { name: 'mix', label: 'Hashtag Mix', type: 'select' as const, options: ['Trending focused', 'Niche focused', 'Balanced mix', 'Long-tail focused'], placeholder: 'Select mix type' }
       ],
       'idea': [
         { name: 'niche', label: 'Your Niche/Industry', type: 'text' as const, placeholder: 'e.g., fitness, technology, food...' },
-        { name: 'contentType', label: 'Content Type', type: 'select' as const, options: ['Video', 'Blog Post', 'Social Media', 'Email'], placeholder: 'Select content type' }
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'TikTok', 'YouTube', 'Facebook', 'LinkedIn', 'Twitter'], placeholder: 'Select platform' },
+        { name: 'contentType', label: 'Content Type', type: 'select' as const, options: ['Video', 'Image Post', 'Story', 'Reel/Short', 'Blog Post', 'Carousel'], placeholder: 'Select content type' },
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your target audience?' },
+        { name: 'goals', label: 'Content Goals', type: 'select' as const, options: ['Increase followers', 'Drive engagement', 'Generate leads', 'Build brand awareness', 'Educate audience', 'Drive sales'], placeholder: 'Select goals' },
+        { name: 'quantity', label: 'Number of Ideas', type: 'select' as const, options: ['10', '15', '20', '25', '30'], placeholder: 'How many ideas?' }
       ],
       'youtube': [
         { name: 'niche', label: 'Channel Niche', type: 'text' as const, placeholder: 'What is your channel about?' },
-        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your target audience?' }
+        { name: 'audience', label: 'Target Audience', type: 'text' as const, placeholder: 'Who is your target audience?' },
+        { name: 'contentStyle', label: 'Content Style', type: 'select' as const, options: ['Educational', 'Entertainment', 'Vlogs', 'Reviews', 'Tutorials', 'Gaming', 'Lifestyle'], placeholder: 'Select content style' },
+        { name: 'experience', label: 'Experience Level', type: 'select' as const, options: ['Beginner', 'Intermediate', 'Advanced', 'Expert'], placeholder: 'Your experience level' },
+        { name: 'goals', label: 'Channel Goals', type: 'select' as const, options: ['Build audience', 'Generate income', 'Share knowledge', 'Build brand', 'Have fun'], placeholder: 'Select goals' },
+        { name: 'frequency', label: 'Upload Frequency', type: 'select' as const, options: ['Daily', '3x per week', 'Weekly', 'Bi-weekly', 'Monthly'], placeholder: 'How often will you upload?' }
       ],
       'bio': [
         { name: 'profession', label: 'Profession/Role', type: 'text' as const, placeholder: 'e.g., Software Developer, Artist...' },
-        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'Twitter', 'LinkedIn', 'TikTok'], placeholder: 'Select platform' },
-        { name: 'personality', label: 'Personality', type: 'select' as const, options: ['Professional', 'Creative', 'Funny', 'Inspirational'], placeholder: 'Select style' }
+        { name: 'platform', label: 'Platform', type: 'select' as const, options: ['Instagram', 'Twitter', 'LinkedIn', 'TikTok', 'Facebook'], placeholder: 'Select platform' },
+        { name: 'personality', label: 'Personality', type: 'select' as const, options: ['Professional', 'Creative', 'Funny', 'Inspirational', 'Casual', 'Authoritative'], placeholder: 'Select style' },
+        { name: 'achievements', label: 'Key Achievements', type: 'text' as const, placeholder: 'Your key achievements or credentials...' },
+        { name: 'interests', label: 'Interests/Hobbies', type: 'text' as const, placeholder: 'Your interests or hobbies...' },
+        { name: 'cta', label: 'Call-to-Action', type: 'select' as const, options: ['Visit website', 'DM for inquiries', 'Check link in bio', 'Email me', 'Follow for tips', 'Custom'], placeholder: 'Select CTA' },
+        { name: 'emojiStyle', label: 'Emoji Style', type: 'select' as const, options: ['Minimal', 'Moderate', 'Heavy', 'None'], placeholder: 'Select emoji usage' }
       ]
     };
 

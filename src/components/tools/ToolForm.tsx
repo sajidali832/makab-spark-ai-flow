@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Copy, ArrowLeft, Sparkles } from 'lucide-react';
+import { Copy, ArrowLeft, Sparkles, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import LimitExceededModal from '../LimitExceededModal';
@@ -148,35 +148,6 @@ const ToolForm = ({ tool }: ToolFormProps) => {
       );
     }
 
-    if (tool.id === 'script-generator') {
-      const scripts = generatedContent.split('---').filter(script => script.trim());
-      return (
-        <div className="space-y-4">
-          {scripts.map((script, index) => (
-            <div key={index} className="bg-gray-50 border border-gray-200 rounded-lg p-4 group relative hover:bg-gray-100 transition-colors">
-              <pre className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap font-mono">{script.trim()}</pre>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => copyToClipboard(script.trim())}
-                className="absolute top-2 right-2 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                <Copy className="h-3 w-3" />
-              </Button>
-            </div>
-          ))}
-          <Button
-            variant="outline"
-            onClick={() => copyToClipboard(generatedContent)}
-            className="w-full"
-          >
-            <Copy className="h-4 w-4 mr-2" />
-            Copy All Scripts
-          </Button>
-        </div>
-      );
-    }
-
     // Default content display for other tools
     return (
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 relative group hover:bg-gray-100 transition-colors">
@@ -195,9 +166,9 @@ const ToolForm = ({ tool }: ToolFormProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-      <div className="max-w-4xl mx-auto p-4 space-y-6">
+      <div className="max-w-7xl mx-auto p-3 sm:p-4 lg:p-6">
         {/* Compact Header */}
-        <div className="flex items-center justify-between py-4">
+        <div className="flex items-center justify-between py-4 mb-6">
           <Button
             variant="ghost"
             onClick={() => window.history.back()}
@@ -206,29 +177,29 @@ const ToolForm = ({ tool }: ToolFormProps) => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="text-center flex-1 mx-4">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               {tool.title}
             </h1>
-            <p className="text-sm text-gray-600 mt-1">{tool.description}</p>
+            <p className="text-xs sm:text-sm text-gray-600 mt-1">{tool.description}</p>
           </div>
           <div className="w-10" />
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-6">
+        {/* Responsive Layout */}
+        <div className="space-y-6">
           {/* Form Section */}
-          <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-3xl p-6 shadow-xl">
-            <div className="flex items-center space-x-2 mb-6">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
-                <Sparkles className="h-4 w-4 text-white" />
+          <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl">
+            <div className="flex items-center space-x-2 mb-4 sm:mb-6">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
               </div>
-              <h2 className="text-lg font-semibold text-gray-800">Create Content</h2>
+              <h2 className="text-base sm:text-lg font-semibold text-gray-800">Create Content</h2>
             </div>
             
-            <div className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
               {tool.inputs.map((input) => (
-                <div key={input.name} className="space-y-2">
-                  <Label htmlFor={input.name} className="text-sm font-medium text-gray-700">
+                <div key={input.name} className={`space-y-2 ${input.type === 'textarea' ? 'sm:col-span-2' : ''}`}>
+                  <Label htmlFor={input.name} className="text-xs sm:text-sm font-medium text-gray-700">
                     {input.label}
                   </Label>
                   {input.type === 'text' && (
@@ -237,7 +208,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
                       placeholder={input.placeholder}
                       value={formData[input.name] || ''}
                       onChange={(e) => handleInputChange(input.name, e.target.value)}
-                      className="w-full border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl h-12"
+                      className="w-full border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl h-10 sm:h-12 text-sm"
                     />
                   )}
                   {input.type === 'textarea' && (
@@ -246,7 +217,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
                       placeholder={input.placeholder}
                       value={formData[input.name] || ''}
                       onChange={(e) => handleInputChange(input.name, e.target.value)}
-                      className="w-full min-h-[120px] border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl"
+                      className="w-full min-h-[100px] sm:min-h-[120px] border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl text-sm"
                     />
                   )}
                   {input.type === 'select' && (
@@ -254,7 +225,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
                       value={formData[input.name] || ''}
                       onValueChange={(value) => handleInputChange(input.name, value)}
                     >
-                      <SelectTrigger className="border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl h-12">
+                      <SelectTrigger className="border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-xl h-10 sm:h-12 text-sm">
                         <SelectValue placeholder={input.placeholder} />
                       </SelectTrigger>
                       <SelectContent>
@@ -273,16 +244,16 @@ const ToolForm = ({ tool }: ToolFormProps) => {
             <Button
               onClick={generateContent}
               disabled={isLoading || !canUseTools()}
-              className="w-full mt-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl h-14 text-lg font-semibold shadow-lg"
+              className="w-full mt-6 sm:mt-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-xl h-12 sm:h-14 text-sm sm:text-lg font-semibold shadow-lg"
             >
               {isLoading ? (
-                <div className="flex items-center space-x-3">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Generating Amazing Content...</span>
+                <div className="flex items-center space-x-2 sm:space-x-3">
+                  <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                  <span>Generating...</span>
                 </div>
               ) : (
                 <div className="flex items-center space-x-2">
-                  <Sparkles className="h-5 w-5" />
+                  <Sparkles className="h-4 w-4 sm:h-5 sm:w-5" />
                   <span>Generate Content</span>
                 </div>
               )}
@@ -291,12 +262,12 @@ const ToolForm = ({ tool }: ToolFormProps) => {
 
           {/* Generated Content Section */}
           {generatedContent && (
-            <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-3xl p-6 shadow-xl">
-              <div className="flex items-center space-x-2 mb-6">
-                <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
-                  <Copy className="h-4 w-4 text-white" />
+            <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-xl">
+              <div className="flex items-center space-x-2 mb-4 sm:mb-6">
+                <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
+                  <Copy className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800">Generated Content</h3>
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800">Generated Content</h3>
               </div>
               {renderGeneratedContent()}
             </div>
@@ -304,13 +275,13 @@ const ToolForm = ({ tool }: ToolFormProps) => {
 
           {/* Placeholder when no content */}
           {!generatedContent && (
-            <div className="bg-white/80 backdrop-blur-sm border border-gray-200/40 rounded-3xl p-6 shadow-lg flex items-center justify-center">
+            <div className="bg-white/80 backdrop-blur-sm border border-gray-200/40 rounded-2xl sm:rounded-3xl p-6 sm:p-8 shadow-lg flex items-center justify-center">
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center mx-auto">
-                  <Sparkles className="h-8 w-8 text-gray-500" />
+                <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-gray-200 to-gray-300 rounded-2xl flex items-center justify-center mx-auto">
+                  <Sparkles className="h-6 w-6 sm:h-8 sm:w-8 text-gray-500" />
                 </div>
-                <p className="text-gray-500 text-lg">Your generated content will appear here</p>
-                <p className="text-gray-400 text-sm">Fill out the form and click generate to get started</p>
+                <p className="text-gray-500 text-base sm:text-lg">Your generated content will appear here</p>
+                <p className="text-gray-400 text-xs sm:text-sm">Fill out the form and click generate to get started</p>
               </div>
             </div>
           )}

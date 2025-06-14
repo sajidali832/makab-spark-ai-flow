@@ -1,3 +1,4 @@
+
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import "https://deno.land/x/xhr@0.1.0/mod.ts"
 
@@ -14,8 +15,8 @@ serve(async (req) => {
   try {
     console.log('Tools generation function called');
     
-    const { toolType, inputData } = await req.json()
-    console.log('Request data:', { toolType, inputData });
+    const { toolId, inputs } = await req.json()
+    console.log('Request data:', { toolId, inputs });
 
     // Use the provided API key directly
     const GEMINI_API_KEY = "AIzaSyAxpV4OY_zVDst3jGaYNwnyHhFmZ0V4XJE"
@@ -25,30 +26,32 @@ serve(async (req) => {
 
     let prompt = ''
     
-    switch (toolType) {
+    switch (toolId) {
       case 'script-generator':
-        prompt = `Create a ${inputData.duration} video script about "${inputData.topic}" for ${inputData.platform}. 
-        Tone: ${inputData.tone}
-        Audience: ${inputData.audience}
-        Style: ${inputData.style}
-        Keywords: ${inputData.keywords || 'None'}
+        prompt = `Create a ${inputs.duration} video script about "${inputs.topic}" for ${inputs.platform}. 
+        Tone: ${inputs.tone}
+        Audience: ${inputs.audience}
+        Style: ${inputs.style}
+        Keywords: ${inputs.keywords || 'None'}
+        Call-to-Action: ${inputs.cta || 'Subscribe and like'}
         
         Write a complete, ready-to-use script with:
-        - Engaging hook/opening
+        - Engaging hook/opening (first 5 seconds)
         - Clear structure with timestamps
         - Natural dialogue/narration
-        - Call-to-action at the end
+        - Smooth transitions between sections
+        - Strong call-to-action at the end
         
         Format it professionally with clear sections and timing cues.`
         break
 
       case 'blog-generator':
-        prompt = `Write a ${inputData.length} blog post about "${inputData.topic}".
-        Tone: ${inputData.tone}
-        Audience: ${inputData.audience}
-        Structure: ${inputData.structure}
-        SEO Keywords: ${inputData.keywords || 'None'}
-        Call-to-Action: ${inputData.cta || 'None'}
+        prompt = `Write a ${inputs.length} blog post about "${inputs.topic}".
+        Tone: ${inputs.tone}
+        Audience: ${inputs.audience}
+        Structure: ${inputs.structure}
+        SEO Keywords: ${inputs.keywords || 'None'}
+        Call-to-Action: ${inputs.cta || 'None'}
         
         Create a complete blog post with:
         - Compelling headline
@@ -61,12 +64,12 @@ serve(async (req) => {
         break
 
       case 'reel-ideas':
-        prompt = `Generate creative reel ideas for ${inputData.niche} content on ${inputData.platform}.
-        Target Audience: ${inputData.audience}
-        Trend Type: ${inputData.trend_type}
-        Content Goals: ${inputData.goals}
-        Style: ${inputData.style}
-        Duration: ${inputData.duration}
+        prompt = `Generate creative reel ideas for ${inputs.niche} content on ${inputs.platform}.
+        Target Audience: ${inputs.audience}
+        Trend Type: ${inputs.trendType}
+        Content Goals: ${inputs.goals}
+        Style: ${inputs.style}
+        Duration: ${inputs.duration}
         
         Provide 10 specific, actionable reel ideas with:
         - Clear concept description
@@ -79,11 +82,11 @@ serve(async (req) => {
         break
 
       case 'engagement-questions':
-        prompt = `Create ${inputData.quantity} engagement questions for ${inputData.content_type} about ${inputData.topic}.
-        Question Type: ${inputData.question_type}
-        Target Audience: ${inputData.audience}
-        Goal: ${inputData.engagement_goal}
-        Industry: ${inputData.industry || 'General'}
+        prompt = `Create ${inputs.quantity} engagement questions for ${inputs.contentType} about ${inputs.topic}.
+        Question Type: ${inputs.questionType}
+        Target Audience: ${inputs.audience}
+        Goal: ${inputs.engagementGoal}
+        Industry: ${inputs.industry || 'General'}
         
         Generate varied, engaging questions that:
         - Encourage responses and interaction
@@ -95,11 +98,12 @@ serve(async (req) => {
         break
 
       case 'caption':
-        prompt = `Write engaging social media captions for ${inputData.platform} about "${inputData.topic}".
-        Tone: ${inputData.tone}
-        Audience: ${inputData.audience}
-        Call-to-Action: ${inputData.cta || 'None'}
-        Keywords: ${inputData.keywords || 'None'}
+        prompt = `Write engaging social media captions for ${inputs.platform} about "${inputs.topic}".
+        Tone: ${inputs.tone}
+        Audience: ${inputs.audience}
+        Call-to-Action: ${inputs.cta || 'None'}
+        Keywords: ${inputs.keywords || 'None'}
+        Length: ${inputs.length}
         
         Create 3 different caption variations:
         - Short and punchy version
@@ -110,25 +114,25 @@ serve(async (req) => {
         break
 
       case 'hashtag':
-        prompt = `Generate ${inputData.count} for ${inputData.platform} about "${inputData.topic}".
-        Niche: ${inputData.niche}
-        Audience: ${inputData.audience}
-        Mix Type: ${inputData.mix}
+        prompt = `Generate ${inputs.count} hashtags for ${inputs.platform} about "${inputs.topic}".
+        Niche: ${inputs.niche}
+        Audience: ${inputs.audience}
+        Mix Type: ${inputs.mix}
         
         Provide hashtags in these categories:
-        - High-volume trending hashtags
-        - Niche-specific hashtags
-        - Long-tail hashtags
+        - High-volume trending hashtags (3-5)
+        - Niche-specific hashtags (5-7)
+        - Long-tail hashtags (5-8)
         - Location-based (if relevant)
         
         Format them ready to copy-paste and include usage tips.`
         break
 
       case 'idea':
-        prompt = `Generate ${inputData.quantity} content ideas for ${inputData.niche} on ${inputData.platform}.
-        Content Type: ${inputData.content_type}
-        Audience: ${inputData.audience}
-        Goals: ${inputData.goals}
+        prompt = `Generate ${inputs.quantity} content ideas for ${inputs.niche} on ${inputs.platform}.
+        Content Type: ${inputs.contentType}
+        Audience: ${inputs.audience}
+        Goals: ${inputs.goals}
         
         Create diverse, actionable content ideas with:
         - Clear title/concept
@@ -141,12 +145,12 @@ serve(async (req) => {
         break
 
       case 'youtube':
-        prompt = `Generate YouTube channel ideas for ${inputData.niche} niche.
-        Target Audience: ${inputData.audience}
-        Content Style: ${inputData.content_style}
-        Experience Level: ${inputData.experience}
-        Goals: ${inputData.goals}
-        Upload Frequency: ${inputData.frequency}
+        prompt = `Generate YouTube channel ideas for ${inputs.niche} niche.
+        Target Audience: ${inputs.audience}
+        Content Style: ${inputs.contentStyle}
+        Experience Level: ${inputs.experience}
+        Goals: ${inputs.goals}
+        Upload Frequency: ${inputs.frequency}
         
         Provide:
         - 5 specific channel concepts
@@ -159,13 +163,13 @@ serve(async (req) => {
         break
 
       case 'bio':
-        prompt = `Create a compelling bio for ${inputData.platform}.
-        Profession: ${inputData.profession}
-        Personality: ${inputData.personality}
-        Achievements: ${inputData.achievements || 'None specified'}
-        Interests: ${inputData.interests || 'None specified'}
-        Call-to-Action: ${inputData.cta || 'None'}
-        Emoji Style: ${inputData.emoji_style}
+        prompt = `Create a compelling bio for ${inputs.platform}.
+        Profession: ${inputs.profession}
+        Personality: ${inputs.personality}
+        Achievements: ${inputs.achievements || 'None specified'}
+        Interests: ${inputs.interests || 'None specified'}
+        Call-to-Action: ${inputs.cta || 'None'}
+        Emoji Style: ${inputs.emojiStyle}
         
         Write 3 bio variations:
         - Professional version
@@ -176,7 +180,7 @@ serve(async (req) => {
         break
 
       default:
-        prompt = `Generate helpful content based on the user's request for ${toolType} with the following details: ${JSON.stringify(inputData)}`
+        prompt = `Generate helpful content based on the user's request for ${toolId} with the following details: ${JSON.stringify(inputs)}`
     }
 
     console.log('Sending request to Gemini API...');
@@ -211,29 +215,17 @@ serve(async (req) => {
     if (!response.ok) {
       const errorText = await response.text();
       console.error('Gemini API error:', response.status, errorText);
-      
-      // Create more user-friendly error messages based on common API errors
-      if (response.status === 400) {
-        throw new Error('Invalid request: Please check your input and try again')
-      } else if (response.status === 401 || response.status === 403) {
-        throw new Error('Authentication error: The Gemini API key appears to be invalid')
-      } else if (response.status === 429) {
-        throw new Error('Rate limit exceeded: Too many requests to the Gemini API')
-      } else if (response.status === 500) {
-        throw new Error('Gemini service error: Their servers may be experiencing issues')
-      } else {
-        throw new Error(`Gemini API error: ${response.status} - Please check the function logs for details`)
-      }
+      throw new Error(`API error: ${response.status}`);
     }
 
     const data = await response.json()
     console.log('Gemini response received successfully');
     
     // Extract the generated content from Gemini's response structure
-    const generatedContent = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No content generated';
+    const content = data.candidates?.[0]?.content?.parts?.[0]?.text || 'No content generated';
 
     return new Response(
-      JSON.stringify({ generatedContent }),
+      JSON.stringify({ content }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
