@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -9,6 +8,7 @@ import { Copy, ArrowLeft, Sparkles, Loader2, RefreshCw, Save, Download } from 'l
 import { useToast } from '@/hooks/use-toast';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import LimitExceededModal from '../LimitExceededModal';
+import CodeBlock from './CodeBlock';
 import { supabase } from '@/integrations/supabase/client';
 
 interface ToolFormProps {
@@ -135,10 +135,76 @@ const ToolForm = ({ tool }: ToolFormProps) => {
     generateContent();
   };
 
+  const isCodeContent = (content: string) => {
+    // Check if content contains code patterns
+    const codePatterns = [
+      /```[\s\S]*```/,  // Markdown code blocks
+      /function\s+\w+\s*\(/,  // Function declarations
+      /const\s+\w+\s*=/,  // Const declarations
+      /let\s+\w+\s*=/,  // Let declarations
+      /var\s+\w+\s*=/,  // Var declarations
+      /class\s+\w+/,  // Class declarations
+      /import\s+.*from/,  // Import statements
+      /export\s+(default\s+)?/,  // Export statements
+      /<\w+.*>/,  // HTML/JSX tags
+      /\{[\s\S]*\}/,  // Code blocks with braces
+      /if\s*\(/,  // If statements
+      /for\s*\(/,  // For loops
+      /while\s*\(/,  // While loops
+    ];
+    
+    return codePatterns.some(pattern => pattern.test(content));
+  };
+
   const renderGeneratedContent = () => {
     if (!generatedContent) return null;
 
-    // Parse different content types for better display
+    // If content looks like code, render it in a code block
+    if (isCodeContent(generatedContent)) {
+      return (
+        <div className="space-y-4">
+          <CodeBlock code={generatedContent} language="javascript" />
+          
+          <div className="flex flex-wrap gap-2">
+            <Button
+              variant="outline"
+              onClick={() => copyToClipboard(generatedContent)}
+              className="flex-1 min-w-0"
+            >
+              <Copy className="h-4 w-4 mr-2" />
+              Copy Code
+            </Button>
+            <Button
+              variant="outline"
+              onClick={regenerateContent}
+              disabled={isLoading}
+              className="flex-1 min-w-0"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+              Regenerate
+            </Button>
+            <Button
+              variant="outline"
+              onClick={saveContent}
+              className="flex-1 min-w-0"
+            >
+              <Save className="h-4 w-4 mr-2" />
+              Save
+            </Button>
+            <Button
+              variant="outline"
+              onClick={downloadContent}
+              className="flex-1 min-w-0"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Download
+            </Button>
+          </div>
+        </div>
+      );
+    }
+
+    // For hashtags - special formatting
     if (tool.id === 'hashtag-generator' || tool.id === 'hashtag') {
       const hashtags = generatedContent.split('\n').filter(line => line.trim().startsWith('#'));
       return (
@@ -190,6 +256,7 @@ const ToolForm = ({ tool }: ToolFormProps) => {
       );
     }
 
+    // For captions - special formatting
     if (tool.id === 'caption-generator' || tool.id === 'caption') {
       const captions = generatedContent.split('\n\n').filter(caption => caption.trim());
       return (
