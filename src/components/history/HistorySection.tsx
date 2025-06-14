@@ -11,6 +11,7 @@ interface HistoryItem {
   content: string;
   timestamp: string;
   source?: 'local' | 'database';
+  input_data?: any;
 }
 
 const HistorySection = () => {
@@ -26,7 +27,7 @@ const HistorySection = () => {
   const loadHistory = async () => {
     setIsLoading(true);
     try {
-      // Load from localStorage
+      // Load from localStorage for backward compatibility
       const localHistory = JSON.parse(localStorage.getItem('makab_history') || '[]')
         .map((item: any) => ({ ...item, source: 'local' }));
 
@@ -47,7 +48,8 @@ const HistorySection = () => {
             type: item.tool_type,
             content: item.generated_content,
             timestamp: item.created_at,
-            source: 'database' as const
+            source: 'database' as const,
+            input_data: item.input_data
           }));
         }
       }
@@ -59,6 +61,11 @@ const HistorySection = () => {
       setHistory(allHistory);
     } catch (error) {
       console.error('Error loading history:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load history",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -127,6 +134,12 @@ const HistorySection = () => {
 
   const getTypeLabel = (type: string) => {
     const labels: Record<string, string> = {
+      'Caption Generator': 'Caption',
+      'Script Generator': 'Script',
+      'Hashtag Generator': 'Hashtags',
+      'Content Ideas Generator': 'Ideas',
+      'YouTube Ideas Generator': 'YouTube Ideas',
+      'Bio Generator': 'Bio',
       caption: 'Caption',
       script: 'Script',
       hashtag: 'Hashtags',
@@ -145,6 +158,12 @@ const HistorySection = () => {
 
   const getTypeGradient = (type: string) => {
     const gradients: Record<string, string> = {
+      'Caption Generator': 'from-blue-500 to-cyan-500',
+      'Script Generator': 'from-purple-500 to-pink-500',
+      'Hashtag Generator': 'from-green-500 to-emerald-500',
+      'Content Ideas Generator': 'from-yellow-500 to-orange-500',
+      'YouTube Ideas Generator': 'from-red-500 to-rose-500',
+      'Bio Generator': 'from-indigo-500 to-purple-500',
       caption: 'from-blue-500 to-cyan-500',
       script: 'from-purple-500 to-pink-500',
       hashtag: 'from-green-500 to-emerald-500',
@@ -225,7 +244,7 @@ const HistorySection = () => {
     <div className="p-3 sm:p-6 space-y-4 sm:space-y-6 max-w-6xl mx-auto">
       <div className="text-center space-y-2">
         <h2 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          History 📚
+          Tools History 📚
         </h2>
         {isLoading && (
           <div className="flex justify-center">
