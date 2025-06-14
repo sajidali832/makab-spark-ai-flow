@@ -33,15 +33,15 @@ const CodeBlock = ({ code, language = 'javascript' }: CodeBlockProps) => {
   };
 
   return (
-    <div className="relative bg-gray-900 rounded-xl overflow-hidden border border-gray-700 shadow-xl">
+    <div className="w-full max-w-full bg-gray-900 rounded-xl overflow-hidden border border-gray-700 shadow-xl my-4">
       {/* Header */}
-      <div className="flex items-center justify-between bg-gray-800 px-4 py-2 border-b border-gray-700">
-        <span className="text-gray-300 text-sm font-medium">{language}</span>
+      <div className="flex items-center justify-between bg-gray-800 px-3 sm:px-4 py-2 border-b border-gray-700">
+        <span className="text-gray-300 text-xs sm:text-sm font-medium">{language}</span>
         <Button
           variant="ghost"
           size="sm"
           onClick={copyToClipboard}
-          className="h-7 w-7 p-0 text-gray-400 hover:text-white hover:bg-gray-700"
+          className="h-6 w-6 sm:h-7 sm:w-7 p-0 text-gray-400 hover:text-white hover:bg-gray-700"
         >
           {copied ? (
             <Check className="h-3 w-3" />
@@ -52,12 +52,14 @@ const CodeBlock = ({ code, language = 'javascript' }: CodeBlockProps) => {
       </div>
       
       {/* Code Content */}
-      <div className="p-4 overflow-x-auto">
-        <pre className="text-gray-100 text-sm leading-relaxed">
-          <code className="block whitespace-pre-wrap break-words">
-            {code}
-          </code>
-        </pre>
+      <div className="w-full overflow-hidden">
+        <div className="p-3 sm:p-4 overflow-x-auto max-h-[60vh] overflow-y-auto">
+          <pre className="text-gray-100 text-xs sm:text-sm leading-relaxed font-mono">
+            <code className="block whitespace-pre break-words max-w-full">
+              {code}
+            </code>
+          </pre>
+        </div>
       </div>
     </div>
   );

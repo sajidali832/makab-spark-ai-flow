@@ -162,8 +162,10 @@ const ToolForm = ({ tool }: ToolFormProps) => {
     // If content looks like code, render it in a code block
     if (isCodeContent(generatedContent)) {
       return (
-        <div className="space-y-4">
-          <CodeBlock code={generatedContent} language="javascript" />
+        <div className="space-y-4 w-full">
+          <div className="w-full overflow-hidden">
+            <CodeBlock code={generatedContent} language="javascript" />
+          </div>
           
           <div className="flex flex-wrap gap-2">
             <Button
@@ -316,9 +318,9 @@ const ToolForm = ({ tool }: ToolFormProps) => {
 
     // Default content display for other tools (scripts, blogs, etc.)
     return (
-      <div className="space-y-4">
-        <div className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-xl p-4 relative group hover:from-gray-100 hover:to-slate-100 transition-all duration-200">
-          <pre className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap pr-8">{generatedContent}</pre>
+      <div className="space-y-4 w-full">
+        <div className="bg-gradient-to-r from-gray-50 to-slate-50 border border-gray-200 rounded-xl p-4 relative group hover:from-gray-100 hover:to-slate-100 transition-all duration-200 w-full overflow-hidden">
+          <pre className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap break-words pr-8 max-w-full overflow-x-auto">{generatedContent}</pre>
           <Button
             variant="ghost"
             size="sm"
@@ -464,14 +466,16 @@ const ToolForm = ({ tool }: ToolFormProps) => {
 
         {/* Generated Content Section */}
         {generatedContent && (
-          <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-2xl p-4 sm:p-6 shadow-xl">
+          <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-2xl p-4 sm:p-6 shadow-xl w-full overflow-hidden">
             <div className="flex items-center space-x-2 mb-4 sm:mb-6">
               <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
                 <Copy className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
               </div>
               <h3 className="text-base sm:text-lg font-semibold text-gray-800">Generated Content</h3>
             </div>
-            {renderGeneratedContent()}
+            <div className="w-full overflow-hidden">
+              {renderGeneratedContent()}
+            </div>
           </div>
         )}
 
