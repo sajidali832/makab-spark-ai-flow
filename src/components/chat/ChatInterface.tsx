@@ -183,24 +183,22 @@ const ChatInterface = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       <div className="flex-1 flex flex-col">
-        {/* Vibrant Neon Header with abstract glowing shapes */}
-        <header className="relative z-10 overflow-hidden select-none border-b border-purple-200">
-          {/* Glassmorphism liquid shapes and flowing neon gradients */}
-          <div className="absolute inset-0 pointer-events-none">
-            {/* Neon blue abstract blob */}
-            <div className="absolute top-[-60px] left-[-80px] w-64 h-64 bg-cyan-400/70 blur-3xl rounded-[60%] rotate-12 animate-[glass-morph_11s_ease-in-out_infinite] opacity-90 z-0" />
-            {/* Neon pink flowing shape */}
-            <div className="absolute top-[10px] right-[-80px] w-80 h-52 bg-pink-500/50 blur-2xl rounded-tl-3xl rounded-br-[80px] rotate-[50deg] opacity-80 animate-[gradient-flow_14s_ease_infinite]" />
-            {/* Cyber green glowing oval */}
-            <div className="absolute bottom-[-60px] left-[60px] w-40 h-20 bg-green-400/50 blur-2xl rounded-full opacity-70 animate-pulse" />
-            {/* Purple glassy oval with soft glow */}
-            <div className="absolute bottom-0 right-[-70px] w-52 h-32 bg-purple-500/60 blur-[50px] rounded-tl-[60%] rounded-br-[80%] opacity-75 animate-[glass-morph_17s_ease-in-out_infinite]" />
-            {/* Soft white reflection bar */}
-            <div className="absolute left-1/2 bottom-0 w-3/5 h-7 bg-white/40 blur-md rounded-full -translate-x-1/2 opacity-30" />
+        {/* Refactored Header: cleaner, smaller, soft-glass blur, soft pastel + white blend */}
+        <header className="relative z-10 select-none border-b border-purple-100 bg-white/70 backdrop-blur-md shadow-sm"
+          style={{ minHeight: '58px', height: '58px' }}>
+          {/* Soft glassy pastel blend overlay */}
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {/* subtle blue blur top-left */}
+            <div className="absolute top-[-32px] left-[-40px] w-32 h-24 bg-blue-200/50 blur-2xl rounded-3xl opacity-30" />
+            {/* soft pink/purple gentle fade right */}
+            <div className="absolute top-0 right-[-30px] w-40 h-16 bg-pink-200/30 blur-2xl rounded-2xl opacity-30" />
+            {/* faint pastel green/blue bottom-left */}
+            <div className="absolute bottom-[-18px] left-4 w-24 h-10 bg-green-200/30 blur-xl rounded-full opacity-25" />
+            {/* gentle white reflection center */}
+            <div className="absolute left-1/2 top-1/2 w-2/3 h-6 bg-white/25 blur-md rounded-full -translate-x-1/2 -translate-y-1/2 opacity-20" />
           </div>
-
-          <div className="relative flex items-center justify-between px-6 py-4">
-            <div className="flex items-center space-x-3">
+          <div className="relative flex items-center justify-between px-4 py-2" style={{ minHeight: 0, height: "58px" }}>
+            <div className="flex items-center space-x-2">
               <Button
                 variant="ghost"
                 size="sm"
@@ -209,34 +207,34 @@ const ChatInterface = () => {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              
-              <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 via-fuchsia-400 to-purple-600 rounded-xl flex items-center justify-center ring-4 ring-green-400/40 shadow-[0_4px_32px_0_rgba(80,255,204,0.25)]">
-                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-6 h-6 rounded" />
+
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-white/70 rounded-xl flex items-center justify-center ring-2 ring-blue-300/20 shadow"
+                     style={{ backdropFilter: 'blur(4px)' }}>
+                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-5 h-5 rounded" />
                 </div>
                 <div>
-                  <h1 className="text-[1.45rem] font-extrabold tracking-wide bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-purple-600 bg-clip-text text-transparent drop-shadow-[0_2px_6px_rgba(120,255,255,0.38)]">
+                  <h1 className="text-lg font-extrabold tracking-wide bg-gradient-to-r from-blue-400 via-pink-400 to-purple-500 bg-clip-text text-transparent drop-shadow-sm">
                     MAKAB
                   </h1>
-                  <span className="bg-gradient-to-r from-green-400 via-purple-300 to-pink-400 bg-clip-text text-xs font-bold text-transparent tracking-wider glow">
+                  <span className="text-xs font-bold bg-gradient-to-r from-blue-300 via-purple-300 to-pink-200 bg-clip-text text-transparent tracking-wide">
                     AI Assistant
                   </span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="hidden sm:flex items-center space-x-2 bg-white/60 rounded-full px-3 py-1 border border-purple-200 shadow backdrop-blur-md">
-                <div className="w-2 h-2 bg-green-400 rounded-full shadow-[0_0_8px_2px_#22d3ee88]" />
-                <span className="text-sm text-purple-700 font-semibold tracking-widest">{remainingMessages}/10</span>
-              </div>
+            <div className="flex items-center space-x-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleNewChat}
-                className="text-purple-700 bg-gradient-to-br from-fuchsia-400 via-cyan-400 to-blue-400 border border-purple-100 hover:from-pink-400 hover:to-purple-700 hover:bg-purple-50 font-bold tracking-wide ring-2 ring-green-300/30"
+                className="text-purple-700 border border-purple-100 hover:bg-purple-50 font-bold tracking-wide rounded-md"
+                style={{
+                  background: "linear-gradient(90deg,rgba(219,234,254,0.19),rgba(232,213,255,0.20) 60%)",
+                  boxShadow: '0 2px 14px 0 rgba(180,136,255,0.06)'
+                }}
               >
-                <Plus className="h-4 w-4 mr-2" />
-                <span className="hidden sm:inline">New Chat</span>
+                <Plus className="h-4 w-4 mr-1" />
               </Button>
             </div>
           </div>
