@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -130,10 +131,8 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
       
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl border-4 border-white/20 backdrop-blur-sm relative">
-            {/* Enhanced colorful blurred background for logo */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/50 via-purple-500/50 to-pink-500/50 rounded-3xl blur-lg"></div>
-            <img src="/lovable-uploads/2abbf453-6761-4fd3-96ab-e66591ad66dc.png" alt="Makab" className="w-16 h-16 rounded-2xl relative z-10" />
+          <div className="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl relative">
+            <img src="/lovable-uploads/cba874ed-0c1b-4131-b3ab-5387f577bc92.png" alt="Makab" className="w-20 h-20 rounded-2xl relative z-10" />
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2 drop-shadow-lg">
             MAKAB AI

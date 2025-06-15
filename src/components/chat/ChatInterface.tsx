@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, Send, Mic, MicOff, Plus } from 'lucide-react';
@@ -232,11 +233,9 @@ const ChatInterface = () => {
                 <Menu className="h-5 w-5" />
               </Button>
               <div className="flex items-center space-x-2">
-                <div className="w-7 h-7 bg-white/90 rounded-xl flex items-center justify-center ring-2 ring-blue-200/20 shadow relative"
+                <div className="w-9 h-9 bg-white/90 rounded-xl flex items-center justify-center shadow relative"
                      style={{ backdropFilter: 'blur(4px)' }}>
-                  {/* Colorful blurred background circles */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-400/30 via-purple-400/30 to-pink-400/30 rounded-xl blur-sm"></div>
-                  <img src="/lovable-uploads/2abbf453-6761-4fd3-96ab-e66591ad66dc.png" alt="Makab" className="w-4 h-4 rounded relative z-10" />
+                  <img src="/lovable-uploads/cba874ed-0c1b-4131-b3ab-5387f577bc92.png" alt="Makab" className="w-7 h-7 rounded relative z-10" />
                 </div>
                 <div className="flex flex-col leading-none">
                   <h1 className="text-base font-extrabold bg-gradient-to-r from-blue-300 via-purple-300 to-blue-400 bg-clip-text text-transparent tracking-wide">
@@ -269,10 +268,8 @@ const ChatInterface = () => {
         <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-24 sm:pb-20">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-lg relative">
-                {/* Colorful blurred background */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-400/40 via-purple-400/40 to-pink-400/40 rounded-full blur-md"></div>
-                <img src="/lovable-uploads/2abbf453-6761-4fd3-96ab-e66591ad66dc.png" alt="Makab" className="w-12 h-12 rounded-full relative z-10" />
+              <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg relative">
+                <img src="/lovable-uploads/cba874ed-0c1b-4131-b3ab-5387f577bc92.png" alt="Makab" className="w-20 h-20 rounded-full relative z-10" />
               </div>
               <div className="space-y-2">
                 <h2 className="text-2xl font-bold text-gray-800">Hi! I'm Makab 👋</h2>
