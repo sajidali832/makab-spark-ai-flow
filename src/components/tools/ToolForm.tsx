@@ -382,22 +382,13 @@ const ToolForm = ({ tool }: ToolFormProps) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-3 sm:p-4">
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* Compact Header */}
-        <div className="flex items-center justify-between py-4">
-          <Button
-            variant="ghost"
-            onClick={() => window.history.back()}
-            className="h-10 w-10 p-0 rounded-full hover:bg-white/80"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className="text-center flex-1 mx-4">
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              {tool.title}
-            </h1>
-            <p className="text-xs sm:text-sm text-gray-600 mt-1">{tool.description}</p>
-          </div>
-          <div className="w-10" />
+
+        {/* Only header with title and description, REMOVE internal back arrow/button */}
+        <div className="text-center py-4">
+          <h1 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            {tool.title}
+          </h1>
+          <p className="text-xs sm:text-sm text-gray-600 mt-1">{tool.description}</p>
         </div>
 
         {/* Form Section */}
