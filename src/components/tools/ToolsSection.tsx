@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Heart, Zap, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ToolForm from './ToolForm';
+import ShareSection from '../shared/ShareSection';
 
 const tools = [
   {
@@ -372,6 +373,11 @@ const ToolsSection = () => {
               </Card>
             ))}
           </div>
+        </div>
+
+        {/* Share Section */}
+        <div className="mt-12">
+          <ShareSection />
         </div>
       </div>
     </div>

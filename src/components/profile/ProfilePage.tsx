@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,6 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Mail, Edit3, Save, X, Bell, Shield, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import ShareSection from '../shared/ShareSection';
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any>(null);
@@ -390,6 +390,11 @@ const ProfilePage = () => {
               </Button>
             </CardContent>
           </Card>
+        </div>
+
+        {/* Share Section */}
+        <div className="mt-8 sm:mt-12">
+          <ShareSection />
         </div>
 
         {/* Footer */}
