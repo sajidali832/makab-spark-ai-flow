@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -5,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { User, Mail, Edit3, Save, X } from 'lucide-react';
+import { User, Mail, Edit3, Save, X, Bell, Shield, LogOut } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
@@ -27,7 +28,6 @@ const ProfilePage = () => {
     const checkAuthAndFetchData = async () => {
       try {
         setAuthError(null);
-        // Wait for supabase to restore session.
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
         if (sessionError) {
@@ -42,7 +42,6 @@ const ProfilePage = () => {
         const currentUser = session.user;
         setUser(currentUser);
 
-        // Fetch profile data
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('*')
@@ -51,7 +50,6 @@ const ProfilePage = () => {
 
         if (profileError) {
           console.error('Error fetching profile:', profileError);
-          // Create profile if it doesn't exist
           if (profileError.code === 'PGRST116') {
             const { data: newProfile, error: createError } = await supabase
               .from('profiles')
@@ -84,13 +82,12 @@ const ProfilePage = () => {
       }
     };
 
-    // Show error if supabase is taking too long
     timeout = setTimeout(() => {
       if (isInitialLoading) {
         setAuthError("Loading is taking longer than usual. Please try refreshing or logging in again.");
         setIsInitialLoading(false);
       }
-    }, 10000); // 10 seconds
+    }, 10000);
 
     checkAuthAndFetchData();
 
@@ -111,7 +108,6 @@ const ProfilePage = () => {
     setIsLoading(true);
 
     try {
-      // Update profile
       if (profile) {
         const { error: profileError } = await supabase
           .from('profiles')
@@ -123,7 +119,6 @@ const ProfilePage = () => {
         }
       }
 
-      // Update email if changed
       if (editData.email !== user.email) {
         const { error: emailError } = await supabase.auth.updateUser({
           email: editData.email
@@ -134,10 +129,8 @@ const ProfilePage = () => {
         }
       }
 
-      // Refetch data after save
       setIsInitialLoading(true);
       setAuthError(null);
-      // Call the effect again to reload data
       const event = new Event('reloadProfile');
       window.dispatchEvent(event);
 
@@ -181,150 +174,243 @@ const ProfilePage = () => {
 
   if (isInitialLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
     );
   }
 
   if (authError) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center max-w-md mx-auto">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="text-center max-w-md mx-auto p-6">
           <p className="text-gray-600 mb-4">{authError}</p>
-          <Button onClick={() => navigate('/')}>Go to Login</Button>
+          <Button onClick={() => navigate('/')} className="bg-gradient-to-r from-blue-600 to-purple-600">
+            Go to Login
+          </Button>
         </div>
       </div>
     );
   }
 
   if (!user) {
-    // Defensive user check (shouldn't happen with above logic)
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+        <div className="text-center p-6">
           <p className="text-gray-600 mb-4">Please log in to view your profile</p>
-          <Button onClick={() => navigate('/')}>Go to Login</Button>
+          <Button onClick={() => navigate('/')} className="bg-gradient-to-r from-blue-600 to-purple-600">
+            Go to Login
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
-      <div className="max-w-2xl mx-auto space-y-6">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-            <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-20 h-20 rounded-full" />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-indigo-50">
+      {/* Mobile-first responsive container */}
+      <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        
+        {/* Header Section */}
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="relative inline-block mb-6">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto shadow-xl">
+              <img 
+                src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" 
+                alt="Makab" 
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-full border-2 border-white/20" 
+              />
+            </div>
+            <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-white shadow-lg">
+              <div className="w-full h-full bg-green-400 rounded-full animate-pulse"></div>
+            </div>
           </div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-2">
             Your Profile
           </h1>
-          <p className="text-gray-600 mt-2">Manage your Makab AI account settings</p>
+          <p className="text-gray-600 text-sm sm:text-base max-w-md mx-auto">
+            Manage your Makab AI account settings and preferences
+          </p>
         </div>
 
-        {/* Profile Information */}
-        <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-          <CardHeader className="border-b border-gray-100">
-            <CardTitle className="flex items-center space-x-2">
-              <User className="h-5 w-5 text-blue-600" />
-              <span>Profile Information</span>
-              {!isEditing && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleEdit}
-                  className="ml-auto text-blue-600 hover:text-blue-700"
-                >
-                  <Edit3 className="h-4 w-4" />
-                </Button>
-              )}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-6 space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              {isEditing ? (
-                <Input
-                  id="username"
-                  value={editData.username}
-                  onChange={(e) => setEditData(prev => ({ ...prev, username: e.target.value }))}
-                  className="border-gray-300 focus:border-blue-500"
-                />
-              ) : (
-                <div className="p-3 bg-gray-50 rounded-md border">
-                  {profile?.username || 'No username set'}
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
+          
+          {/* Profile Information Card */}
+          <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-300 lg:col-span-2">
+            <CardHeader className="border-b border-gray-100 pb-4">
+              <CardTitle className="flex items-center justify-between text-lg sm:text-xl">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                    <User className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                    Profile Information
+                  </span>
                 </div>
-              )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="email" className="flex items-center space-x-2">
-                <Mail className="h-4 w-4" />
-                <span>Email</span>
-              </Label>
-              {isEditing ? (
-                <Input
-                  id="email"
-                  type="email"
-                  value={editData.email}
-                  onChange={(e) => setEditData(prev => ({ ...prev, email: e.target.value }))}
-                  className="border-gray-300 focus:border-blue-500"
-                />
-              ) : (
-                <div className="p-3 bg-gray-50 rounded-md border">
-                  {user.email}
+                {!isEditing && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleEdit}
+                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg"
+                  >
+                    <Edit3 className="h-4 w-4 mr-1" />
+                    <span className="hidden sm:inline">Edit</span>
+                  </Button>
+                )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-6">
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="space-y-3">
+                  <Label htmlFor="username" className="text-sm font-medium text-gray-700 flex items-center space-x-2">
+                    <User className="h-4 w-4 text-blue-600" />
+                    <span>Username</span>
+                  </Label>
+                  {isEditing ? (
+                    <Input
+                      id="username"
+                      value={editData.username}
+                      onChange={(e) => setEditData(prev => ({ ...prev, username: e.target.value }))}
+                      className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg"
+                      placeholder="Enter your username"
+                    />
+                  ) : (
+                    <div className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-100">
+                      <span className="text-gray-800 font-medium">
+                        {profile?.username || 'No username set'}
+                      </span>
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
 
-            {isEditing && (
-              <div className="flex space-x-3 pt-4">
-                <Button
-                  onClick={handleSave}
-                  disabled={isLoading}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                >
-                  <Save className="h-4 w-4 mr-2" />
-                  {isLoading ? 'Saving...' : 'Save Changes'}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={handleCancel}
-                  disabled={isLoading}
-                >
-                  <X className="h-4 w-4 mr-2" />
-                  Cancel
-                </Button>
+                <div className="space-y-3">
+                  <Label htmlFor="email" className="text-sm font-medium text-gray-700 flex items-center space-x-2">
+                    <Mail className="h-4 w-4 text-blue-600" />
+                    <span>Email</span>
+                  </Label>
+                  {isEditing ? (
+                    <Input
+                      id="email"
+                      type="email"
+                      value={editData.email}
+                      onChange={(e) => setEditData(prev => ({ ...prev, email: e.target.value }))}
+                      className="border-gray-300 focus:border-blue-500 focus:ring-blue-500 rounded-lg"
+                      placeholder="Enter your email"
+                    />
+                  ) : (
+                    <div className="p-3 bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-100">
+                      <span className="text-gray-800 font-medium">
+                        {user.email}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-            )}
-          </CardContent>
-        </Card>
 
-        {/* Account Actions */}
-        <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-          <CardHeader>
-            <CardTitle className="text-red-600">Account Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="p-6">
-            <Button
-              variant="destructive"
-              onClick={handleSignOut}
-              className="w-full bg-red-600 hover:bg-red-700"
-            >
-              Sign Out
-            </Button>
-          </CardContent>
-        </Card>
+              {isEditing && (
+                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-gray-100">
+                  <Button
+                    onClick={handleSave}
+                    disabled={isLoading}
+                    className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg"
+                  >
+                    <Save className="h-4 w-4 mr-2" />
+                    {isLoading ? 'Saving...' : 'Save Changes'}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleCancel}
+                    disabled={isLoading}
+                    className="flex-1 border-gray-300 hover:bg-gray-50"
+                  >
+                    <X className="h-4 w-4 mr-2" />
+                    Cancel
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Quick Actions Card */}
+          <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="border-b border-gray-100 pb-4">
+              <CardTitle className="flex items-center space-x-3 text-lg">
+                <div className="w-10 h-10 bg-gradient-to-br from-green-600 to-blue-600 rounded-lg flex items-center justify-center">
+                  <Shield className="h-5 w-5 text-white" />
+                </div>
+                <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+                  Quick Actions
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6 space-y-4">
+              <Button
+                variant="outline"
+                className="w-full justify-start text-left border-green-200 hover:bg-green-50 hover:border-green-300"
+              >
+                <Bell className="h-4 w-4 mr-3 text-green-600" />
+                <div>
+                  <div className="font-medium text-green-700">Notifications</div>
+                  <div className="text-xs text-green-600">Manage your alerts</div>
+                </div>
+              </Button>
+              
+              <Button
+                variant="outline"
+                className="w-full justify-start text-left border-blue-200 hover:bg-blue-50 hover:border-blue-300"
+              >
+                <User className="h-4 w-4 mr-3 text-blue-600" />
+                <div>
+                  <div className="font-medium text-blue-700">Privacy Settings</div>
+                  <div className="text-xs text-blue-600">Control your data</div>
+                </div>
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Account Actions Card */}
+          <Card className="shadow-xl border-0 bg-white/90 backdrop-blur-sm hover:shadow-2xl transition-all duration-300">
+            <CardHeader className="border-b border-gray-100 pb-4">
+              <CardTitle className="flex items-center space-x-3 text-lg">
+                <div className="w-10 h-10 bg-gradient-to-br from-red-600 to-pink-600 rounded-lg flex items-center justify-center">
+                  <LogOut className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-red-600">Account Actions</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <Button
+                variant="destructive"
+                onClick={handleSignOut}
+                className="w-full bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 shadow-lg"
+              >
+                <LogOut className="h-4 w-4 mr-2" />
+                Sign Out
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Footer */}
-        <div className="text-center pt-8">
-          <div className="bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-            <p className="text-xs text-gray-500 mb-2">Made with ❤️ by</p>
-            <p className="text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-              Sajid
-            </p>
+        <div className="text-center mt-12 sm:mt-16">
+          <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 sm:p-8 border border-gray-200 shadow-lg max-w-md mx-auto">
+            <div className="mb-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <img 
+                  src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" 
+                  alt="Makab" 
+                  className="w-8 h-8 rounded-lg" 
+                />
+              </div>
+              <p className="text-sm text-gray-500 mb-2">Made with ❤️ by</p>
+              <p className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Sajid
+              </p>
+            </div>
+            <div className="text-xs text-gray-400">
+              © 2024 Makab AI. All rights reserved.
+            </div>
           </div>
         </div>
       </div>

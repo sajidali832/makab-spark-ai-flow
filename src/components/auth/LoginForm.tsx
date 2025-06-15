@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -28,8 +27,19 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
   const requestNotificationPermission = async () => {
     const granted = await requestPermission();
     if (granted) {
-      // Automatically subscribe if permission is granted
       await subscribe();
+    }
+  };
+
+  const sendWelcomeNotification = (username: string) => {
+    if (window.Notification && Notification.permission === 'granted') {
+      setTimeout(() => {
+        new Notification('Welcome to Makab AI! 🎉', {
+          body: `Hi ${username}! Your account has been successfully registered. Welcome to your AI journey!`,
+          icon: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
+          badge: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
+        });
+      }, 30000); // 30 seconds delay
     }
   };
 
@@ -64,7 +74,6 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
           description: "Successfully logged in to Makab AI",
         });
 
-        // Request notification permission after successful login
         setTimeout(() => {
           requestNotificationPermission();
         }, 1000);
@@ -118,9 +127,13 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
           description: "Your account has been created successfully",
         });
 
-        // Request notification permission after successful signup
-        setTimeout(() => {
-          requestNotificationPermission();
+        // Request notification permission and send welcome notification
+        setTimeout(async () => {
+          const granted = await requestPermission();
+          if (granted) {
+            await subscribe();
+            sendWelcomeNotification(formData.username);
+          }
         }, 1000);
 
         onAuthSuccess();
@@ -162,31 +175,23 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
           <p className="text-blue-200 drop-shadow-lg">Your intelligent AI companion</p>
         </div>
 
-        {/* === Improved scrollable and always-reachable card content for mobile === */}
-        <div className="flex flex-col h-[min(80vh,650px)] w-full rounded-xl overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 bg-transparent"
-          style={{
-            minHeight: '420px', // for mobile
-            maxHeight: '90vh',
-            paddingBottom: 'env(safe-area-inset-bottom, 24px)', // iOS safe area
-          }}
-        >
-          <Card className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl backdrop-saturate-150 flex-1 flex flex-col">
+        <div className="w-full max-h-[70vh] overflow-y-auto">
+          <Card className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl backdrop-saturate-150">
             <CardHeader>
               <CardTitle className="text-center flex items-center justify-center space-x-2 text-white">
                 <Sparkles className="h-5 w-5 text-blue-400" />
                 <span>Get Started</span>
               </CardTitle>
             </CardHeader>
-            <CardContent className="flex-1 flex flex-col justify-between pt-0 pb-4">
+            <CardContent className="pt-0 pb-6">
               <Tabs defaultValue="login" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 bg-black/20 border border-white/20">
                   <TabsTrigger value="login" className="text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white">Login</TabsTrigger>
                   <TabsTrigger value="signup" className="text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white">Sign Up</TabsTrigger>
                 </TabsList>
                 
-                <TabsContent value="login" className="space-y-4 pt-4 pb-1">
-                  <form onSubmit={handleLogin} className="space-y-4 flex flex-col min-h-0">
-                    {/* Email */}
+                <TabsContent value="login" className="space-y-4 pt-4">
+                  <form onSubmit={handleLogin} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-blue-200">Email</Label>
                       <div className="relative">
@@ -203,7 +208,6 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                         />
                       </div>
                     </div>
-                    {/* Password */}
                     <div className="space-y-2">
                       <Label htmlFor="password" className="text-blue-200">Password</Label>
                       <div className="relative">
@@ -225,18 +229,13 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                           className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-blue-400 hover:text-blue-300"
                           onClick={() => setShowPassword(!showPassword)}
                         >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
                     </div>
-                    {/* Submit button */}
                     <Button 
                       type="submit" 
-                      className="mt-2 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
                       disabled={isLoading}
                     >
                       {isLoading ? "Signing in..." : "Sign In"}
@@ -244,9 +243,8 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                   </form>
                 </TabsContent>
                 
-                <TabsContent value="signup" className="space-y-4 pt-4 pb-1">
-                  <form onSubmit={handleSignup} className="space-y-4 flex flex-col min-h-0">
-                    {/* Username */}
+                <TabsContent value="signup" className="space-y-4 pt-4">
+                  <form onSubmit={handleSignup} className="space-y-4">
                     <div className="space-y-2">
                       <Label htmlFor="signup-username" className="text-blue-200">Username</Label>
                       <div className="relative">
@@ -263,7 +261,6 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                         />
                       </div>
                     </div>
-                    {/* Email */}
                     <div className="space-y-2">
                       <Label htmlFor="signup-email" className="text-blue-200">Email</Label>
                       <div className="relative">
@@ -280,7 +277,6 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                         />
                       </div>
                     </div>
-                    {/* Password */}
                     <div className="space-y-2">
                       <Label htmlFor="signup-password" className="text-blue-200">Password</Label>
                       <div className="relative">
@@ -303,18 +299,13 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                           className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-blue-400 hover:text-blue-300"
                           onClick={() => setShowPassword(!showPassword)}
                         >
-                          {showPassword ? (
-                            <EyeOff className="h-4 w-4" />
-                          ) : (
-                            <Eye className="h-4 w-4" />
-                          )}
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </Button>
                       </div>
                     </div>
-                    {/* Submit button */}
                     <Button 
                       type="submit" 
-                      className="mt-2 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
                       disabled={isLoading}
                     >
                       {isLoading ? "Creating account..." : "Create Account"}
@@ -325,11 +316,9 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
             </CardContent>
           </Card>
         </div>
-        {/* === End improved scrollable card === */}
       </div>
     </div>
   );
 };
 
 export default LoginForm;
-
