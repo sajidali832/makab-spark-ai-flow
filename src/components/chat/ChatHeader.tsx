@@ -9,7 +9,7 @@ interface ChatHeaderProps {
 
 const ChatHeader = ({ onMenuClick, isSidebarOpen }: ChatHeaderProps) => {
   return (
-    <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white lg:hidden">
+    <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white">
       <div className="flex items-center space-x-3">
         <Button
           variant="ghost"

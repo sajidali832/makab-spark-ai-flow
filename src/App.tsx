@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import ChatLayout from "./components/chat/ChatLayout";
 import Index from "./pages/Index";
 import Chat from "./pages/Chat";
 import Tools from "./pages/Tools";
@@ -24,19 +25,21 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/tools" element={<Tools />} />
-          <Route path="/free-course" element={<FreeCourse />} />
-          <Route path="/history" element={<History />} />
-          <Route path="/chat-history" element={<ChatHistory />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/favorites" element={<Favorites />} />
-          <Route path="/templates" element={<Templates />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <ChatLayout>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/tools" element={<Tools />} />
+            <Route path="/free-course" element={<FreeCourse />} />
+            <Route path="/history" element={<History />} />
+            <Route path="/chat-history" element={<ChatHistory />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/templates" element={<Templates />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </ChatLayout>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
