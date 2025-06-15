@@ -15,6 +15,7 @@ import Profile from "./pages/Profile";
 import About from "./pages/About";
 import Favorites from "./pages/Favorites";
 import Templates from "./pages/Templates";
+import Analytics from "./pages/Analytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/templates" element={<Templates />} />
+            <Route path="/analytics" element={<Analytics />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </ChatLayout>
