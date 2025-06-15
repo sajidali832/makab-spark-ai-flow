@@ -183,16 +183,23 @@ const ChatInterface = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       <div className="flex-1 flex flex-col">
-        {/* Header with soft gradient, pink/purple/white, subtle blur */}
-        <header
-          className="relative z-10 backdrop-blur-md"
-          style={{
-            background: 'linear-gradient(90deg, #fff5fb 0%, #ffe7fa 50%, #ebdaf8 100%)',
-            borderBottom: '1px solid #ECECEC',
-            boxShadow: "0 2px 16px rgba(220, 192, 246, 0.10)"
-          }}
-        >
-          <div className="flex items-center justify-between px-4 py-3">
+        {/* Vibrant Neon Header with abstract glowing shapes */}
+        <header className="relative z-10 overflow-hidden select-none border-b border-purple-200">
+          {/* Glassmorphism liquid shapes and flowing neon gradients */}
+          <div className="absolute inset-0 pointer-events-none">
+            {/* Neon blue abstract blob */}
+            <div className="absolute top-[-60px] left-[-80px] w-64 h-64 bg-cyan-400/70 blur-3xl rounded-[60%] rotate-12 animate-[glass-morph_11s_ease-in-out_infinite] opacity-90 z-0" />
+            {/* Neon pink flowing shape */}
+            <div className="absolute top-[10px] right-[-80px] w-80 h-52 bg-pink-500/50 blur-2xl rounded-tl-3xl rounded-br-[80px] rotate-[50deg] opacity-80 animate-[gradient-flow_14s_ease_infinite]" />
+            {/* Cyber green glowing oval */}
+            <div className="absolute bottom-[-60px] left-[60px] w-40 h-20 bg-green-400/50 blur-2xl rounded-full opacity-70 animate-pulse" />
+            {/* Purple glassy oval with soft glow */}
+            <div className="absolute bottom-0 right-[-70px] w-52 h-32 bg-purple-500/60 blur-[50px] rounded-tl-[60%] rounded-br-[80%] opacity-75 animate-[glass-morph_17s_ease-in-out_infinite]" />
+            {/* Soft white reflection bar */}
+            <div className="absolute left-1/2 bottom-0 w-3/5 h-7 bg-white/40 blur-md rounded-full -translate-x-1/2 opacity-30" />
+          </div>
+
+          <div className="relative flex items-center justify-between px-6 py-4">
             <div className="flex items-center space-x-3">
               <Button
                 variant="ghost"
@@ -200,29 +207,33 @@ const ChatInterface = () => {
                 onClick={() => setIsSidebarOpen(true)}
                 className="lg:hidden text-purple-500 hover:bg-purple-100"
               >
-                <Menu className="h-4 w-4" />
+                <Menu className="h-5 w-5" />
               </Button>
               
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-pink-300 to-purple-300 rounded-lg flex items-center justify-center">
-                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-5 h-5 rounded" />
+                <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 via-fuchsia-400 to-purple-600 rounded-xl flex items-center justify-center ring-4 ring-green-400/40 shadow-[0_4px_32px_0_rgba(80,255,204,0.25)]">
+                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-6 h-6 rounded" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-semibold text-purple-700">MAKAB</h1>
-                  <p className="text-xs text-purple-400">AI Assistant</p>
+                  <h1 className="text-[1.45rem] font-extrabold tracking-wide bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-purple-600 bg-clip-text text-transparent drop-shadow-[0_2px_6px_rgba(120,255,255,0.38)]">
+                    MAKAB
+                  </h1>
+                  <span className="bg-gradient-to-r from-green-400 via-purple-300 to-pink-400 bg-clip-text text-xs font-bold text-transparent tracking-wider glow">
+                    AI Assistant
+                  </span>
                 </div>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <div className="hidden sm:flex items-center space-x-2 bg-white/70 rounded-full px-3 py-1 border border-pink-200">
-                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm text-purple-700 font-medium">{remainingMessages}/10</span>
+              <div className="hidden sm:flex items-center space-x-2 bg-white/60 rounded-full px-3 py-1 border border-purple-200 shadow backdrop-blur-md">
+                <div className="w-2 h-2 bg-green-400 rounded-full shadow-[0_0_8px_2px_#22d3ee88]" />
+                <span className="text-sm text-purple-700 font-semibold tracking-widest">{remainingMessages}/10</span>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleNewChat}
-                className="text-purple-700 hover:bg-pink-100 border border-purple-100"
+                className="text-purple-700 bg-gradient-to-br from-fuchsia-400 via-cyan-400 to-blue-400 border border-purple-100 hover:from-pink-400 hover:to-purple-700 hover:bg-purple-50 font-bold tracking-wide ring-2 ring-green-300/30"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">New Chat</span>
