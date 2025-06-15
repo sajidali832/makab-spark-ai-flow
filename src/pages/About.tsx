@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import AboutPage from '@/components/about/AboutPage';
 import Sidebar from '@/components/chat/Sidebar';
+import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
 
 const About = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

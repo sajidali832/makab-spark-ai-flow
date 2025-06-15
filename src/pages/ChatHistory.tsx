@@ -1,8 +1,9 @@
+
 import { useState } from 'react';
 import ChatHistorySection from '@/components/history/ChatHistorySection';
 import Sidebar from '@/components/chat/Sidebar';
-import Button from '@/components/ui/Button';
-import Menu from '@/components/ui/Menu';
+import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
 
 const ChatHistory = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);

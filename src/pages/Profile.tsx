@@ -1,8 +1,9 @@
+
 import { useState } from 'react';
 import ProfilePage from '@/components/profile/ProfilePage';
 import Sidebar from '@/components/chat/Sidebar';
-import Button from '@/components/ui/Button';
-import Menu from '@/components/ui/Menu';
+import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
 
 const Profile = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
