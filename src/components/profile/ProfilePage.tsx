@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -19,79 +18,86 @@ const ProfilePage = () => {
     username: '',
     email: ''
   });
+  const [authError, setAuthError] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    const checkAuthAndFetchData = async () => {
+      try {
+        setAuthError(null);
+        // Wait for supabase to restore session.
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+
+        if (sessionError) {
+          console.error('Session error:', sessionError);
+          setAuthError("Something went wrong loading your session. Please try logging in again.");
+          return;
+        }
+        if (!session || !session.user) {
+          setAuthError("You are not logged in. Please log in to view your profile.");
+          return;
+        }
+        const currentUser = session.user;
+        setUser(currentUser);
+
+        // Fetch profile data
+        const { data: profileData, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('user_id', currentUser.id)
+          .maybeSingle();
+
+        if (profileError) {
+          console.error('Error fetching profile:', profileError);
+          // Create profile if it doesn't exist
+          if (profileError.code === 'PGRST116') {
+            const { data: newProfile, error: createError } = await supabase
+              .from('profiles')
+              .insert([{ user_id: currentUser.id, username: 'User' }])
+              .select()
+              .single();
+
+            if (createError) {
+              console.error('Error creating profile:', createError);
+            } else {
+              setProfile(newProfile);
+              setEditData({
+                username: newProfile?.username || '',
+                email: currentUser.email || ''
+              });
+            }
+          }
+        } else {
+          setProfile(profileData);
+          setEditData({
+            username: profileData?.username || '',
+            email: currentUser.email || ''
+          });
+        }
+      } catch (error) {
+        console.error('Error in checkAuthAndFetchData:', error);
+        setAuthError("Failed to load your profile. Try again.");
+      } finally {
+        setIsInitialLoading(false);
+      }
+    };
+
+    // Show error if supabase is taking too long
+    timeout = setTimeout(() => {
+      if (isInitialLoading) {
+        setAuthError("Loading is taking longer than usual. Please try refreshing or logging in again.");
+        setIsInitialLoading(false);
+      }
+    }, 10000); // 10 seconds
+
     checkAuthAndFetchData();
+
+    return () => clearTimeout(timeout);
   }, []);
 
-  const checkAuthAndFetchData = async () => {
-    try {
-      // First check if user is authenticated
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
-      if (sessionError) {
-        console.error('Session error:', sessionError);
-        // Redirect to login if no valid session
-        navigate('/');
-        return;
-      }
-
-      if (!session || !session.user) {
-        console.log('No active session, redirecting to login');
-        navigate('/');
-        return;
-      }
-
-      const currentUser = session.user;
-      setUser(currentUser);
-      
-      // Fetch profile data
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', currentUser.id)
-        .maybeSingle();
-
-      if (profileError) {
-        console.error('Error fetching profile:', profileError);
-        // Create profile if it doesn't exist
-        if (profileError.code === 'PGRST116') {
-          const { data: newProfile, error: createError } = await supabase
-            .from('profiles')
-            .insert([{ user_id: currentUser.id, username: 'User' }])
-            .select()
-            .single();
-          
-          if (createError) {
-            console.error('Error creating profile:', createError);
-          } else {
-            setProfile(newProfile);
-            setEditData({
-              username: newProfile?.username || '',
-              email: currentUser.email || ''
-            });
-          }
-        }
-      } else {
-        setProfile(profileData);
-        setEditData({
-          username: profileData?.username || '',
-          email: currentUser.email || ''
-        });
-      }
-    } catch (error) {
-      console.error('Error in checkAuthAndFetchData:', error);
-      navigate('/');
-    } finally {
-      setIsInitialLoading(false);
-    }
-  };
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
+  const handleEdit = () => setIsEditing(true);
 
   const handleCancel = () => {
     setIsEditing(false);
@@ -103,7 +109,7 @@ const ProfilePage = () => {
 
   const handleSave = async () => {
     setIsLoading(true);
-    
+
     try {
       // Update profile
       if (profile) {
@@ -128,13 +134,18 @@ const ProfilePage = () => {
         }
       }
 
-      await checkAuthAndFetchData();
-      setIsEditing(false);
-      
+      // Refetch data after save
+      setIsInitialLoading(true);
+      setAuthError(null);
+      // Call the effect again to reload data
+      const event = new Event('reloadProfile');
+      window.dispatchEvent(event);
+
       toast({
         title: "Profile Updated",
         description: "Your profile has been successfully updated.",
       });
+      setIsEditing(false);
     } catch (error: any) {
       toast({
         title: "Update Failed",
@@ -176,7 +187,19 @@ const ProfilePage = () => {
     );
   }
 
+  if (authError) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center max-w-md mx-auto">
+          <p className="text-gray-600 mb-4">{authError}</p>
+          <Button onClick={() => navigate('/')}>Go to Login</Button>
+        </div>
+      </div>
+    );
+  }
+
   if (!user) {
+    // Defensive user check (shouldn't happen with above logic)
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
