@@ -1,6 +1,6 @@
 
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { Cell, Pie, PieChart } from 'recharts';
 
 interface MostUsedToolsChartProps {
   data: any[] | null | undefined;
@@ -57,7 +57,6 @@ const MostUsedToolsChart = ({ data }: MostUsedToolsChartProps) => {
           </Pie>
           <ChartTooltip 
             content={<ChartTooltipContent />}
-            formatter={(value: any, name: any) => [value, name]}
           />
         </PieChart>
       </ChartContainer>
