@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 
 interface DailyLimits {
@@ -12,7 +13,22 @@ const TOOLS_LIMIT = 6;  // Updated from 3 to 6
 export const useDailyLimits = () => {
   const [limits, setLimits] = useState<DailyLimits>(() => {
     try {
-      const stored = localStorage.getItem('makab_daily_limits');
+      // Get current user from localStorage
+      const user = localStorage.getItem('makab_user');
+      const userId = user ? JSON.parse(user).id : null;
+      
+      if (!userId) {
+        // No user logged in, return default limits
+        return {
+          chatMessages: 0,
+          toolGenerations: 0,
+          lastReset: new Date().toDateString()
+        };
+      }
+
+      // Use user-specific key for limits
+      const userLimitsKey = `makab_daily_limits_${userId}`;
+      const stored = localStorage.getItem(userLimitsKey);
       const today = new Date().toDateString();
       
       if (stored) {
@@ -20,7 +36,7 @@ export const useDailyLimits = () => {
           const parsedLimits = JSON.parse(stored);
           // Reset if it's a new day
           if (parsedLimits.lastReset !== today) {
-            console.log('New day detected, resetting limits');
+            console.log('New day detected, resetting limits for user:', userId);
             return {
               chatMessages: 0,
               toolGenerations: 0,
@@ -40,7 +56,7 @@ export const useDailyLimits = () => {
       }
       
       // New user - start with fresh limits
-      console.log('No stored limits found, starting with fresh limits');
+      console.log('No stored limits found for user, starting with fresh limits:', userId);
       return {
         chatMessages: 0,
         toolGenerations: 0,
@@ -70,7 +86,14 @@ export const useDailyLimits = () => {
             lastReset: today
           };
           setLimits(newLimits);
-          localStorage.setItem('makab_daily_limits', JSON.stringify(newLimits));
+          
+          // Save to user-specific key
+          const user = localStorage.getItem('makab_user');
+          const userId = user ? JSON.parse(user).id : null;
+          if (userId) {
+            const userLimitsKey = `makab_daily_limits_${userId}`;
+            localStorage.setItem(userLimitsKey, JSON.stringify(newLimits));
+          }
         }
       } catch (error) {
         console.error('Error checking for reset:', error);
@@ -87,7 +110,14 @@ export const useDailyLimits = () => {
   const updateLimits = (newLimits: DailyLimits) => {
     try {
       setLimits(newLimits);
-      localStorage.setItem('makab_daily_limits', JSON.stringify(newLimits));
+      
+      // Save to user-specific key
+      const user = localStorage.getItem('makab_user');
+      const userId = user ? JSON.parse(user).id : null;
+      if (userId) {
+        const userLimitsKey = `makab_daily_limits_${userId}`;
+        localStorage.setItem(userLimitsKey, JSON.stringify(newLimits));
+      }
     } catch (error) {
       console.error('Error updating limits:', error);
     }
