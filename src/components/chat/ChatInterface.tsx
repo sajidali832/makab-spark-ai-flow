@@ -25,7 +25,7 @@ const ChatInterface = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { isListening, startListening, stopListening } = useVoiceInput();
-  const { canSendMessage, incrementChatMessages } = useDailyLimits();
+  const { canSendMessage, incrementChatMessages, remainingMessages } = useDailyLimits();
 
   useEffect(() => {
     scrollToBottom();
@@ -33,6 +33,17 @@ const ChatInterface = () => {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleNewChat = () => {
+    setMessages([]);
+    setInputValue('');
+    setIsLoading(false);
+    setIsThinking(false);
+    toast({
+      title: "New Chat Started",
+      description: "You can start fresh conversation now!",
+    });
   };
 
   const handleSendMessage = async () => {
@@ -117,45 +128,55 @@ const ChatInterface = () => {
       
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-4 py-3">
+        <header className="bg-gradient-to-r from-blue-600 to-purple-600 border-b border-gray-200 px-4 py-3 shadow-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Button
-                variant="outline"
+                variant="ghost"
                 size="sm"
                 onClick={() => setIsSidebarOpen(true)}
-                className="lg:hidden"
+                className="lg:hidden text-white hover:bg-white/20"
               >
                 <Menu className="h-4 w-4" />
               </Button>
               
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
                   <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-5 h-5 rounded" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-semibold text-gray-900">MAKAB</h1>
-                  <p className="text-xs text-gray-500">AI Assistant</p>
+                  <h1 className="text-lg font-semibold text-white">MAKAB</h1>
+                  <p className="text-xs text-white/80">AI Assistant</p>
                 </div>
               </div>
             </div>
 
-            <Button
-              variant="outline"
-              size="sm"
-              className="hidden sm:flex"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              New Chat
-            </Button>
+            <div className="flex items-center space-x-3">
+              {/* Message Limit Display */}
+              <div className="hidden sm:flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+                <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                <span className="text-sm text-white font-medium">{remainingMessages}/10</span>
+              </div>
+
+              {/* New Chat Button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleNewChat}
+                className="text-white hover:bg-white/20 border border-white/30"
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                <span className="hidden sm:inline">New Chat</span>
+              </Button>
+            </div>
           </div>
         </header>
 
         {/* Chat Messages Area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-24 sm:pb-20">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-              <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-xl">
                 <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-12 h-12 rounded-full" />
               </div>
               <div className="space-y-2">
@@ -164,10 +185,10 @@ const ChatInterface = () => {
                   Your AI assistant created by Sajid for conversations and content creation! 🤖
                 </p>
               </div>
-              <div className="bg-gray-100 rounded-lg px-4 py-2">
+              <div className="bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg px-4 py-2 border border-blue-200">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm text-gray-700">10 messages remaining today</span>
+                  <span className="text-sm text-gray-700 font-medium">{remainingMessages} messages remaining today</span>
                 </div>
               </div>
             </div>
@@ -185,10 +206,20 @@ const ChatInterface = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input Area */}
-        <div className="p-4 bg-white border-t border-gray-200">
+        {/* Mobile Message Limit - Show on small screens */}
+        <div className="sm:hidden px-4 py-2 bg-white border-t border-gray-200">
+          <div className="flex justify-center">
+            <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full px-3 py-1 border border-blue-200">
+              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+              <span className="text-sm text-gray-700 font-medium">{remainingMessages}/10 messages left</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Input Area - Fixed at bottom */}
+        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg lg:relative lg:shadow-none">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+            <div className="bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="flex items-end space-x-3">
                 <div className="flex-1">
                   <textarea
@@ -196,9 +227,9 @@ const ChatInterface = () => {
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your message here..."
-                    className="w-full resize-none bg-transparent border-none outline-none text-gray-800 placeholder-gray-500 text-sm"
+                    className="w-full resize-none bg-transparent border-none outline-none text-gray-800 placeholder-gray-500 text-sm leading-relaxed"
                     rows={1}
-                    style={{ minHeight: '20px', maxHeight: '120px' }}
+                    style={{ minHeight: '24px', maxHeight: '120px' }}
                   />
                 </div>
                 
@@ -207,7 +238,11 @@ const ChatInterface = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleVoiceToggle}
-                    className={`${isListening ? 'bg-red-50 border-red-200 text-red-600' : ''}`}
+                    className={`rounded-xl border-2 transition-all duration-300 ${
+                      isListening 
+                        ? 'bg-red-50 border-red-300 text-red-600 hover:bg-red-100' 
+                        : 'bg-blue-50 border-blue-300 text-blue-600 hover:bg-blue-100'
+                    }`}
                   >
                     {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                   </Button>
@@ -216,6 +251,7 @@ const ChatInterface = () => {
                     size="sm"
                     onClick={handleSendMessage}
                     disabled={!inputValue.trim() || isLoading}
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
                   >
                     <Send className="h-4 w-4" />
                   </Button>
