@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { ArrowLeft, Zap, ArrowRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -127,7 +129,7 @@ const QuickTemplates = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4">
+      <div className="h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 p-4">
         <div className="max-w-4xl mx-auto">
           <div className="animate-pulse space-y-4">
             <div className="h-8 bg-gray-200 rounded w-1/4"></div>
@@ -143,93 +145,104 @@ const QuickTemplates = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
-      <div className="max-w-6xl mx-auto p-4 space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between py-4">
-          <Button
-            variant="ghost"
-            onClick={() => navigate('/tools')}
-            className="h-10 w-10 p-0 rounded-full hover:bg-white/80"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </Button>
-          <div className="text-center flex-1 mx-4">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
-              <Zap className="h-6 w-6 text-blue-600" />
-              Quick Templates
-            </h1>
-            <p className="text-sm text-gray-600 mt-1">Ready-to-use content templates</p>
+    <div className="h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 flex flex-col">
+      {/* Fixed Header */}
+      <div className="flex-shrink-0 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border-b border-gray-200/30">
+        <div className="max-w-6xl mx-auto p-4">
+          <div className="flex items-center justify-between py-4">
+            <Button
+              variant="ghost"
+              onClick={() => navigate('/tools')}
+              className="h-10 w-10 p-0 rounded-full hover:bg-white/80"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <div className="text-center flex-1 mx-4">
+              <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent flex items-center justify-center gap-2">
+                <Zap className="h-6 w-6 text-blue-600" />
+                Quick Templates
+              </h1>
+              <p className="text-sm text-gray-600 mt-1">Ready-to-use content templates</p>
+            </div>
+            <div className="w-10" />
           </div>
-          <div className="w-10" />
         </div>
-
-        {/* Templates by Category */}
-        {Object.entries(groupedTemplates).map(([category, categoryTemplates]) => (
-          <div key={category} className="space-y-4">
-            <div className={`inline-block px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r ${categoryColors[category as keyof typeof categoryColors] || 'from-gray-100 to-gray-200'} text-gray-800`}>
-              {category}
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {categoryTemplates.map((template) => (
-                <Card key={template.id} className="bg-white/95 backdrop-blur-sm border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200 group">
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
-                      <div>
-                        <h3 className="font-semibold text-gray-800 mb-2">{template.name}</h3>
-                        <p className="text-sm text-gray-600 leading-relaxed">{template.description}</p>
-                      </div>
-                      <Button
-                        onClick={() => generateFromTemplate(template)}
-                        disabled={generatingTemplate === template.id}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
-                      >
-                        {generatingTemplate === template.id ? (
-                          <div className="flex items-center space-x-2">
-                            <div className="w-4 h-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
-                            <span>Generating...</span>
-                          </div>
-                        ) : (
-                          <div className="flex items-center space-x-2">
-                            <Zap className="h-4 w-4" />
-                            <span>Generate</span>
-                            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                          </div>
-                        )}
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        ))}
-
-        {/* Generated Content Display */}
-        {generatedContent && (
-          <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-2xl p-6 shadow-xl">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-800">Generated Content</h3>
-              <Button
-                variant="outline"
-                onClick={() => copyToClipboard(generatedContent)}
-                className="flex items-center space-x-2"
-              >
-                <span>Copy</span>
-              </Button>
-            </div>
-            <div className="bg-gray-50 rounded-xl p-4">
-              <pre className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">{generatedContent}</pre>
-            </div>
-          </div>
-        )}
-
-        <LimitExceededModal
-          isOpen={limitModalOpen}
-          onClose={() => setLimitModalOpen(false)}
-          type="tools"
-        />
       </div>
+
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="max-w-6xl mx-auto p-4 pb-8">
+            <div className="space-y-6">
+              {/* Templates by Category */}
+              {Object.entries(groupedTemplates).map(([category, categoryTemplates]) => (
+                <div key={category} className="space-y-4">
+                  <div className={`inline-block px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r ${categoryColors[category as keyof typeof categoryColors] || 'from-gray-100 to-gray-200'} text-gray-800`}>
+                    {category}
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {categoryTemplates.map((template) => (
+                      <Card key={template.id} className="bg-white/95 backdrop-blur-sm border border-gray-200/60 shadow-lg hover:shadow-xl transition-all duration-200 group">
+                        <CardContent className="p-6">
+                          <div className="space-y-4">
+                            <div>
+                              <h3 className="font-semibold text-gray-800 mb-2">{template.name}</h3>
+                              <p className="text-sm text-gray-600 leading-relaxed">{template.description}</p>
+                            </div>
+                            <Button
+                              onClick={() => generateFromTemplate(template)}
+                              disabled={generatingTemplate === template.id}
+                              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                            >
+                              {generatingTemplate === template.id ? (
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-4 h-4 animate-spin rounded-full border-2 border-white border-t-transparent" />
+                                  <span>Generating...</span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center space-x-2">
+                                  <Zap className="h-4 w-4" />
+                                  <span>Generate</span>
+                                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                                </div>
+                              )}
+                            </Button>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              ))}
+
+              {/* Generated Content Display */}
+              {generatedContent && (
+                <div className="bg-white/95 backdrop-blur-sm border border-gray-200/60 rounded-2xl p-6 shadow-xl">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-lg font-semibold text-gray-800">Generated Content</h3>
+                    <Button
+                      variant="outline"
+                      onClick={() => copyToClipboard(generatedContent)}
+                      className="flex items-center space-x-2"
+                    >
+                      <span>Copy</span>
+                    </Button>
+                  </div>
+                  <div className="bg-gray-50 rounded-xl p-4">
+                    <pre className="text-gray-800 text-sm leading-relaxed whitespace-pre-wrap">{generatedContent}</pre>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </ScrollArea>
+      </div>
+
+      <LimitExceededModal
+        isOpen={limitModalOpen}
+        onClose={() => setLimitModalOpen(false)}
+        type="tools"
+      />
     </div>
   );
 };
