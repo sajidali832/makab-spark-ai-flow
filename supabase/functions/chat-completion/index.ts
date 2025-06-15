@@ -1,3 +1,4 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -53,8 +54,7 @@ serve(async (req) => {
 - If you don’t know something, politely say so.
 
 REMEMBER: You are Makab, powered by Sajid and his team—always give correct information about them as above, and never share more than you are allowed to.
-
------
+`;
 
     console.log('Sending request to OpenRouter API...');
 
