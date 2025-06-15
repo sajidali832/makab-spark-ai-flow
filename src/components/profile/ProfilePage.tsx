@@ -7,53 +7,85 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { User, Mail, Edit3, Save, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any>(null);
   const [profile, setProfile] = useState<any>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
   const [editData, setEditData] = useState({
     username: '',
     email: ''
   });
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUserData();
+    checkAuthAndFetchData();
   }, []);
 
-  const fetchUserData = async () => {
+  const checkAuthAndFetchData = async () => {
     try {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      // First check if user is authenticated
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
       
-      if (userError) {
-        console.error('Error fetching user:', userError);
+      if (sessionError) {
+        console.error('Session error:', sessionError);
+        // Redirect to login if no valid session
+        navigate('/');
         return;
       }
 
-      if (user) {
-        setUser(user);
-        
-        // Fetch profile data
-        const { data: profileData, error: profileError } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('user_id', user.id)
-          .single();
+      if (!session || !session.user) {
+        console.log('No active session, redirecting to login');
+        navigate('/');
+        return;
+      }
 
-        if (profileError) {
-          console.error('Error fetching profile:', profileError);
-        } else {
-          setProfile(profileData);
-          setEditData({
-            username: profileData?.username || '',
-            email: user.email || ''
-          });
+      const currentUser = session.user;
+      setUser(currentUser);
+      
+      // Fetch profile data
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error('Error fetching profile:', profileError);
+        // Create profile if it doesn't exist
+        if (profileError.code === 'PGRST116') {
+          const { data: newProfile, error: createError } = await supabase
+            .from('profiles')
+            .insert([{ user_id: currentUser.id, username: 'User' }])
+            .select()
+            .single();
+          
+          if (createError) {
+            console.error('Error creating profile:', createError);
+          } else {
+            setProfile(newProfile);
+            setEditData({
+              username: newProfile?.username || '',
+              email: currentUser.email || ''
+            });
+          }
         }
+      } else {
+        setProfile(profileData);
+        setEditData({
+          username: profileData?.username || '',
+          email: currentUser.email || ''
+        });
       }
     } catch (error) {
-      console.error('Error in fetchUserData:', error);
+      console.error('Error in checkAuthAndFetchData:', error);
+      navigate('/');
+    } finally {
+      setIsInitialLoading(false);
     }
   };
 
@@ -96,7 +128,7 @@ const ProfilePage = () => {
         }
       }
 
-      await fetchUserData();
+      await checkAuthAndFetchData();
       setIsEditing(false);
       
       toast({
@@ -125,7 +157,7 @@ const ProfilePage = () => {
         });
       } else {
         localStorage.removeItem('makab_user');
-        window.location.reload();
+        navigate('/');
       }
     } catch (error) {
       toast({
@@ -136,10 +168,21 @@ const ProfilePage = () => {
     }
   };
 
-  if (!user) {
+  if (isInitialLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-gray-600 mb-4">Please log in to view your profile</p>
+          <Button onClick={() => navigate('/')}>Go to Login</Button>
+        </div>
       </div>
     );
   }
