@@ -5,7 +5,7 @@ import { Share } from 'lucide-react';
 
 const ShareSection = () => {
   const handleShare = (platform: string) => {
-    const url = window.location.origin;
+    const url = "https://makab-o1.vercel.app/";
     const text = "Check out MAKAB - Your intelligent AI companion for conversations and content creation!";
     
     let shareUrl = '';
