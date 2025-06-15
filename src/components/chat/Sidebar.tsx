@@ -37,23 +37,30 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   return (
     <>
-      {/* Simplified overlay */}
-      {isOpen && (
-        <div 
-          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-      
-      {/* Optimized sidebar with GPU acceleration */}
-      <div className={`
-        fixed lg:relative top-0 left-0 h-full w-72 sm:w-80 bg-white border-r border-gray-200 z-50
-        transform transition-transform duration-200 ease-out gpu-accelerated
-        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        lg:block
-      `}>
+      {/* Overlay for mobile - visible only when sidebar is open */}
+      <div
+        className={`
+          fixed inset-0 z-40 bg-black/30
+          transition-opacity duration-200
+          ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+          lg:hidden
+        `}
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Sidebar – slides in/out, with GPU acceleration, on top of content on mobile */}
+      <aside
+        className={`
+          fixed z-50 top-0 left-0 h-full w-72 sm:w-80 bg-white border-r border-gray-200 shadow-lg
+          transform transition-transform duration-200 ease-in-out will-change-transform
+          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:sticky lg:left-0 lg:top-0 lg:translate-x-0 lg:shadow-none
+        `}
+        style={{ maxWidth: '100vw' }}
+      >
         <div className="flex flex-col h-full">
-          {/* Simplified header */}
+          {/* Sidebar header */}
           <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200 bg-white">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -71,11 +78,11 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               className="lg:hidden h-8 w-8 p-0 text-gray-600 hover:bg-gray-100"
             >
               <X className="h-4 w-4" />
+              <span className="sr-only">Close sidebar</span>
             </Button>
           </div>
-
-          {/* Optimized navigation with smooth scroll */}
-          <nav className="flex-1 p-4 smooth-scroll overflow-y-auto">
+          {/* Navigation */}
+          <nav className="flex-1 p-4 overflow-y-auto">
             <div className="space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
@@ -98,8 +105,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               })}
             </div>
           </nav>
-
-          {/* Simplified footer */}
+          {/* Footer */}
           <div className="p-4 border-t border-gray-200">
             <Button
               variant="outline"
@@ -111,7 +117,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </Button>
           </div>
         </div>
-      </div>
+      </aside>
     </>
   );
 };
