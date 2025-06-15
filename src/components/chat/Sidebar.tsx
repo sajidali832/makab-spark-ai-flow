@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen, LogOut, Menu } from 'lucide-react';
+import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen, LogOut, Menu, BarChart } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PageLoader from '@/components/ui/PageLoader';
 import { useState } from 'react';
@@ -22,6 +22,7 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
     { id: 'history', label: 'Tools History', icon: History, path: '/history' },
     { id: 'chat-history', label: 'Chats History', icon: MessageCircle, path: '/chat-history' },
     { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
+    { id: 'analytics', label: 'Analytics', icon: BarChart, path: '/analytics' },
     { id: 'about', label: 'About', icon: Info, path: '/about' },
   ];
 
