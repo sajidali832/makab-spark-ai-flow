@@ -1,4 +1,3 @@
-
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Cell, Pie, PieChart } from 'recharts';
 
@@ -16,15 +15,15 @@ const MostUsedToolsChart = ({ data }: MostUsedToolsChartProps) => {
   }
 
   // Group by tool type
-  const toolCounts = data.reduce((acc, item) => {
+  const toolCounts = data.reduce((acc: Record<string, number>, item: any) => {
     const toolType = item.tool_type || 'Unknown';
     acc[toolType] = (acc[toolType] || 0) + 1;
     return acc;
   }, {});
 
   const chartData = Object.entries(toolCounts)
-    .map(([name, value]) => ({ name, value }))
-    .sort((a: any, b: any) => b.value - a.value)
+    .map(([name, value]) => ({ name: String(name), value: Number(value) }))
+    .sort((a, b) => b.value - a.value)
     .slice(0, 8); // Top 8 tools
 
   const COLORS = [
