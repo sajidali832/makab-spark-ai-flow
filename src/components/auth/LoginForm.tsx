@@ -161,158 +161,162 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
           <p className="text-blue-200 drop-shadow-lg">Your intelligent AI companion</p>
         </div>
 
-        <Card className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl backdrop-saturate-150">
-          <CardHeader>
-            <CardTitle className="text-center flex items-center justify-center space-x-2 text-white">
-              <Sparkles className="h-5 w-5 text-blue-400" />
-              <span>Get Started</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="login" className="w-full">
-              <TabsList className="grid w-full grid-cols-2 bg-black/20 border border-white/20">
-                <TabsTrigger value="login" className="text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white">Login</TabsTrigger>
-                <TabsTrigger value="signup" className="text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white">Sign Up</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="login" className="space-y-4">
-                <form onSubmit={handleLogin} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-blue-200">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="pl-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
-                        required
-                      />
+        {/* === Make card content scrollable and responsive === */}
+        <div className="max-h-[70vh] min-h-[430px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 rounded-xl">
+          <Card className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl backdrop-saturate-150">
+            <CardHeader>
+              <CardTitle className="text-center flex items-center justify-center space-x-2 text-white">
+                <Sparkles className="h-5 w-5 text-blue-400" />
+                <span>Get Started</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs defaultValue="login" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 bg-black/20 border border-white/20">
+                  <TabsTrigger value="login" className="text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white">Login</TabsTrigger>
+                  <TabsTrigger value="signup" className="text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white">Sign Up</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="login" className="space-y-4">
+                  <form onSubmit={handleLogin} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="email" className="text-blue-200">Email</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          placeholder="Enter your email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className="pl-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="password" className="text-blue-200">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
-                      <Input
-                        id="password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Enter your password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        className="pl-10 pr-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
-                        required
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-blue-400 hover:text-blue-300"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="password" className="text-blue-200">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
+                        <Input
+                          id="password"
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter your password"
+                          value={formData.password}
+                          onChange={handleInputChange}
+                          className="pl-10 pr-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
+                          required
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-blue-400 hover:text-blue-300"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Signing in..." : "Sign In"}
-                  </Button>
-                </form>
-              </TabsContent>
-              
-              <TabsContent value="signup" className="space-y-4">
-                <form onSubmit={handleSignup} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-username" className="text-blue-200">Username</Label>
-                    <div className="relative">
-                      <User className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
-                      <Input
-                        id="signup-username"
-                        name="username"
-                        type="text"
-                        placeholder="Choose a username"
-                        value={formData.username}
-                        onChange={handleInputChange}
-                        className="pl-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
-                        required
-                      />
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Signing in..." : "Sign In"}
+                    </Button>
+                  </form>
+                </TabsContent>
+                
+                <TabsContent value="signup" className="space-y-4">
+                  <form onSubmit={handleSignup} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-username" className="text-blue-200">Username</Label>
+                      <div className="relative">
+                        <User className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
+                        <Input
+                          id="signup-username"
+                          name="username"
+                          type="text"
+                          placeholder="Choose a username"
+                          value={formData.username}
+                          onChange={handleInputChange}
+                          className="pl-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email" className="text-blue-200">Email</Label>
-                    <div className="relative">
-                      <Mail className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
-                      <Input
-                        id="signup-email"
-                        name="email"
-                        type="email"
-                        placeholder="Enter your email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        className="pl-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
-                        required
-                      />
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-email" className="text-blue-200">Email</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
+                        <Input
+                          id="signup-email"
+                          name="email"
+                          type="email"
+                          placeholder="Enter your email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          className="pl-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
+                          required
+                        />
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-password" className="text-blue-200">Password</Label>
-                    <div className="relative">
-                      <Lock className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
-                      <Input
-                        id="signup-password"
-                        name="password"
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Create a password"
-                        value={formData.password}
-                        onChange={handleInputChange}
-                        className="pl-10 pr-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
-                        required
-                        minLength={6}
-                      />
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-blue-400 hover:text-blue-300"
-                        onClick={() => setShowPassword(!showPassword)}
-                      >
-                        {showPassword ? (
-                          <EyeOff className="h-4 w-4" />
-                        ) : (
-                          <Eye className="h-4 w-4" />
-                        )}
-                      </Button>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-password" className="text-blue-200">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-blue-400" />
+                        <Input
+                          id="signup-password"
+                          name="password"
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Create a password"
+                          value={formData.password}
+                          onChange={handleInputChange}
+                          className="pl-10 pr-10 bg-black/20 border-white/20 text-white placeholder:text-blue-300 focus:border-blue-400 focus:ring-blue-400 backdrop-blur-sm"
+                          required
+                          minLength={6}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent text-blue-400 hover:text-blue-300"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Creating account..." : "Create Account"}
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-        </Card>
+                    
+                    <Button 
+                      type="submit" 
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
+                      disabled={isLoading}
+                    >
+                      {isLoading ? "Creating account..." : "Create Account"}
+                    </Button>
+                  </form>
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+        </div>
+        {/* === End scrollable card === */}
       </div>
     </div>
   );

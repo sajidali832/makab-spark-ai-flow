@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Bell, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -8,6 +8,7 @@ const NotificationPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const { isSupported, isSubscribed, subscribe, permission, requestPermission } = usePushNotifications();
+  const testNotificationTimer = useRef<NodeJS.Timeout | null>(null);
 
   /** Enhancement: Show prompt as soon as user logs in (not just after user interactions) **/
   useEffect(() => {
@@ -36,7 +37,7 @@ const NotificationPrompt = () => {
     };
   }, []);
 
-  // Request permission and subscribe
+  // Schedule up to 2 notifications every 30 seconds after subscribing (for testing)
   const handleSubscribe = async () => {
     const granted = await requestPermission();
     if (granted) {
@@ -44,10 +45,23 @@ const NotificationPrompt = () => {
       if (success) {
         setShowPrompt(false);
         localStorage.setItem('notification_prompted', 'true');
-        // Schedule a notification for 5 minutes later for testing
-        setTimeout(() => {
-          sendLocalNotification('Makab AI', 'Test notification! You will now receive daily AI tips. 🚀');
-        }, 5 * 60 * 1000);
+        // ---- TEST NOTIFICATION: Every 30 seconds, up to 2 times ----
+        localStorage.setItem('notification_test_count', '0');
+        let count = 0;
+        const sendTestNotification = () => {
+          if (count < 2) {
+            sendLocalNotification(
+              'Makab AI',
+              `Test notification #${count + 1}! You will now receive daily AI tips. 🚀`
+            );
+            count++;
+            localStorage.setItem('notification_test_count', count.toString());
+            if (count < 2) {
+              testNotificationTimer.current = setTimeout(sendTestNotification, 30000); // 30 sec
+            }
+          }
+        };
+        sendTestNotification();
       }
     }
   };
@@ -73,6 +87,14 @@ const NotificationPrompt = () => {
       });
     }
   };
+
+  // Reset test count if user disables and re-enables
+  useEffect(() => {
+    if (!isSubscribed) {
+      localStorage.setItem('notification_test_count', '0');
+      if (testNotificationTimer.current) clearTimeout(testNotificationTimer.current);
+    }
+  }, [isSubscribed]);
 
   if (!showPrompt || dismissed || isSubscribed || !isSupported) return null;
 
