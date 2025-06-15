@@ -112,44 +112,41 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-purple-50">
+    <div className="flex h-screen bg-gray-50">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       <div className="flex-1 flex flex-col">
-        {/* Simple Mobile-Friendly Header */}
-        <header className="bg-white/20 backdrop-blur-xl border-b border-white/30 px-4 py-4 shadow-glass">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200 px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Button
-                variant="crystal"
+                variant="outline"
                 size="sm"
                 onClick={() => setIsSidebarOpen(true)}
-                className="h-10 w-10 rounded-2xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
+                className="lg:hidden"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4 w-4" />
               </Button>
               
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-glass backdrop-blur-xl border-2 border-white/20">
-                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-6 h-6 rounded-xl" />
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-5 h-5 rounded" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    MAKAB
-                  </h1>
-                  <p className="text-xs text-gray-600 font-medium">AI Assistant</p>
+                  <h1 className="text-lg font-semibold text-gray-900">MAKAB</h1>
+                  <p className="text-xs text-gray-500">AI Assistant</p>
                 </div>
               </div>
             </div>
 
-            {/* New Chat Button - Hidden on Mobile */}
             <Button
-              variant="liquid"
+              variant="outline"
               size="sm"
-              className="hidden sm:flex h-10 px-4 rounded-2xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/20"
+              className="hidden sm:flex"
             >
               <Plus className="h-4 w-4 mr-2" />
-              <span className="text-sm font-semibold">New Chat</span>
+              New Chat
             </Button>
           </div>
         </header>
@@ -158,19 +155,19 @@ const ChatInterface = () => {
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-              <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-2xl animate-breathing-glow">
-                <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-16 h-16 rounded-2xl" />
+              <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center">
+                <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-12 h-12 rounded-full" />
               </div>
-              <div className="space-y-3">
-                <h2 className="text-3xl font-bold text-gray-800">Hi! I'm Makab 👋</h2>
+              <div className="space-y-2">
+                <h2 className="text-2xl font-bold text-gray-800">Hi! I'm Makab 👋</h2>
                 <p className="text-gray-600 max-w-md">
                   Your AI assistant created by Sajid for conversations and content creation! 🤖
                 </p>
               </div>
-              <div className="bg-white/15 backdrop-blur-xl border border-white/30 rounded-2xl px-6 py-4 shadow-glass">
-                <div className="flex items-center space-x-3">
-                  <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
-                  <span className="text-sm text-gray-700 font-medium">10 messages remaining today</span>
+              <div className="bg-gray-100 rounded-lg px-4 py-2">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-sm text-gray-700">10 messages remaining today</span>
                 </div>
               </div>
             </div>
@@ -189,42 +186,36 @@ const ChatInterface = () => {
         </div>
 
         {/* Input Area */}
-        <div className="p-4 bg-white/10 backdrop-blur-xl border-t border-white/20">
+        <div className="p-4 bg-white border-t border-gray-200">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-2xl shadow-glass p-3">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
               <div className="flex items-end space-x-3">
-                <div className="flex-1 min-h-[40px] max-h-32">
+                <div className="flex-1">
                   <textarea
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your message here..."
-                    className="w-full h-full resize-none bg-transparent border-none outline-none text-gray-800 placeholder-gray-500 text-sm leading-relaxed"
+                    className="w-full resize-none bg-transparent border-none outline-none text-gray-800 placeholder-gray-500 text-sm"
                     rows={1}
-                    style={{ minHeight: '40px' }}
+                    style={{ minHeight: '20px', maxHeight: '120px' }}
                   />
                 </div>
                 
                 <div className="flex items-center space-x-2">
                   <Button
-                    variant="frosted"
+                    variant="outline"
                     size="sm"
                     onClick={handleVoiceToggle}
-                    className={`h-10 w-10 rounded-xl shadow-lg transition-all duration-300 ${
-                      isListening 
-                        ? 'bg-red-500/20 border-red-400/40 text-red-600 animate-pulse-mic' 
-                        : 'hover:shadow-xl'
-                    }`}
+                    className={`${isListening ? 'bg-red-50 border-red-200 text-red-600' : ''}`}
                   >
                     {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                   </Button>
                   
                   <Button
-                    variant="liquid"
                     size="sm"
                     onClick={handleSendMessage}
                     disabled={!inputValue.trim() || isLoading}
-                    className="h-10 w-10 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                   >
                     <Send className="h-4 w-4" />
                   </Button>
