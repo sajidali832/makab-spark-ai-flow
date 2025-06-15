@@ -25,23 +25,27 @@ const ProfilePage = () => {
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
+    let cancelled = false;
+
     const checkAuthAndFetchData = async () => {
+      setIsInitialLoading(true);
+      setAuthError(null);
       try {
-        setAuthError(null);
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
 
         if (sessionError) {
           console.error('Session error:', sessionError);
-          setAuthError("Something went wrong loading your session. Please try logging in again.");
+          if (!cancelled) setAuthError("Something went wrong loading your session. Please try logging in again.");
           return;
         }
         if (!session || !session.user) {
-          setAuthError("You are not logged in. Please log in to view your profile.");
+          if (!cancelled) setAuthError("You are not logged in. Please log in to view your profile.");
           return;
         }
         const currentUser = session.user;
         setUser(currentUser);
 
+        // Removed unnecessary loading state - show instantly if session is present
         const { data: profileData, error: profileError } = await supabase
           .from('profiles')
           .select('*')
@@ -51,6 +55,7 @@ const ProfilePage = () => {
         if (profileError) {
           console.error('Error fetching profile:', profileError);
           if (profileError.code === 'PGRST116') {
+            // Try to auto-create profile
             const { data: newProfile, error: createError } = await supabase
               .from('profiles')
               .insert([{ user_id: currentUser.id, username: 'User' }])
@@ -59,6 +64,7 @@ const ProfilePage = () => {
 
             if (createError) {
               console.error('Error creating profile:', createError);
+              if (!cancelled) setAuthError("Error creating your profile. Try relogging.");
             } else {
               setProfile(newProfile);
               setEditData({
@@ -76,22 +82,16 @@ const ProfilePage = () => {
         }
       } catch (error) {
         console.error('Error in checkAuthAndFetchData:', error);
-        setAuthError("Failed to load your profile. Try again.");
+        if (!cancelled) setAuthError("Failed to load your profile. Try again.");
       } finally {
-        setIsInitialLoading(false);
+        if (!cancelled) setIsInitialLoading(false);
       }
     };
 
-    timeout = setTimeout(() => {
-      if (isInitialLoading) {
-        setAuthError("Loading is taking longer than usual. Please try refreshing or logging in again.");
-        setIsInitialLoading(false);
-      }
-    }, 10000);
-
+    // Remove the slow fallback timeout—now use exact state for loading
     checkAuthAndFetchData();
 
-    return () => clearTimeout(timeout);
+    return () => { cancelled = true; clearTimeout(timeout); };
   }, []);
 
   const handleEdit = () => setIsEditing(true);
@@ -172,7 +172,8 @@ const ProfilePage = () => {
     }
   };
 
-  if (isInitialLoading) {
+  // Only show loading spinner while truly waiting for user/session
+  if (isInitialLoading && !authError && !user) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
