@@ -1,6 +1,6 @@
 
 import { Button } from '@/components/ui/button';
-import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen } from 'lucide-react';
+import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen, LogOut } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
@@ -28,6 +28,15 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   };
 
   const isActive = (path: string) => location.pathname === path;
+
+  // TODO: Implement logout logic below.
+  const handleSignOut = () => {
+    // Remove user info, tokens, etc. Replace with your actual logout logic if needed.
+    localStorage.removeItem('makab_user');
+    // Optionally navigate to login or main page
+    navigate('/');
+    window.location.reload();
+  };
 
   return (
     <>
@@ -106,12 +115,14 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
           {/* Footer */}
           <div className="p-6 border-t border-gray-200 bg-gray-50">
-            <div className="text-center bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
-              <p className="text-xs text-gray-500 mb-2">Made with ❤️ by</p>
-              <p className="text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Sajid
-              </p>
-            </div>
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2 rounded-xl text-base font-semibold text-red-600 hover:bg-red-50 hover:text-red-700 transition"
+              onClick={handleSignOut}
+            >
+              <LogOut className="h-5 w-5" />
+              Sign out
+            </Button>
           </div>
         </div>
       </div>
@@ -120,3 +131,4 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 };
 
 export default Sidebar;
+
