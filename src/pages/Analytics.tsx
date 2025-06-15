@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Sidebar from '@/components/chat/Sidebar';
 import AnalyticsSection from '@/components/analytics/AnalyticsSection';
+import NotificationPrompt from '@/components/notifications/NotificationPrompt';
 
 const Analytics = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -31,6 +32,7 @@ const Analytics = () => {
           <AnalyticsSection />
         </div>
       </div>
+      <NotificationPrompt />
     </div>
   );
 };

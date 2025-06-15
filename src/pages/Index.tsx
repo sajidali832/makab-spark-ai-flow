@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import LoginForm from '@/components/auth/LoginForm';
 import ChatInterface from '@/components/chat/ChatInterface';
+import NotificationPrompt from '@/components/notifications/NotificationPrompt';
 
 const Index = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,7 +30,10 @@ const Index = () => {
       {!isAuthenticated ? (
         <LoginForm onAuthSuccess={() => setIsAuthenticated(true)} />
       ) : (
-        <ChatInterface />
+        <>
+          <ChatInterface />
+          <NotificationPrompt />
+        </>
       )}
     </div>
   );

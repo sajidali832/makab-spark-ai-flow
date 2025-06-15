@@ -7,9 +7,20 @@ import DailyUsageChart from './DailyUsageChart';
 import WeeklyUsageChart from './WeeklyUsageChart';
 import MostUsedToolsChart from './MostUsedToolsChart';
 import ContentTrendsChart from './ContentTrendsChart';
-import { Loader2, TrendingUp, Users, Calendar, BarChart3 } from 'lucide-react';
+import { Loader2, TrendingUp, Users, Calendar, BarChart3, MessageSquare, Wrench, Zap } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
+import { useAnalytics } from '@/hooks/useAnalytics';
+import { useEffect } from 'react';
 
 const AnalyticsSection = () => {
+  const navigate = useNavigate();
+  const { trackPageView } = useAnalytics();
+
+  useEffect(() => {
+    trackPageView('analytics');
+  }, [trackPageView]);
+
   const { data: analyticsData, isLoading, error } = useQuery({
     queryKey: ['user-analytics'],
     queryFn: async () => {
@@ -85,6 +96,58 @@ const AnalyticsSection = () => {
   const totalEvents = analyticsData?.length || 0;
   const uniqueDays = new Set(analyticsData?.map(item => new Date(item.created_at).toDateString())).size;
   const toolGenerationsCount = toolGenerations?.length || 0;
+  const hasData = totalEvents > 0 || toolGenerationsCount > 0;
+
+  // If no data, show welcome screen
+  if (!hasData) {
+    return (
+      <div className="p-3 sm:p-6 space-y-6">
+        <Card className="border-dashed border-2 border-gray-300">
+          <CardContent className="p-8 text-center space-y-6">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto">
+              <BarChart3 className="h-8 w-8 text-blue-600" />
+            </div>
+            <div className="space-y-3">
+              <h2 className="text-2xl font-bold text-gray-800">Welcome to Analytics! 📊</h2>
+              <p className="text-gray-600 max-w-md mx-auto">
+                Your usage analytics will appear here once you start using Makab AI. 
+                Try chatting with the AI or using tools to see your data visualized!
+              </p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-md mx-auto">
+              <Button 
+                onClick={() => navigate('/chat')}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Start Chatting
+              </Button>
+              <Button 
+                onClick={() => navigate('/tools')}
+                variant="outline"
+                className="border-blue-200 hover:bg-blue-50"
+              >
+                <Wrench className="h-4 w-4 mr-2" />
+                Try AI Tools
+              </Button>
+            </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-lg mx-auto">
+              <div className="flex items-center space-x-2 mb-2">
+                <Zap className="h-5 w-5 text-blue-600" />
+                <span className="font-semibold text-blue-800">What gets tracked?</span>
+              </div>
+              <ul className="text-sm text-blue-700 space-y-1 text-left">
+                <li>• Chat conversations and messages</li>
+                <li>• AI tool usage and generations</li>
+                <li>• Daily activity patterns</li>
+                <li>• Most used features</li>
+              </ul>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="p-3 sm:p-6 space-y-6">

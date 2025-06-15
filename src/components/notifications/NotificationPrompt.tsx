@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { Bell, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,60 +9,55 @@ const NotificationPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const { isSupported, isSubscribed, subscribe, permission, requestPermission } = usePushNotifications();
-  const testNotificationTimer = useRef<NodeJS.Timeout | null>(null);
 
-  /** Enhancement: Show prompt as soon as user logs in (not just after user interactions) **/
+  // Show prompt immediately for logged in users
   useEffect(() => {
-    // Run ASAP on mount for logged in users.
     const hasBeenPrompted = localStorage.getItem('notification_prompted');
-    if (!hasBeenPrompted && !isSubscribed && isSupported && permission !== 'denied') {
-      // Show after a short delay
+    const user = localStorage.getItem('makab_user');
+    
+    if (user && !hasBeenPrompted && !isSubscribed && isSupported && permission !== 'denied') {
+      // Show after a very short delay
       const timer = setTimeout(() => {
         setShowPrompt(true);
-      }, 1200); // 1.2s delay for good UX
+      }, 2000); // 2 seconds after login
       return () => clearTimeout(timer);
     }
   }, [isSubscribed, isSupported, permission]);
 
-  // Track interactions, but now prompt immediately anyway (above).
-  useEffect(() => {
-    const trackInteraction = () => {
-      const current = parseInt(localStorage.getItem('user_interactions') || '0');
-      localStorage.setItem('user_interactions', (current + 1).toString());
-    };
-    document.addEventListener('click', trackInteraction);
-    document.addEventListener('keydown', trackInteraction);
-    return () => {
-      document.removeEventListener('click', trackInteraction);
-      document.removeEventListener('keydown', trackInteraction);
-    };
-  }, []);
-
-  // Schedule up to 2 notifications every 30 seconds after subscribing (for testing)
   const handleSubscribe = async () => {
+    console.log('Requesting notification permission...');
     const granted = await requestPermission();
+    console.log('Permission granted:', granted);
+    
     if (granted) {
       const success = await subscribe();
+      console.log('Subscription success:', success);
+      
       if (success) {
         setShowPrompt(false);
         localStorage.setItem('notification_prompted', 'true');
-        // ---- TEST NOTIFICATION: Every 30 seconds, up to 2 times ----
-        localStorage.setItem('notification_test_count', '0');
-        let count = 0;
-        const sendTestNotification = () => {
-          if (count < 2) {
-            sendLocalNotification(
-              'Makab AI',
-              `Test notification #${count + 1}! You will now receive daily AI tips. 🚀`
-            );
-            count++;
-            localStorage.setItem('notification_test_count', count.toString());
-            if (count < 2) {
-              testNotificationTimer.current = setTimeout(sendTestNotification, 30000); // 30 sec
-            }
+        
+        // Send immediate test notification
+        setTimeout(() => {
+          if (window.Notification && Notification.permission === 'granted') {
+            new Notification('Makab AI - Welcome! 🎉', {
+              body: 'Notifications are now enabled! You\'ll receive daily AI tips and updates.',
+              icon: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
+              badge: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
+            });
           }
-        };
-        sendTestNotification();
+        }, 1000);
+
+        // Send another test notification after 10 seconds
+        setTimeout(() => {
+          if (window.Notification && Notification.permission === 'granted') {
+            new Notification('Makab AI - Test Success! ✅', {
+              body: 'Perfect! Your notifications are working. Expect daily tips at 9 AM and 7 PM.',
+              icon: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
+              badge: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
+            });
+          }
+        }, 10000);
       }
     }
   };
@@ -74,27 +70,8 @@ const NotificationPrompt = () => {
 
   const handleLater = () => {
     setShowPrompt(false);
-    // Will re-show in future.
+    // Don't mark as prompted so it shows again later
   };
-
-  // Helper to send a browser notification using the permission the user just gave
-  const sendLocalNotification = (title: string, body: string) => {
-    if (window.Notification && Notification.permission === 'granted') {
-      new Notification(title, {
-        body,
-        icon: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
-        badge: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
-      });
-    }
-  };
-
-  // Reset test count if user disables and re-enables
-  useEffect(() => {
-    if (!isSubscribed) {
-      localStorage.setItem('notification_test_count', '0');
-      if (testNotificationTimer.current) clearTimeout(testNotificationTimer.current);
-    }
-  }, [isSubscribed]);
 
   if (!showPrompt || dismissed || isSubscribed || !isSupported) return null;
 
@@ -107,9 +84,9 @@ const NotificationPrompt = () => {
               <Bell className="w-6 h-6 text-white" />
             </div>
             <div className="flex-1">
-              <h3 className="font-bold text-gray-800 mb-1">Stay Inspired Daily! 🚀</h3>
+              <h3 className="font-bold text-gray-800 mb-1">Get Daily AI Tips! 🚀</h3>
               <p className="text-sm text-gray-600 mb-3 leading-relaxed">
-                Get 2 daily notifications with free AI tips, creative inspiration, and new feature updates from Makab AI.
+                Enable notifications to receive 2 daily tips with AI insights, creative ideas, and feature updates.
               </p>
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -118,7 +95,7 @@ const NotificationPrompt = () => {
                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-md"
                 >
                   <Bell className="h-4 w-4 mr-1" />
-                  Enable Free Notifications
+                  Enable Notifications
                 </Button>
                 <Button
                   size="sm"
@@ -126,7 +103,7 @@ const NotificationPrompt = () => {
                   onClick={handleLater}
                   className="text-gray-600"
                 >
-                  Maybe Later
+                  Later
                 </Button>
                 <Button
                   size="sm"

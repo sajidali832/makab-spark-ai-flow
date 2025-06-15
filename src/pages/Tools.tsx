@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ToolsSection from '@/components/tools/ToolsSection';
 import Sidebar from '@/components/chat/Sidebar';
+import NotificationPrompt from '@/components/notifications/NotificationPrompt';
 
 const Tools = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -33,6 +34,7 @@ const Tools = () => {
           <ToolsSection />
         </div>
       </div>
+      <NotificationPrompt />
     </div>
   );
 };
