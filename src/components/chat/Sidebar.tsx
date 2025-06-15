@@ -2,6 +2,8 @@
 import { Button } from '@/components/ui/button';
 import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen, LogOut } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import PageLoader from '@/components/ui/PageLoader';
+import { useState } from 'react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -11,6 +13,7 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState(false);
 
   const menuItems = [
     { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
@@ -23,8 +26,16 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   ];
 
   const handleNavigation = (path: string) => {
-    navigate(path);
-    onClose();
+    if (location.pathname !== path) {
+      setLoading(true);
+      setTimeout(() => {
+        navigate(path);
+        onClose();
+        setLoading(false);
+      }, 340); // matches the duration below, so loading spinner shows during transition
+    } else {
+      onClose();
+    }
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -40,11 +51,14 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       {/* Overlay for mobile - visible only when sidebar is open */}
       <div
         className={`
-          fixed inset-0 z-40 bg-black/30
-          transition-opacity duration-200
-          ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+          fixed inset-0 z-40 bg-black/30 transition-all duration-400
+          ${isOpen ? 'opacity-100 pointer-events-auto animate-fade-in' : 'opacity-0 pointer-events-none'}
           lg:hidden
         `}
+        style={{
+          transitionProperty: 'opacity',
+          transitionDuration: '400ms'
+        }}
         onClick={onClose}
         aria-hidden="true"
       />
@@ -53,11 +67,15 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       <aside
         className={`
           fixed z-50 top-0 left-0 h-full w-72 sm:w-80 bg-white border-r border-gray-200 shadow-lg
-          transform transition-transform duration-200 ease-in-out will-change-transform
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
+          transform transition-transform duration-400 ease-[cubic-bezier(0.4,0,0.2,1)] will-change-transform
+          ${isOpen ? 'translate-x-0 animate-fade-in' : '-translate-x-full'}
           lg:sticky lg:left-0 lg:top-0 lg:translate-x-0 lg:shadow-none
         `}
-        style={{ maxWidth: '100vw' }}
+        style={{
+          maxWidth: '100vw',
+          transitionProperty: 'transform',
+          transitionDuration: '400ms'
+        }}
       >
         <div className="flex flex-col h-full">
           {/* Sidebar header */}
@@ -117,6 +135,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </Button>
           </div>
         </div>
+        {loading && <PageLoader />}
       </aside>
     </>
   );
