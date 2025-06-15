@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, Send, Mic, MicOff, Plus } from 'lucide-react';
@@ -8,6 +7,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
 import { supabase } from '@/integrations/supabase/client';
+import PWAInstallPrompt from '@/components/PWAInstallPrompt';
+import NotificationPrompt from '@/components/notifications/NotificationPrompt';
 
 interface Message {
   id: string;
@@ -28,6 +29,7 @@ const ChatInterface = () => {
   const { toast } = useToast();
   const { isListening, startListening, stopListening } = useVoiceInput();
   const { canSendMessage, incrementChatMessages, remainingMessages } = useDailyLimits();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     scrollToBottom();
@@ -207,10 +209,11 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
-      <div className="flex-1 flex flex-col">
+      {/* Main Chat Area */}
+      <div className="flex-1 flex flex-col h-screen">
         {/* --- HEADER: Smaller, soft white/blue, subtitle lower, blur effect --- */}
         <header
           className="relative z-10 select-none border-b border-blue-100 bg-white/60 backdrop-blur-lg shadow-sm"
@@ -355,6 +358,12 @@ const ChatInterface = () => {
             </div>
           </div>
         </div>
+        
+        {/* PWA Install Prompt */}
+        <PWAInstallPrompt />
+        
+        {/* Notification Prompt */}
+        <NotificationPrompt />
       </div>
     </div>
   );
