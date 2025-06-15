@@ -48,13 +48,17 @@ const ChatInterface = () => {
     });
   };
 
-  // Updated function to use Supabase Edge Function for Gemini 2.5 Flash
+  // Updated function to use chat-completion edge function with OpenRouter
   const getAIResponse = async (input: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('tools-generation', {
+      const { data, error } = await supabase.functions.invoke('chat-completion', {
         body: {
-          toolId: 'chat-completion',
-          inputs: { prompt: input }
+          messages: [
+            {
+              role: 'user',
+              content: input
+            }
+          ]
         }
       });
 
@@ -63,12 +67,12 @@ const ChatInterface = () => {
         throw new Error(error.message || 'Failed to get AI response');
       }
 
-      if (!data || !data.content) {
+      if (!data || !data.generatedText) {
         console.error('No content in response:', data);
         throw new Error('No response content received');
       }
 
-      return data.content;
+      return data.generatedText;
     } catch (error) {
       console.error('AI Response error:', error);
       throw error;
