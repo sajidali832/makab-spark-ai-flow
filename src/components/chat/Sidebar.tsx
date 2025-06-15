@@ -56,9 +56,9 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               <div className="absolute bottom-[-8px] left-4 w-14 h-3 bg-white/18 blur-md rounded-full opacity-12" />
             </div>
             <div className="relative z-10 flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white/90 rounded-xl flex items-center justify-center shadow relative"
+              <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow relative"
                    style={{ backdropFilter: 'blur(4px)' }}>
-                <img src="/lovable-uploads/cba874ed-0c1b-4131-b3ab-5387f577bc92.png" alt="Makab" className="w-8 h-8 rounded relative z-10" />
+                <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-10 h-10 rounded-full relative z-10" />
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-base font-extrabold bg-gradient-to-r from-blue-300 via-purple-300 to-blue-400 bg-clip-text text-transparent tracking-wide">

@@ -25,7 +25,7 @@ const FreeCourse = () => {
             <Menu className="h-5 w-5" />
           </Button>
           <div className="flex items-center space-x-2">
-            <img src="/lovable-uploads/cba874ed-0c1b-4131-b3ab-5387f577bc92.png" alt="Makab" className="w-6 h-6" />
+            <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-8 h-8 rounded-full" />
             <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               MAKAB
             </span>

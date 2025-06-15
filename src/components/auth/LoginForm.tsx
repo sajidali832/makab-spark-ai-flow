@@ -131,8 +131,8 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
       
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
-          <div className="w-24 h-24 bg-white rounded-3xl flex items-center justify-center mx-auto mb-4 shadow-2xl relative">
-            <img src="/lovable-uploads/cba874ed-0c1b-4131-b3ab-5387f577bc92.png" alt="Makab" className="w-20 h-20 rounded-2xl relative z-10" />
+          <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-2xl relative">
+            <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-20 h-20 rounded-full relative z-10" />
           </div>
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2 drop-shadow-lg">
             MAKAB AI

@@ -76,7 +76,7 @@ const ChatMessage = ({ message, isCurrentlyThinking, onRegenerate, onStop }: Cha
   return (
     <div className="flex justify-start space-x-2">
       <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center flex-shrink-0 shadow-sm relative">
-        <img src="/lovable-uploads/cba874ed-0c1b-4131-b3ab-5387f577bc92.png" alt="Makab" className="w-6 h-6 rounded-full relative z-10" />
+        <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-7 h-7 rounded-full relative z-10" />
       </div>
       
       <div className="flex-1 space-y-2">

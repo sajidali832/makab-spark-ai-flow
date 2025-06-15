@@ -10,13 +10,13 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/lovable-uploads/2abbf453-6761-4fd3-96ab-e66591ad66dc.png",
+      "src": "/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/lovable-uploads/2abbf453-6761-4fd3-96ab-e66591ad66dc.png",
+      "src": "/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -25,7 +25,7 @@
   "categories": ["productivity", "utilities"],
   "screenshots": [
     {
-      "src": "/lovable-uploads/2abbf453-6761-4fd3-96ab-e66591ad66dc.png",
+      "src": "/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide"

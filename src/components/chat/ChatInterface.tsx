@@ -233,9 +233,9 @@ const ChatInterface = () => {
                 <Menu className="h-5 w-5" />
               </Button>
               <div className="flex items-center space-x-2">
-                <div className="w-9 h-9 bg-white/90 rounded-xl flex items-center justify-center shadow relative"
+                <div className="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow relative"
                      style={{ backdropFilter: 'blur(4px)' }}>
-                  <img src="/lovable-uploads/cba874ed-0c1b-4131-b3ab-5387f577bc92.png" alt="Makab" className="w-7 h-7 rounded relative z-10" />
+                  <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-9 h-9 rounded-full relative z-10" />
                 </div>
                 <div className="flex flex-col leading-none">
                   <h1 className="text-base font-extrabold bg-gradient-to-r from-blue-300 via-purple-300 to-blue-400 bg-clip-text text-transparent tracking-wide">
@@ -269,7 +269,7 @@ const ChatInterface = () => {
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
               <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg relative">
-                <img src="/lovable-uploads/cba874ed-0c1b-4131-b3ab-5387f577bc92.png" alt="Makab" className="w-20 h-20 rounded-full relative z-10" />
+                <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-20 h-20 rounded-full relative z-10" />
               </div>
               <div className="space-y-2">
                 <h2 className="text-2xl font-bold text-gray-800">Hi! I'm Makab 👋</h2>
