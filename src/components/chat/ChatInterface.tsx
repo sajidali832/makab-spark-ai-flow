@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, Send, Mic, MicOff, Plus, Settings, User, MessageSquare } from 'lucide-react';
@@ -25,7 +26,7 @@ const ChatInterface = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { isListening, startListening, stopListening } = useVoiceInput();
-  const { canSendMessage, incrementMessageCount } = useDailyLimits();
+  const { canSendMessage, incrementChatMessages } = useDailyLimits();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,7 +82,7 @@ const ChatInterface = () => {
       };
 
       setMessages(prev => prev.filter(msg => !msg.isThinking).concat([aiResponse]));
-      incrementMessageCount();
+      incrementChatMessages();
       
     } catch (error) {
       console.error('Chat error:', error);
@@ -118,67 +119,67 @@ const ChatInterface = () => {
       
       <div className="flex-1 flex flex-col">
         {/* Enhanced Navigation Header */}
-        <header className="bg-white/20 backdrop-blur-xl border-b border-white/30 px-4 py-4 shadow-glass">
+        <header className="bg-white/20 backdrop-blur-xl border-b border-white/30 px-6 py-6 shadow-glass">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button
                 variant="crystal"
                 size="lg"
                 onClick={() => setIsSidebarOpen(true)}
-                className="lg:hidden h-12 w-12 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="lg:hidden h-16 w-16 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
               >
-                <Menu className="h-6 w-6" />
+                <Menu className="h-8 w-8" />
               </Button>
               
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
-                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-8 h-8 rounded-lg" />
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-glass backdrop-blur-xl border-2 border-white/20">
+                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-10 h-10 rounded-2xl" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     MAKAB
                   </h1>
-                  <p className="text-sm text-gray-600">AI Assistant</p>
+                  <p className="text-base text-gray-600 font-medium">AI Assistant</p>
                 </div>
               </div>
             </div>
 
             {/* Enhanced Navigation Icons */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-4">
               <Button
                 variant="frosted"
                 size="lg"
                 onClick={() => navigate('/chat')}
-                className="h-12 w-12 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="h-16 w-16 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
               >
-                <MessageSquare className="h-6 w-6" />
+                <MessageSquare className="h-8 w-8" />
               </Button>
               
               <Button
                 variant="frosted"
                 size="lg"
                 onClick={() => navigate('/profile')}
-                className="h-12 w-12 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="h-16 w-16 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
               >
-                <User className="h-6 w-6" />
+                <User className="h-8 w-8" />
               </Button>
               
               <Button
                 variant="frosted"
                 size="lg"
                 onClick={() => navigate('/tools')}
-                className="h-12 w-12 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="h-16 w-16 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
               >
-                <Settings className="h-6 w-6" />
+                <Settings className="h-8 w-8" />
               </Button>
               
               <Button
                 variant="liquid"
                 size="lg"
-                className="h-12 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                className="h-16 px-8 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/20"
               >
-                <Plus className="h-5 w-5 mr-2" />
-                New Chat
+                <Plus className="h-6 w-6 mr-3" />
+                <span className="text-lg font-semibold">New Chat</span>
               </Button>
             </div>
           </div>
