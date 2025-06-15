@@ -63,6 +63,19 @@
     /* Prevent zoom on mobile */
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
+    /* Fully disable zoom on pinch/gesture */
+    touch-action: manipulation;
+    overscroll-behavior: none;
+  }
+
+  html,
+  body {
+    overscroll-behavior: none;
+    /* Extra zoom protection */
+    -ms-content-zooming: none;
+    -webkit-user-drag: none;
+    gesture-zoom: none;
+    zoom: 1 !important;
   }
 
   /* Enable text selection for content areas */
@@ -96,6 +109,9 @@
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    touch-action: manipulation;
+    overscroll-behavior: none;
+    outline: none !important;
   }
 
   /* Mobile-specific fixes */

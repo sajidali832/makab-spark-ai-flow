@@ -159,35 +159,39 @@ const AboutPage = () => {
           </div>
         </div>
 
-        {/* About Creator */}
-        <Card className="border-0 shadow-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden mb-4 sm:mb-6">
-          <CardContent className="p-4 sm:p-6 text-center">
-            <div className="flex justify-center mb-3 sm:mb-4">
-              <div className="w-12 h-12 sm:w-14 sm:h-14 bg-white/20 rounded-full flex items-center justify-center">
-                <Heart className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
+        {/* About Creator - MOBILE OPTIMIZED & CENTERED */}
+        <div className="flex justify-center w-full mb-4 sm:mb-6">
+          <Card className="w-full max-w-sm sm:max-w-lg border-0 shadow-xl bg-gradient-to-r from-blue-600 to-purple-600 text-white overflow-hidden mx-auto">
+            <CardContent className="p-5 pt-6 text-center flex flex-col items-center">
+              <div className="flex justify-center mb-3 sm:mb-4">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-white/20 rounded-full flex items-center justify-center">
+                  <Heart className="h-7 w-7 sm:h-8 sm:w-8 text-white" />
+                </div>
               </div>
-            </div>
-            <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">Made with ❤️ by Sajid</h2>
-            <p className="text-blue-100 mb-3 sm:mb-4 max-w-2xl mx-auto text-xs sm:text-sm px-2">
-              Crafted with passion and dedication to bring you the best AI experience.
-              Constantly evolving to meet your needs and exceed your expectations.
-            </p>
-            <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
-              <div className="flex items-center space-x-1">
-                <Code className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="text-xs sm:text-sm">Built with React</span>
+              <h2 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 flex items-center justify-center gap-1">
+                Made with <span className="text-red-400 text-xl">❤️</span> by Sajid
+              </h2>
+              <p className="text-blue-100 mb-3 sm:mb-4 max-w-xs sm:max-w-md text-xs sm:text-sm mx-auto px-2">
+                Crafted with passion and dedication to bring you the best AI experience.<br/>
+                Constantly evolving to meet your needs and exceed your expectations.
+              </p>
+              <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+                <div className="flex items-center space-x-1">
+                  <Code className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-xs sm:text-sm">Built with React</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Users className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-xs sm:text-sm">User Focused</span>
+                </div>
+                <div className="flex items-center space-x-1">
+                  <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <span className="text-xs sm:text-sm">AI Enhanced</span>
+                </div>
               </div>
-              <div className="flex items-center space-x-1">
-                <Users className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="text-xs sm:text-sm">User Focused</span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Sparkles className="h-3 w-3 sm:h-4 sm:w-4" />
-                <span className="text-xs sm:text-sm">AI Enhanced</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Usage Limits Info + Upgrade Note */}
         <Card className="border-0 shadow-lg bg-amber-50/80 backdrop-blur-sm border border-amber-200">
