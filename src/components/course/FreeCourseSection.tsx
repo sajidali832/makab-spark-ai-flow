@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -137,9 +136,9 @@ const FreeCourseSection = () => {
               <div className="px-4 sm:px-0">
                 <Button 
                   onClick={handleAccessCourse}
-                  className="group relative w-full max-w-sm sm:max-w-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white py-4 sm:py-5 text-base sm:text-lg md:text-xl font-bold rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 mb-6 sm:mb-8 overflow-hidden"
+                  className="group relative w-full max-w-sm sm:max-w-lg bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white py-4 sm:py-5 text-base sm:text-lg md:text-xl font-bold rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-500 ease-in-out mb-6 sm:mb-8 overflow-hidden"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out"></div>
                   <div className="relative flex items-center justify-center space-x-2">
                     <Download className="h-5 w-5 sm:h-6 sm:w-6 animate-bounce" />
                     <span>Download Free Course</span>
@@ -159,8 +158,8 @@ const FreeCourseSection = () => {
               {benefits.map((benefit, index) => (
                 <Card 
                   key={index} 
-                  className="group relative overflow-hidden bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-3 animate-fade-in"
-                  style={{ animationDelay: `${index * 0.15}s` }}
+                  className="group relative overflow-hidden bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-700 ease-in-out transform hover:-translate-y-3 animate-fade-in"
+                  style={{ animationDelay: `${index * 0.22}s` }}
                 >
                   <div className={`absolute inset-0 bg-gradient-to-br ${benefit.color} opacity-0 group-hover:opacity-10 transition-opacity duration-500`}></div>
                   <CardHeader className="text-center pb-3 p-4 sm:p-6 relative z-10">
@@ -188,8 +187,8 @@ const FreeCourseSection = () => {
               {reviews.map((review, index) => (
                 <Card 
                   key={index} 
-                  className="group bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 animate-fade-in overflow-hidden"
-                  style={{ animationDelay: `${index * 0.2}s` }}
+                  className="group bg-white/90 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all duration-800 ease-in-out transform hover:-translate-y-2 animate-fade-in"
+                  style={{ animationDelay: `${index * 0.25}s` }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                   <CardHeader className="pb-3 p-4 sm:p-6 relative z-10">

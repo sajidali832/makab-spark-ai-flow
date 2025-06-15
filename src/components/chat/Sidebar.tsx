@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen, LogOut, Menu } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -50,23 +49,12 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
   return (
     <>
       {loading && <PageLoader />}
-      
-      {/* Mobile menu button - visible only on small screens */}
-      <div className="lg:hidden fixed top-4 left-4 z-[60]">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onMenuClick}
-          className="h-10 w-10 p-0 bg-white/90 backdrop-blur-sm border border-gray-200 shadow-sm hover:bg-white hover:shadow-md transition-all duration-200"
-        >
-          {isOpen ? <X className="h-5 w-5 text-gray-700" /> : <Menu className="h-5 w-5 text-gray-700" />}
-        </Button>
-      </div>
 
+      {/* NO Menu/Close button above logo -- just the sidebar for mobile! */}
       {/* Overlay for mobile */}
       <div
         className={`
-          fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-all duration-300 ease-out
+          fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-all duration-400 ease-in-out
           ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
           lg:hidden
         `}
@@ -78,7 +66,7 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
       <aside
         className={`
           fixed z-50 top-0 left-0 h-full w-80 bg-white/95 backdrop-blur-md border-r border-gray-200/80 shadow-xl
-          transform transition-all duration-300 ease-out will-change-transform
+          transform transition-all duration-500 ease-in-out will-change-transform
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:sticky lg:left-0 lg:top-0 lg:translate-x-0 lg:shadow-lg lg:bg-white lg:w-72
         `}
@@ -86,8 +74,8 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
       >
         <div className="flex flex-col h-full">
           {/* Sidebar header */}
-          <div className="flex items-center justify-between py-4 px-6 border-b border-gray-200/80 bg-gradient-to-r from-blue-50 to-indigo-50">
-            <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-start py-4 px-6 border-b border-gray-200/80 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <div className="flex items-center gap-3">
               <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md">
                 <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-7 h-7 rounded-lg" />
               </div>
@@ -96,11 +84,12 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
                 <span className="text-xs text-gray-500 font-medium">AI Assistant</span>
               </div>
             </div>
+            {/* Only close button for MOBILE in the row, right side */}
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="lg:hidden h-8 w-8 p-0 text-gray-500 hover:bg-white/70 hover:text-gray-700 transition-all duration-200 rounded-lg"
+              className="ml-auto lg:hidden h-8 w-8 p-0 text-gray-500 hover:bg-white/70 hover:text-gray-700 transition-all duration-200 rounded-lg"
             >
               <X className="h-4 w-4" />
               <span className="sr-only">Close sidebar</span>
@@ -118,7 +107,7 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
                     key={item.id}
                     variant={active ? "default" : "ghost"}
                     className={`
-                      w-full justify-start h-12 transition-all duration-300 ease-out transform group
+                      w-full justify-start h-12 transition-all duration-500 ease-in-out transform group
                       ${active 
                         ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-lg scale-[1.02]' 
                         : 'text-gray-700 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 hover:translate-x-1 hover:shadow-sm hover:border-blue-200/50 border border-transparent'
@@ -127,11 +116,11 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
                     `}
                     onClick={() => handleNavigation(item.path)}
                     style={{ 
-                      animationDelay: `${index * 50}ms`,
-                      animation: isOpen ? 'fade-in 0.3s ease-out forwards' : undefined
+                      animationDelay: `${index * 60}ms`,
+                      animation: isOpen ? 'fade-in 0.4s ease-in-out forwards' : undefined
                     }}
                   >
-                    <Icon className={`h-5 w-5 mr-3 transition-all duration-300 ${
+                    <Icon className={`h-5 w-5 mr-3 transition-all duration-500 ${
                       active 
                         ? 'text-white' 
                         : 'text-gray-500 group-hover:text-blue-600 group-hover:scale-110'
@@ -147,7 +136,7 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
           <div className="p-5 border-t border-gray-200/80 bg-gradient-to-r from-gray-50 to-blue-50/30">
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-3 h-12 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:text-red-700 hover:border-red-200 transition-all duration-300 ease-out hover:shadow-md rounded-xl font-semibold border-red-200/50"
+              className="w-full flex items-center justify-center gap-3 h-12 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:text-red-700 hover:border-red-200 transition-all duration-400 ease-in-out hover:shadow-md rounded-xl font-semibold border-red-200/50"
               onClick={handleSignOut}
             >
               <LogOut className="h-5 w-5" />
@@ -159,5 +148,4 @@ const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
     </>
   );
 };
-
 export default Sidebar;

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,7 +18,7 @@ const FreeCourse = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-screen">
         {/* Top Navigation Bar for Mobile */}
-        <div className="lg:hidden flex items-center justify-between p-3 sm:p-4 bg-white border-b border-gray-200">
+        <div className="lg:hidden flex items-center justify-between p-3 sm:p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-gray-200">
           <Button
             variant="ghost"
             size="sm"
