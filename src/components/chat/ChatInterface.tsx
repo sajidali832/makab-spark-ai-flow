@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, Send, Mic, MicOff, Plus } from 'lucide-react';
@@ -6,6 +7,7 @@ import ChatMessage from './ChatMessage';
 import { useToast } from '@/hooks/use-toast';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
+import { supabase } from '@/integrations/supabase/client';
 
 interface Message {
   id: string;
@@ -46,26 +48,31 @@ const ChatInterface = () => {
     });
   };
 
-  // --- UPDATE: Use Gemini 2.5 Flash for chat API ---
-  // New function for Gemini chat completion - replace getAIResponse
+  // Updated function to use Supabase Edge Function for Gemini 2.5 Flash
   const getAIResponse = async (input: string) => {
-    // Call the Supabase Edge Function for Gemini 2.5 Flash
-    const response = await fetch("/functions/tools-generation", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        toolId: "chat-completion",
-        inputs: { prompt: input }
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok || !data.content) {
-      // fallback or error from Gemini API
-      return "I'm having trouble reaching Gemini right now. Please try again!";
+    try {
+      const { data, error } = await supabase.functions.invoke('tools-generation', {
+        body: {
+          toolId: 'chat-completion',
+          inputs: { prompt: input }
+        }
+      });
+
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw new Error(error.message || 'Failed to get AI response');
+      }
+
+      if (!data || !data.content) {
+        console.error('No content in response:', data);
+        throw new Error('No response content received');
+      }
+
+      return data.content;
+    } catch (error) {
+      console.error('AI Response error:', error);
+      throw error;
     }
-    return data.content;
   };
 
   const handleSendMessage = async () => {
