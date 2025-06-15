@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Eye, EyeOff, Mail, Lock, User, Sparkles } from 'lucide-react';
+import { usePushNotifications } from '@/hooks/usePushNotifications';
 
 interface LoginFormProps {
   onAuthSuccess: () => void;
@@ -22,6 +22,15 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
     username: ''
   });
   const { toast } = useToast();
+  const { requestPermission, subscribe } = usePushNotifications();
+
+  const requestNotificationPermission = async () => {
+    const granted = await requestPermission();
+    if (granted) {
+      // Automatically subscribe if permission is granted
+      await subscribe();
+    }
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +62,12 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
           title: "Welcome back! 🎉",
           description: "Successfully logged in to Makab AI",
         });
+
+        // Request notification permission after successful login
+        setTimeout(() => {
+          requestNotificationPermission();
+        }, 1000);
+
         onAuthSuccess();
       }
     } catch (error) {
@@ -101,6 +116,12 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
           title: "Welcome to Makab! 🚀",
           description: "Your account has been created successfully",
         });
+
+        // Request notification permission after successful signup
+        setTimeout(() => {
+          requestNotificationPermission();
+        }, 1000);
+
         onAuthSuccess();
       }
     } catch (error) {

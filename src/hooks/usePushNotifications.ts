@@ -47,11 +47,6 @@ export const usePushNotifications = () => {
 
   const requestPermission = async (): Promise<boolean> => {
     if (!isSupported) {
-      toast({
-        title: "Not Supported",
-        description: "Push notifications are not supported in this browser.",
-        variant: "destructive",
-      });
       return false;
     }
 
@@ -60,17 +55,8 @@ export const usePushNotifications = () => {
       setPermission(permission);
 
       if (permission === 'granted') {
-        toast({
-          title: "Notifications Enabled!",
-          description: "You'll now receive daily inspiration from Makab AI.",
-        });
         return true;
       } else {
-        toast({
-          title: "Notifications Blocked",
-          description: "You can enable notifications in your browser settings.",
-          variant: "destructive",
-        });
         return false;
       }
     } catch (error) {
@@ -81,8 +67,7 @@ export const usePushNotifications = () => {
 
   const subscribe = async (): Promise<boolean> => {
     if (!isSupported || permission !== 'granted') {
-      const granted = await requestPermission();
-      if (!granted) return false;
+      return false;
     }
 
     setIsLoading(true);
@@ -102,11 +87,6 @@ export const usePushNotifications = () => {
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        toast({
-          title: "Login Required",
-          description: "Please log in to enable notifications.",
-          variant: "destructive",
-        });
         return false;
       }
 
@@ -124,28 +104,13 @@ export const usePushNotifications = () => {
 
       if (error) {
         console.error('Error storing subscription:', error);
-        toast({
-          title: "Error",
-          description: "Failed to save notification preferences.",
-          variant: "destructive",
-        });
         return false;
       }
 
       setIsSubscribed(true);
-      toast({
-        title: "Success!",
-        description: "You'll receive 2 daily notifications with free AI tips and inspiration!",
-      });
-      
       return true;
     } catch (error) {
       console.error('Error subscribing:', error);
-      toast({
-        title: "Subscription Failed",
-        description: "Failed to enable notifications. Please try again.",
-        variant: "destructive",
-      });
       return false;
     } finally {
       setIsLoading(false);
