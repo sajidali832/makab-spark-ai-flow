@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -161,24 +162,31 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
           <p className="text-blue-200 drop-shadow-lg">Your intelligent AI companion</p>
         </div>
 
-        {/* === Make card content scrollable and responsive === */}
-        <div className="max-h-[70vh] min-h-[430px] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 rounded-xl">
-          <Card className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl backdrop-saturate-150">
+        {/* === Improved scrollable and always-reachable card content for mobile === */}
+        <div className="flex flex-col h-[min(80vh,650px)] w-full rounded-xl overflow-y-auto scrollbar-thin scrollbar-thumb-blue-300 bg-transparent"
+          style={{
+            minHeight: '420px', // for mobile
+            maxHeight: '90vh',
+            paddingBottom: 'env(safe-area-inset-bottom, 24px)', // iOS safe area
+          }}
+        >
+          <Card className="backdrop-blur-xl bg-white/10 border border-white/20 shadow-2xl backdrop-saturate-150 flex-1 flex flex-col">
             <CardHeader>
               <CardTitle className="text-center flex items-center justify-center space-x-2 text-white">
                 <Sparkles className="h-5 w-5 text-blue-400" />
                 <span>Get Started</span>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-1 flex flex-col justify-between pt-0 pb-4">
               <Tabs defaultValue="login" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 bg-black/20 border border-white/20">
                   <TabsTrigger value="login" className="text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white">Login</TabsTrigger>
                   <TabsTrigger value="signup" className="text-white data-[state=active]:bg-blue-600 data-[state=active]:text-white">Sign Up</TabsTrigger>
                 </TabsList>
                 
-                <TabsContent value="login" className="space-y-4">
-                  <form onSubmit={handleLogin} className="space-y-4">
+                <TabsContent value="login" className="space-y-4 pt-4 pb-1">
+                  <form onSubmit={handleLogin} className="space-y-4 flex flex-col min-h-0">
+                    {/* Email */}
                     <div className="space-y-2">
                       <Label htmlFor="email" className="text-blue-200">Email</Label>
                       <div className="relative">
@@ -195,7 +203,7 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                         />
                       </div>
                     </div>
-                    
+                    {/* Password */}
                     <div className="space-y-2">
                       <Label htmlFor="password" className="text-blue-200">Password</Label>
                       <div className="relative">
@@ -225,10 +233,10 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                         </Button>
                       </div>
                     </div>
-                    
+                    {/* Submit button */}
                     <Button 
                       type="submit" 
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
+                      className="mt-2 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
                       disabled={isLoading}
                     >
                       {isLoading ? "Signing in..." : "Sign In"}
@@ -236,8 +244,9 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                   </form>
                 </TabsContent>
                 
-                <TabsContent value="signup" className="space-y-4">
-                  <form onSubmit={handleSignup} className="space-y-4">
+                <TabsContent value="signup" className="space-y-4 pt-4 pb-1">
+                  <form onSubmit={handleSignup} className="space-y-4 flex flex-col min-h-0">
+                    {/* Username */}
                     <div className="space-y-2">
                       <Label htmlFor="signup-username" className="text-blue-200">Username</Label>
                       <div className="relative">
@@ -254,7 +263,7 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                         />
                       </div>
                     </div>
-                    
+                    {/* Email */}
                     <div className="space-y-2">
                       <Label htmlFor="signup-email" className="text-blue-200">Email</Label>
                       <div className="relative">
@@ -271,7 +280,7 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                         />
                       </div>
                     </div>
-                    
+                    {/* Password */}
                     <div className="space-y-2">
                       <Label htmlFor="signup-password" className="text-blue-200">Password</Label>
                       <div className="relative">
@@ -302,10 +311,10 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
                         </Button>
                       </div>
                     </div>
-                    
+                    {/* Submit button */}
                     <Button 
                       type="submit" 
-                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
+                      className="mt-2 w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg border border-white/20"
                       disabled={isLoading}
                     >
                       {isLoading ? "Creating account..." : "Create Account"}
@@ -316,10 +325,11 @@ const LoginForm = ({ onAuthSuccess }: LoginFormProps) => {
             </CardContent>
           </Card>
         </div>
-        {/* === End scrollable card === */}
+        {/* === End improved scrollable card === */}
       </div>
     </div>
   );
 };
 
 export default LoginForm;
+
