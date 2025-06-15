@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -47,24 +46,33 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         lg:block
       `}>
         <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-purple-600">
-            <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
-                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-8 h-8 rounded-lg" />
+          {/* --- Sidebar header: match chat header, smaller, blurry, soft --- */}
+          <div className="flex items-center justify-between py-4 px-6 border-b border-blue-100 bg-white/60 relative" style={{ minHeight: '48px', height: '48px' }}>
+            {/* Blurry overlay like chat */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute top-[-18px] left-[-8px] w-20 h-10 bg-blue-100/18 blur-2xl rounded-xl opacity-25" />
+              <div className="absolute top-1 right-[-12px] w-16 h-8 bg-purple-100/18 blur-xl rounded-xl opacity-14" />
+              <div className="absolute bottom-[-8px] left-4 w-14 h-3 bg-white/18 blur-md rounded-full opacity-12" />
+            </div>
+            <div className="relative z-10 flex items-center space-x-3">
+              <div className="w-8 h-8 bg-white/90 rounded-xl flex items-center justify-center ring-2 ring-blue-200/15 shadow"
+                   style={{ backdropFilter: 'blur(4px)' }}>
+                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-5 h-5 rounded" />
               </div>
-              <div>
-                <span className="font-bold text-xl text-white">
+              <div className="flex flex-col leading-none">
+                <span className="text-base font-extrabold bg-gradient-to-r from-blue-300 via-purple-300 to-blue-400 bg-clip-text text-transparent tracking-wide">
                   MAKAB
                 </span>
-                <p className="text-sm text-white/80 mt-1">AI Assistant</p>
+                <span className="text-[11px] font-medium text-blue-500 mt-[0.5px]" style={{ lineHeight: '13px', marginTop: '2px' }}>
+                  AI Assistant
+                </span>
               </div>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="lg:hidden h-10 w-10 p-0 rounded-lg text-white hover:bg-white/20"
+              className="lg:hidden h-9 w-9 p-0 rounded-lg text-blue-600 hover:bg-blue-50"
             >
               <X className="h-5 w-5" />
             </Button>

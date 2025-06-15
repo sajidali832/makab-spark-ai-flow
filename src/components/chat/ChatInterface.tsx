@@ -46,9 +46,26 @@ const ChatInterface = () => {
     });
   };
 
+  // --- UPDATE: Use Gemini 2.5 Flash for chat API ---
+  // New function for Gemini chat completion - replace getAIResponse
   const getAIResponse = async (input: string) => {
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    return `I understand you're asking about: "${input}". I'm here to help you with conversations and content creation! How can I assist you further?`;
+    // Call the Supabase Edge Function for Gemini 2.5 Flash
+    const response = await fetch("/functions/tools-generation", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        toolId: "chat-completion",
+        inputs: { prompt: input }
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok || !data.content) {
+      // fallback or error from Gemini API
+      return "I'm having trouble reaching Gemini right now. Please try again!";
+    }
+    return data.content;
   };
 
   const handleSendMessage = async () => {
@@ -183,58 +200,54 @@ const ChatInterface = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       <div className="flex-1 flex flex-col">
-        {/* Refactored Header: cleaner, smaller, soft-glass blur, soft pastel + white blend */}
-        <header className="relative z-10 select-none border-b border-purple-100 bg-white/70 backdrop-blur-md shadow-sm"
-          style={{ minHeight: '58px', height: '58px' }}>
-          {/* Soft glassy pastel blend overlay */}
+        {/* --- HEADER: Smaller, soft white/blue, subtitle lower, blur effect --- */}
+        <header
+          className="relative z-10 select-none border-b border-blue-100 bg-white/60 backdrop-blur-lg shadow-sm"
+          style={{ minHeight: '40px', height: '44px', paddingTop: 0, paddingBottom: 0 }}
+        >
+          {/* Blurry overlays - very soft blue/white, subtle */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {/* subtle blue blur top-left */}
-            <div className="absolute top-[-32px] left-[-40px] w-32 h-24 bg-blue-200/50 blur-2xl rounded-3xl opacity-30" />
-            {/* soft pink/purple gentle fade right */}
-            <div className="absolute top-0 right-[-30px] w-40 h-16 bg-pink-200/30 blur-2xl rounded-2xl opacity-30" />
-            {/* faint pastel green/blue bottom-left */}
-            <div className="absolute bottom-[-18px] left-4 w-24 h-10 bg-green-200/30 blur-xl rounded-full opacity-25" />
-            {/* gentle white reflection center */}
-            <div className="absolute left-1/2 top-1/2 w-2/3 h-6 bg-white/25 blur-md rounded-full -translate-x-1/2 -translate-y-1/2 opacity-20" />
+            <div className="absolute top-[-24px] left-[-18px] w-28 h-14 bg-blue-100/25 blur-2xl rounded-2xl opacity-30" />
+            <div className="absolute top-1 right-[-18px] w-24 h-10 bg-purple-100/30 blur-xl rounded-2xl opacity-25" />
+            <div className="absolute bottom-[-10px] left-8 w-20 h-6 bg-white/25 blur-lg rounded-full opacity-20" />
           </div>
-          <div className="relative flex items-center justify-between px-4 py-2" style={{ minHeight: 0, height: "58px" }}>
+          <div className="relative flex items-center justify-between px-3 py-0" style={{ minHeight: 0, height: '44px' }}>
             <div className="flex items-center space-x-2">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsSidebarOpen(true)}
-                className="lg:hidden text-purple-500 hover:bg-purple-100"
+                className="lg:hidden text-purple-500 hover:bg-blue-100"
               >
                 <Menu className="h-5 w-5" />
               </Button>
-
               <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-white/70 rounded-xl flex items-center justify-center ring-2 ring-blue-300/20 shadow"
+                <div className="w-7 h-7 bg-white/90 rounded-xl flex items-center justify-center ring-2 ring-blue-200/20 shadow"
                      style={{ backdropFilter: 'blur(4px)' }}>
-                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-5 h-5 rounded" />
+                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-4 h-4 rounded" />
                 </div>
-                <div>
-                  <h1 className="text-lg font-extrabold tracking-wide bg-gradient-to-r from-blue-400 via-pink-400 to-purple-500 bg-clip-text text-transparent drop-shadow-sm">
+                <div className="flex flex-col leading-none">
+                  <h1 className="text-base font-extrabold bg-gradient-to-r from-blue-300 via-purple-300 to-blue-400 bg-clip-text text-transparent tracking-wide">
                     MAKAB
                   </h1>
-                  <span className="text-xs font-bold bg-gradient-to-r from-blue-300 via-purple-300 to-pink-200 bg-clip-text text-transparent tracking-wide">
+                  <span className="text-[11px] font-medium text-blue-500 mt-[1px]" style={{ lineHeight: '13px', marginTop: '2px' }}>
                     AI Assistant
                   </span>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleNewChat}
-                className="text-purple-700 border border-purple-100 hover:bg-purple-50 font-bold tracking-wide rounded-md"
+                className="text-blue-600 border border-blue-100 hover:bg-blue-50 font-bold rounded-md"
                 style={{
-                  background: "linear-gradient(90deg,rgba(219,234,254,0.19),rgba(232,213,255,0.20) 60%)",
-                  boxShadow: '0 2px 14px 0 rgba(180,136,255,0.06)'
+                  background: "linear-gradient(90deg,rgba(219,234,254,0.16),rgba(211,225,255,0.15) 60%)",
+                  boxShadow: '0 2px 14px 0 rgba(180,200,255,0.06)'
                 }}
               >
-                <Plus className="h-4 w-4 mr-1" />
+                <Plus className="h-3.5 w-3.5 mr-1" />
               </Button>
             </div>
           </div>
@@ -278,7 +291,7 @@ const ChatInterface = () => {
         </div>
 
         {/* Mobile message limit line */}
-        <div className="sm:hidden px-4 py-2 bg-white/90 border-t border-purple-100">
+        <div className="sm:hidden px-4 py-2 bg-white/90 border-t border-blue-100">
           <div className="flex justify-center">
             <div className="flex items-center space-x-2 bg-pink-50 rounded-full px-3 py-1 border border-pink-200">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -288,9 +301,9 @@ const ChatInterface = () => {
         </div>
 
         {/* Input Area - fixed at VERY bottom, nice UI */}
-        <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-white/95 via-white/70 to-transparent border-t-2 border-purple-100 shadow-lg lg:relative lg:shadow-none">
+        <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-white/95 via-white/70 to-transparent border-t-2 border-blue-100 shadow-lg lg:relative lg:shadow-none">
           <div className="max-w-4xl mx-auto px-2">
-            <div className="bg-white border-2 border-purple-100 rounded-2xl p-3 shadow-sm hover:shadow-md transition transition-shadow duration-200">
+            <div className="bg-white border-2 border-blue-100 rounded-2xl p-3 shadow-sm hover:shadow-md transition transition-shadow duration-200">
               <div className="flex items-end space-x-3">
                 <div className="flex-1">
                   <textarea
@@ -298,7 +311,7 @@ const ChatInterface = () => {
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your message here..."
-                    className="w-full resize-none bg-transparent border-none outline-none text-purple-800 placeholder-purple-300 text-sm leading-relaxed"
+                    className="w-full resize-none bg-transparent border-none outline-none text-blue-800 placeholder-blue-300 text-sm leading-relaxed"
                     rows={1}
                     style={{ minHeight: '24px', maxHeight: '120px' }}
                   />
