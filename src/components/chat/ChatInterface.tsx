@@ -281,17 +281,23 @@ const ChatInterface = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 safe-top safe-bottom transition-colors duration-300">
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50 safe-top safe-bottom transition-colors duration-300 relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl animate-breathing-glow"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-400/10 rounded-full blur-3xl animate-breathing-glow" style={{ animationDelay: '1s' }}></div>
+      </div>
+
       {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       {/* Main Chat Area */}
-      <div className="flex-1 flex flex-col backdrop-blur-sm relative">
-        {/* Compact Header */}
-        <header className="flex items-center justify-between p-2 sm:p-3 border-b border-gray-200/60 bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-10">
+      <div className="flex-1 flex flex-col backdrop-blur-sm relative z-10">
+        {/* Compact Header with glass effect */}
+        <header className="flex items-center justify-between p-2 sm:p-3 border-b border-white/20 bg-white/10 backdrop-blur-xl shadow-glass sticky top-0 z-10">
           <div className="flex items-center space-x-2">
             <Button
-              variant="ghost"
+              variant="glass"
               size="sm"
               onClick={() => setIsSidebarOpen(true)}
               className="lg:hidden h-7 w-7 p-0 rounded-lg"
@@ -299,7 +305,7 @@ const ChatInterface = () => {
               <Menu className="h-4 w-4" />
             </Button>
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+              <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-glass animate-glass-morph">
                 <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-4 h-4 rounded-md" />
               </div>
               <span className="font-bold text-lg bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -309,15 +315,15 @@ const ChatInterface = () => {
           </div>
           
           <div className="flex items-center space-x-1 sm:space-x-2">
-            <div className="flex items-center space-x-1 text-xs text-gray-500 bg-gray-100/80 rounded-full px-2 py-1 backdrop-blur-sm">
+            <div className="flex items-center space-x-1 text-xs text-gray-700 bg-white/20 backdrop-blur-md rounded-full px-2 py-1 border border-white/30 shadow-glass">
               <Sparkles className="h-3 w-3 text-blue-500" />
               <span>{remainingMessages}/6</span>
             </div>
             <Button
-              variant="ghost"
+              variant="frosted"
               size="sm"
               onClick={startNewChat}
-              className="h-7 px-2 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs"
+              className="h-7 px-2 rounded-lg text-xs"
             >
               <Plus className="h-3 w-3 mr-1" />
               New
@@ -330,7 +336,7 @@ const ChatInterface = () => {
           <div className="p-2 sm:p-3 space-y-3 min-h-full">
             {messages.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center space-y-4 px-4">
-                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl animate-pulse">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-glass animate-breathing-glow backdrop-blur-sm">
                   <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl" />
                 </div>
                 <div className="space-y-3">
@@ -340,7 +346,7 @@ const ChatInterface = () => {
                   <p className="text-gray-600 text-sm sm:text-base max-w-sm leading-relaxed">
                     Your AI assistant created by Sajid for conversations and content creation! ✨
                   </p>
-                  <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-3 backdrop-blur-sm">
+                  <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-xl p-3 shadow-glass">
                     <div className="flex items-center justify-center space-x-2">
                       <Sparkles className="h-4 w-4 text-blue-500" />
                       <span className="text-xs font-semibold text-gray-700">
@@ -365,15 +371,15 @@ const ChatInterface = () => {
           </div>
         </div>
 
-        {/* Fixed Input Area for Mobile */}
-        <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto p-2 sm:p-3 border-t border-gray-200/60 bg-white/95 backdrop-blur-md safe-bottom z-20">
+        {/* Fixed Input Area for Mobile with liquid glass styling */}
+        <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto lg:left-auto lg:right-auto p-2 sm:p-3 border-t border-white/20 bg-white/10 backdrop-blur-xl safe-bottom z-20 shadow-glass">
           <form onSubmit={handleSendMessage} className="flex space-x-2 max-w-full">
             <Input
               ref={inputRef}
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={canSendMessage() ? "Message Makab..." : "Daily limit reached"}
-              className="flex-1 border-gray-200/60 focus:border-blue-500 focus:ring-blue-500/20 rounded-lg bg-white/90 backdrop-blur-sm shadow-sm h-9 sm:h-10 text-sm text-gray-800 placeholder-gray-400"
+              className="flex-1 border-white/30 focus:border-blue-500/50 focus:ring-blue-500/20 rounded-lg bg-white/20 backdrop-blur-md shadow-glass h-9 sm:h-10 text-sm text-gray-800 placeholder-gray-500"
               disabled={isLoading || !canSendMessage()}
               style={{ fontSize: '16px' }}
             />
@@ -381,13 +387,10 @@ const ChatInterface = () => {
             {isSupported && (
               <Button
                 type="button"
+                variant={isListening ? "destructive" : "crystal"}
                 onClick={handleVoiceToggle}
                 disabled={isLoading || !canSendMessage()}
-                className={`h-9 sm:h-10 w-9 sm:w-10 rounded-lg shadow-md min-w-[36px] flex-shrink-0 ${
-                  isListening 
-                    ? 'bg-red-500 hover:bg-red-600 text-white' 
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
-                }`}
+                className="h-9 sm:h-10 w-9 sm:w-10 rounded-lg shadow-glass min-w-[36px] flex-shrink-0"
               >
                 {isListening ? <MicOff className="h-3 w-3 sm:h-4 sm:w-4" /> : <Mic className="h-3 w-3 sm:h-4 sm:w-4" />}
               </Button>
@@ -395,8 +398,9 @@ const ChatInterface = () => {
             
             <Button
               type="submit"
+              variant="liquid"
               disabled={!inputValue.trim() || isLoading || !canSendMessage()}
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg px-3 shadow-md h-9 sm:h-10 min-w-[36px] flex-shrink-0"
+              className="rounded-lg px-3 shadow-glass h-9 sm:h-10 min-w-[36px] flex-shrink-0"
             >
               <Send className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
