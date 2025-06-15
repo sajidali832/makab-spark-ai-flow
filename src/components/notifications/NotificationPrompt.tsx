@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Bell, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -8,45 +7,48 @@ import { usePushNotifications } from '@/hooks/usePushNotifications';
 const NotificationPrompt = () => {
   const [showPrompt, setShowPrompt] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const { isSupported, isSubscribed, subscribe, permission } = usePushNotifications();
+  const { isSupported, isSubscribed, subscribe, permission, requestPermission } = usePushNotifications();
 
+  /** Enhancement: Show prompt as soon as user logs in (not just after user interactions) **/
   useEffect(() => {
-    // Check if user has already been prompted or subscribed
+    // Run ASAP on mount for logged in users.
     const hasBeenPrompted = localStorage.getItem('notification_prompted');
-    const userInteractions = parseInt(localStorage.getItem('user_interactions') || '0');
-    
-    // Show prompt after user has made 3 interactions and hasn't been prompted
-    if (!hasBeenPrompted && !isSubscribed && userInteractions >= 3 && isSupported && permission !== 'denied') {
+    if (!hasBeenPrompted && !isSubscribed && isSupported && permission !== 'denied') {
+      // Show after a short delay
       const timer = setTimeout(() => {
         setShowPrompt(true);
-      }, 2000); // Show after 2 seconds of activity
-      
+      }, 1200); // 1.2s delay for good UX
       return () => clearTimeout(timer);
     }
   }, [isSubscribed, isSupported, permission]);
 
-  // Track user interactions
+  // Track interactions, but now prompt immediately anyway (above).
   useEffect(() => {
     const trackInteraction = () => {
       const current = parseInt(localStorage.getItem('user_interactions') || '0');
       localStorage.setItem('user_interactions', (current + 1).toString());
     };
-
-    // Add event listeners for user interactions
     document.addEventListener('click', trackInteraction);
     document.addEventListener('keydown', trackInteraction);
-    
     return () => {
       document.removeEventListener('click', trackInteraction);
       document.removeEventListener('keydown', trackInteraction);
     };
   }, []);
 
+  // Request permission and subscribe
   const handleSubscribe = async () => {
-    const success = await subscribe();
-    if (success) {
-      setShowPrompt(false);
-      localStorage.setItem('notification_prompted', 'true');
+    const granted = await requestPermission();
+    if (granted) {
+      const success = await subscribe();
+      if (success) {
+        setShowPrompt(false);
+        localStorage.setItem('notification_prompted', 'true');
+        // Schedule a notification for 5 minutes later for testing
+        setTimeout(() => {
+          sendLocalNotification('Makab AI', 'Test notification! You will now receive daily AI tips. 🚀');
+        }, 5 * 60 * 1000);
+      }
     }
   };
 
@@ -58,12 +60,21 @@ const NotificationPrompt = () => {
 
   const handleLater = () => {
     setShowPrompt(false);
-    // Don't mark as prompted so it can show again later
+    // Will re-show in future.
   };
 
-  if (!showPrompt || dismissed || isSubscribed || !isSupported) {
-    return null;
-  }
+  // Helper to send a browser notification using the permission the user just gave
+  const sendLocalNotification = (title: string, body: string) => {
+    if (window.Notification && Notification.permission === 'granted') {
+      new Notification(title, {
+        body,
+        icon: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
+        badge: '/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png',
+      });
+    }
+  };
+
+  if (!showPrompt || dismissed || isSubscribed || !isSupported) return null;
 
   return (
     <div className="fixed bottom-4 left-4 right-4 z-50 flex justify-center animate-fade-in">

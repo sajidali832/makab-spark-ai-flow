@@ -37,6 +37,7 @@ const ChatInterface = () => {
     isSupported 
   } = useVoiceInput();
   const { canSendMessage, incrementChatMessages, remainingMessages } = useDailyLimits();
+  const [conversationId, setConversationId] = useState<string | null>(null);
 
   useEffect(() => {
     scrollToBottom();
@@ -65,16 +66,77 @@ const ChatInterface = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleNewChat = () => {
-    setMessages([]);
+  // When starting a new chat, create a new conversation in Supabase
+  const handleNewChat = async () => {
     setInputValue('');
+    setMessages([]);
     setIsLoading(false);
     setIsThinking(false);
+
+    // Get user info (if logged in)
+    const userRaw = localStorage.getItem('makab_user');
+    let convId = null;
+    if (userRaw) {
+      const user = JSON.parse(userRaw);
+      if (user.id) {
+        // Create new conversation record
+        const { data, error } = await supabase
+          .from('chat_conversations')
+          .insert({
+            user_id: user.id,
+            title: "Untitled Chat " + new Date().toLocaleString(),
+          })
+          .select()
+          .single();
+        if (!error && data && data.id) {
+          setConversationId(data.id);
+          convId = data.id;
+        } else {
+          console.error('Failed to create conversation in Supabase:', error);
+        }
+      } else {
+        setConversationId(null);
+      }
+    } else {
+      setConversationId(null);
+    }
+
+    // Show toast
     toast({
       title: "New Chat Started",
       description: "You can start fresh conversation now!",
     });
   };
+
+  // Save messages as chat progresses
+  useEffect(() => {
+    const saveMessage = async (message: Message) => {
+      try {
+        const userRaw = localStorage.getItem('makab_user');
+        if (!userRaw || !conversationId) return;
+        const user = JSON.parse(userRaw);
+        if (!user.id) return;
+
+        // Save message to chat_messages
+        await supabase.from('chat_messages').insert({
+          conversation_id: conversationId,
+          user_id: user.id,
+          content: message.content,
+          role: message.role,
+        });
+      } catch (e) {
+        // Don't block UI
+        console.error('Error saving message:', e);
+      }
+    };
+    // Save new messages only (not thinking messages)
+    if (messages.length && conversationId) {
+      const lastMsg = messages[messages.length - 1];
+      if (lastMsg.content && !lastMsg.isThinking) {
+        saveMessage(lastMsg);
+      }
+    }
+  }, [messages, conversationId]);
 
   // Updated function to use chat-completion edge function with OpenRouter
   const getAIResponse = async (input: string) => {
@@ -107,6 +169,7 @@ const ChatInterface = () => {
     }
   };
 
+  // update handleSendMessage to ensure there is a conversationId before AI reply
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
     
@@ -119,6 +182,29 @@ const ChatInterface = () => {
       return;
     }
 
+    // Ensure there's a conversation in Supabase
+    let convId = conversationId;
+    if (!convId) {
+      // Try to create immediately if somehow not set
+      const userRaw = localStorage.getItem('makab_user');
+      if (userRaw) {
+        const user = JSON.parse(userRaw);
+        if (user.id) {
+          const { data, error } = await supabase
+            .from('chat_conversations')
+            .insert({
+              user_id: user.id,
+              title: "Untitled Chat " + new Date().toLocaleString(),
+            })
+            .select()
+            .single();
+          convId = data?.id;
+          setConversationId(convId);
+        }
+      }
+    }
+
+    // keep rest of function the same, but now chat messages will be saved in the effect above
     const userMessage: Message = {
       id: Date.now().toString(),
       content: inputValue,
