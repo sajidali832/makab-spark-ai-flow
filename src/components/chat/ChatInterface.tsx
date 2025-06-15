@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, Send, Mic, MicOff, Plus } from 'lucide-react';
@@ -332,7 +331,11 @@ const ChatInterface = () => {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+      <Sidebar 
+        isOpen={isSidebarOpen} 
+        onClose={() => setIsSidebarOpen(false)} 
+        onMenuClick={() => setIsSidebarOpen(!isSidebarOpen)}
+      />
       
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col h-screen">

@@ -10,7 +10,11 @@ const FreeCourse = () => {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar 
+        isOpen={sidebarOpen} 
+        onClose={() => setSidebarOpen(false)} 
+        onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+      />
       
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-screen">
