@@ -27,13 +27,39 @@ const ChatInterface = () => {
   const [regeneratingIndex, setRegeneratingIndex] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
-  const { isListening, startListening, stopListening } = useVoiceInput();
+  const { 
+    isListening, 
+    transcript, 
+    error, 
+    startListening, 
+    stopListening, 
+    clearTranscript,
+    isSupported 
+  } = useVoiceInput();
   const { canSendMessage, incrementChatMessages, remainingMessages } = useDailyLimits();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Handle voice input transcript
+  useEffect(() => {
+    if (transcript) {
+      setInputValue(transcript);
+      clearTranscript();
+    }
+  }, [transcript, clearTranscript]);
+
+  // Handle voice input errors
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Voice Input Error",
+        description: error,
+        variant: "destructive",
+      });
+    }
+  }, [error, toast]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -142,6 +168,15 @@ const ChatInterface = () => {
   };
 
   const handleVoiceToggle = () => {
+    if (!isSupported) {
+      toast({
+        title: "Not Supported",
+        description: "Speech recognition is not supported in this browser.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     if (isListening) {
       stopListening();
     } else {
@@ -210,7 +245,7 @@ const ChatInterface = () => {
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col h-screen">
@@ -324,7 +359,7 @@ const ChatInterface = () => {
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
-                    placeholder="Type your message here..."
+                    placeholder={isListening ? "Listening..." : "Type your message here..."}
                     className="w-full resize-none bg-transparent border-none outline-none text-blue-800 placeholder-blue-300 text-sm leading-relaxed"
                     rows={1}
                     style={{ minHeight: '24px', maxHeight: '120px' }}
