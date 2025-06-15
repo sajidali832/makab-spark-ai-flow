@@ -388,8 +388,8 @@ const ChatInterface = () => {
           </div>
         </header>
 
-        {/* Main chat area */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-24 sm:pb-20">
+        {/* Main chat area - increased bottom padding for new input position */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-32 sm:pb-28">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
               <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-lg relative">
@@ -435,45 +435,68 @@ const ChatInterface = () => {
           </div>
         </div>
 
-        {/* Input Area - fixed at VERY bottom, nice UI */}
-        <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-white/95 via-white/70 to-transparent border-t-2 border-blue-100 shadow-lg lg:relative lg:shadow-none">
-          <div className="max-w-4xl mx-auto px-2">
-            <div className="bg-white border-2 border-blue-100 rounded-2xl p-3 shadow-sm hover:shadow-md transition transition-shadow duration-200">
-              <div className="flex items-end space-x-3">
-                <div className="flex-1">
-                  <textarea
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                    placeholder={isListening ? "Listening..." : "Type your message here..."}
-                    className="w-full resize-none bg-transparent border-none outline-none text-blue-800 placeholder-blue-300 text-sm leading-relaxed"
-                    rows={1}
-                    style={{ minHeight: '24px', maxHeight: '120px' }}
-                  />
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={handleVoiceToggle}
-                    className={`rounded-xl border-2 transition-colors duration-200 ${
-                      isListening 
-                        ? 'bg-red-50 border-red-300 text-red-600 hover:bg-red-100' 
-                        : 'bg-pink-50 border-pink-300 text-pink-600 hover:bg-pink-100'
-                    }`}
-                  >
-                    {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
-                  </Button>
-                  
-                  <Button
-                    size="sm"
-                    onClick={handleSendMessage}
-                    disabled={!inputValue.trim() || isLoading}
-                    className="bg-gradient-to-r from-pink-400 via-purple-400 to-purple-600 hover:from-pink-400 hover:to-purple-700 text-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50"
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
+        {/* Input Area - moved to very bottom with 3D border effect */}
+        <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-white via-white/95 to-white/80 backdrop-blur-sm lg:relative lg:bg-transparent lg:backdrop-blur-none">
+          <div className="max-w-4xl mx-auto px-3 pb-4 pt-2">
+            <div className="relative">
+              {/* 3D border container with delicate colorful effect */}
+              <div 
+                className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-200/40 via-purple-200/40 to-pink-200/40 blur-sm"
+                style={{
+                  transform: 'translateY(2px)',
+                  filter: 'blur(1px)'
+                }}
+              />
+              <div 
+                className="relative bg-white/95 backdrop-blur-lg rounded-3xl shadow-lg"
+                style={{
+                  border: '1px solid rgba(147, 197, 253, 0.3)',
+                  boxShadow: `
+                    0 4px 20px rgba(59, 130, 246, 0.1),
+                    0 2px 8px rgba(147, 51, 234, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+                    inset 0 -1px 0 rgba(59, 130, 246, 0.1)
+                  `
+                }}
+              >
+                <div className="p-4">
+                  <div className="flex items-end space-x-3">
+                    <div className="flex-1">
+                      <textarea
+                        value={inputValue}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        onKeyPress={handleKeyPress}
+                        placeholder={isListening ? "Listening..." : "Type your message here..."}
+                        className="w-full resize-none bg-transparent border-none outline-none text-blue-800 placeholder-blue-300 text-sm leading-relaxed"
+                        rows={1}
+                        style={{ minHeight: '28px', maxHeight: '120px' }}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleVoiceToggle}
+                        className={`rounded-xl border-2 transition-all duration-200 shadow-sm ${
+                          isListening 
+                            ? 'bg-red-50 border-red-300 text-red-600 hover:bg-red-100 shadow-red-100' 
+                            : 'bg-pink-50 border-pink-300 text-pink-600 hover:bg-pink-100 shadow-pink-100'
+                        }`}
+                      >
+                        {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+                      </Button>
+                      
+                      <Button
+                        size="sm"
+                        onClick={handleSendMessage}
+                        disabled={!inputValue.trim() || isLoading}
+                        className="bg-gradient-to-r from-pink-400 via-purple-400 to-purple-600 hover:from-pink-500 hover:to-purple-700 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50"
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
