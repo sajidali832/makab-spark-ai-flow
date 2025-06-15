@@ -29,68 +29,54 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  // TODO: Implement logout logic below.
   const handleSignOut = () => {
-    // Remove user info, tokens, etc. Replace with your actual logout logic if needed.
     localStorage.removeItem('makab_user');
-    // Optionally navigate to login or main page
     navigate('/');
     window.location.reload();
   };
 
   return (
     <>
-      {/* Overlay */}
+      {/* Simplified overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/30 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/20 z-40 lg:hidden"
           onClick={onClose}
         />
       )}
       
-      {/* Sidebar */}
+      {/* Optimized sidebar with GPU acceleration */}
       <div className={`
-        fixed lg:relative top-0 left-0 h-full w-72 sm:w-80 bg-white border-r border-gray-200 z-50 shadow-lg
-        transform transition-transform duration-300 ease-out
+        fixed lg:relative top-0 left-0 h-full w-72 sm:w-80 bg-white border-r border-gray-200 z-50
+        transform transition-transform duration-200 ease-out gpu-accelerated
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         lg:block
       `}>
         <div className="flex flex-col h-full">
-          {/* --- Sidebar header: match chat header, smaller, blurry, soft --- */}
-          <div className="flex items-center justify-between py-4 px-6 border-b border-blue-100 bg-white/60 relative" style={{ minHeight: '48px', height: '48px' }}>
-            {/* Blurry overlay like chat */}
-            <div className="absolute inset-0 pointer-events-none">
-              <div className="absolute top-[-18px] left-[-8px] w-20 h-10 bg-blue-100/18 blur-2xl rounded-xl opacity-25" />
-              <div className="absolute top-1 right-[-12px] w-16 h-8 bg-purple-100/18 blur-xl rounded-xl opacity-14" />
-              <div className="absolute bottom-[-8px] left-4 w-14 h-3 bg-white/18 blur-md rounded-full opacity-12" />
-            </div>
-            <div className="relative z-10 flex items-center space-x-3">
-              <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center shadow relative"
-                   style={{ backdropFilter: 'blur(4px)' }}>
-                <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-10 h-10 rounded-full relative z-10" />
+          {/* Simplified header */}
+          <div className="flex items-center justify-between py-3 px-4 border-b border-gray-200 bg-white">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-8 h-8 rounded-full" />
               </div>
-              <div className="flex flex-col leading-none">
-                <span className="text-base font-extrabold bg-gradient-to-r from-blue-300 via-purple-300 to-blue-400 bg-clip-text text-transparent tracking-wide">
-                  MAKAB
-                </span>
-                <span className="text-[11px] font-medium text-blue-500 mt-[0.5px]" style={{ lineHeight: '13px', marginTop: '2px' }}>
-                  AI Assistant
-                </span>
+              <div className="flex flex-col">
+                <span className="text-lg font-bold text-blue-600">MAKAB</span>
+                <span className="text-xs text-gray-500">AI Assistant</span>
               </div>
             </div>
             <Button
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="lg:hidden h-9 w-9 p-0 rounded-lg text-blue-600 hover:bg-blue-50"
+              className="lg:hidden h-8 w-8 p-0 text-gray-600 hover:bg-gray-100"
             >
-              <X className="h-5 w-5" />
+              <X className="h-4 w-4" />
             </Button>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 p-6">
-            <div className="space-y-2">
+          {/* Optimized navigation with smooth scroll */}
+          <nav className="flex-1 p-4 smooth-scroll overflow-y-auto">
+            <div className="space-y-1">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
@@ -98,14 +84,14 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                   <Button
                     key={item.id}
                     variant={active ? "default" : "ghost"}
-                    className={`w-full justify-start text-base h-12 rounded-xl transition-all duration-200 ${
+                    className={`w-full justify-start h-10 transition-colors duration-150 ${
                       active 
-                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm hover:shadow-md' 
+                        ? 'bg-blue-600 text-white hover:bg-blue-700' 
                         : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                     onClick={() => handleNavigation(item.path)}
                   >
-                    <Icon className={`h-5 w-5 mr-3 ${active ? 'text-white' : 'text-gray-600'}`} />
+                    <Icon className={`h-4 w-4 mr-3 ${active ? 'text-white' : 'text-gray-600'}`} />
                     <span className="font-medium">{item.label}</span>
                   </Button>
                 );
@@ -113,14 +99,14 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </div>
           </nav>
 
-          {/* Footer */}
-          <div className="p-6 border-t border-gray-200 bg-gray-50">
+          {/* Simplified footer */}
+          <div className="p-4 border-t border-gray-200">
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 rounded-xl text-base font-semibold text-red-600 hover:bg-red-50 hover:text-red-700 transition"
+              className="w-full flex items-center justify-center gap-2 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors duration-150"
               onClick={handleSignOut}
             >
-              <LogOut className="h-5 w-5" />
+              <LogOut className="h-4 w-4" />
               Sign out
             </Button>
           </div>
@@ -131,4 +117,3 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 };
 
 export default Sidebar;
-
