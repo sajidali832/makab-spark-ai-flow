@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -55,9 +56,11 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               <div className="absolute bottom-[-8px] left-4 w-14 h-3 bg-white/18 blur-md rounded-full opacity-12" />
             </div>
             <div className="relative z-10 flex items-center space-x-3">
-              <div className="w-8 h-8 bg-white/90 rounded-xl flex items-center justify-center ring-2 ring-blue-200/15 shadow"
+              <div className="w-8 h-8 bg-white/90 rounded-xl flex items-center justify-center ring-2 ring-blue-200/15 shadow relative"
                    style={{ backdropFilter: 'blur(4px)' }}>
-                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-5 h-5 rounded" />
+                {/* Colorful blurred background circles */}
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-400/30 via-purple-400/30 to-pink-400/30 rounded-xl blur-sm"></div>
+                <img src="/lovable-uploads/2abbf453-6761-4fd3-96ab-e66591ad66dc.png" alt="Makab" className="w-5 h-5 rounded relative z-10" />
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-base font-extrabold bg-gradient-to-r from-blue-300 via-purple-300 to-blue-400 bg-clip-text text-transparent tracking-wide">

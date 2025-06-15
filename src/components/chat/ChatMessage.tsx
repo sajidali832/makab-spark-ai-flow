@@ -1,3 +1,4 @@
+
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Square, Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -74,8 +75,10 @@ const ChatMessage = ({ message, isCurrentlyThinking, onRegenerate, onStop }: Cha
 
   return (
     <div className="flex justify-start space-x-2">
-      <div className="w-6 h-6 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-        <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-4 h-4 rounded-full" />
+      <div className="w-6 h-6 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm relative">
+        {/* Colorful blurred background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-400/40 via-purple-400/40 to-pink-400/40 rounded-full blur-sm"></div>
+        <img src="/lovable-uploads/2abbf453-6761-4fd3-96ab-e66591ad66dc.png" alt="Makab" className="w-4 h-4 rounded-full relative z-10" />
       </div>
       
       <div className="flex-1 space-y-2">
