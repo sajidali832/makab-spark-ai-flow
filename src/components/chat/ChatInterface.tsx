@@ -1,13 +1,12 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, Send, Mic, MicOff, Plus, Settings, User, MessageSquare } from 'lucide-react';
+import { Menu, Send, Mic, MicOff, Plus } from 'lucide-react';
 import Sidebar from './Sidebar';
 import ChatMessage from './ChatMessage';
 import { useToast } from '@/hooks/use-toast';
 import { useVoiceInput } from '@/hooks/useVoiceInput';
 import { useDailyLimits } from '@/hooks/useDailyLimits';
-import { useNavigate } from 'react-router-dom';
 
 interface Message {
   id: string;
@@ -27,7 +26,6 @@ const ChatInterface = () => {
   const { toast } = useToast();
   const { isListening, startListening, stopListening } = useVoiceInput();
   const { canSendMessage, incrementChatMessages } = useDailyLimits();
-  const navigate = useNavigate();
 
   useEffect(() => {
     scrollToBottom();
@@ -118,70 +116,41 @@ const ChatInterface = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       <div className="flex-1 flex flex-col">
-        {/* Enhanced Navigation Header */}
-        <header className="bg-white/20 backdrop-blur-xl border-b border-white/30 px-6 py-6 shadow-glass">
+        {/* Simple Mobile-Friendly Header */}
+        <header className="bg-white/20 backdrop-blur-xl border-b border-white/30 px-4 py-4 shadow-glass">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
               <Button
                 variant="crystal"
-                size="lg"
+                size="sm"
                 onClick={() => setIsSidebarOpen(true)}
-                className="lg:hidden h-16 w-16 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
+                className="h-10 w-10 rounded-2xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
               >
-                <Menu className="h-8 w-8" />
+                <Menu className="h-5 w-5" />
               </Button>
               
-              <div className="flex items-center space-x-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl flex items-center justify-center shadow-glass backdrop-blur-xl border-2 border-white/20">
-                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-10 h-10 rounded-2xl" />
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-glass backdrop-blur-xl border-2 border-white/20">
+                  <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-6 h-6 rounded-xl" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  <h1 className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                     MAKAB
                   </h1>
-                  <p className="text-base text-gray-600 font-medium">AI Assistant</p>
+                  <p className="text-xs text-gray-600 font-medium">AI Assistant</p>
                 </div>
               </div>
             </div>
 
-            {/* Enhanced Navigation Icons */}
-            <div className="flex items-center space-x-4">
-              <Button
-                variant="frosted"
-                size="lg"
-                onClick={() => navigate('/chat')}
-                className="h-16 w-16 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
-              >
-                <MessageSquare className="h-8 w-8" />
-              </Button>
-              
-              <Button
-                variant="frosted"
-                size="lg"
-                onClick={() => navigate('/profile')}
-                className="h-16 w-16 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
-              >
-                <User className="h-8 w-8" />
-              </Button>
-              
-              <Button
-                variant="frosted"
-                size="lg"
-                onClick={() => navigate('/tools')}
-                className="h-16 w-16 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/30"
-              >
-                <Settings className="h-8 w-8" />
-              </Button>
-              
-              <Button
-                variant="liquid"
-                size="lg"
-                className="h-16 px-8 rounded-3xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/20"
-              >
-                <Plus className="h-6 w-6 mr-3" />
-                <span className="text-lg font-semibold">New Chat</span>
-              </Button>
-            </div>
+            {/* New Chat Button - Hidden on Mobile */}
+            <Button
+              variant="liquid"
+              size="sm"
+              className="hidden sm:flex h-10 px-4 rounded-2xl shadow-glass hover:shadow-xl transition-all duration-300 backdrop-blur-xl border-2 border-white/20"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              <span className="text-sm font-semibold">New Chat</span>
+            </Button>
           </div>
         </header>
 
@@ -219,45 +188,45 @@ const ChatInterface = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Enhanced Input Area */}
+        {/* Input Area */}
         <div className="p-4 bg-white/10 backdrop-blur-xl border-t border-white/20">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-2xl shadow-glass p-4">
+            <div className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-2xl shadow-glass p-3">
               <div className="flex items-end space-x-3">
-                <div className="flex-1 min-h-[50px] max-h-32">
+                <div className="flex-1 min-h-[40px] max-h-32">
                   <textarea
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your message here..."
-                    className="w-full h-full resize-none bg-transparent border-none outline-none text-gray-800 placeholder-gray-500 text-base leading-relaxed"
+                    className="w-full h-full resize-none bg-transparent border-none outline-none text-gray-800 placeholder-gray-500 text-sm leading-relaxed"
                     rows={1}
-                    style={{ minHeight: '50px' }}
+                    style={{ minHeight: '40px' }}
                   />
                 </div>
                 
                 <div className="flex items-center space-x-2">
                   <Button
                     variant="frosted"
-                    size="lg"
+                    size="sm"
                     onClick={handleVoiceToggle}
-                    className={`h-12 w-12 rounded-2xl shadow-lg transition-all duration-300 ${
+                    className={`h-10 w-10 rounded-xl shadow-lg transition-all duration-300 ${
                       isListening 
                         ? 'bg-red-500/20 border-red-400/40 text-red-600 animate-pulse-mic' 
                         : 'hover:shadow-xl'
                     }`}
                   >
-                    {isListening ? <MicOff className="h-6 w-6" /> : <Mic className="h-6 w-6" />}
+                    {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
                   </Button>
                   
                   <Button
                     variant="liquid"
-                    size="lg"
+                    size="sm"
                     onClick={handleSendMessage}
                     disabled={!inputValue.trim() || isLoading}
-                    className="h-12 w-12 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                    className="h-10 w-10 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
                   >
-                    <Send className="h-6 w-6" />
+                    <Send className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
