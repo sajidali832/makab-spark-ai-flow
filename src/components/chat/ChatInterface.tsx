@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, Send, Mic, MicOff, Plus } from 'lucide-react';
@@ -22,6 +21,7 @@ const ChatInterface = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
+  const [regeneratingIndex, setRegeneratingIndex] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { isListening, startListening, stopListening } = useVoiceInput();
@@ -44,6 +44,11 @@ const ChatInterface = () => {
       title: "New Chat Started",
       description: "You can start fresh conversation now!",
     });
+  };
+
+  const getAIResponse = async (input: string) => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    return `I understand you're asking about: "${input}". I'm here to help you with conversations and content creation! How can I assist you further?`;
   };
 
   const handleSendMessage = async () => {
@@ -81,11 +86,10 @@ const ChatInterface = () => {
     setMessages(prev => [...prev, thinkingMessage]);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      const aiResponseMsg = await getAIResponse(inputValue);
       const aiResponse: Message = {
         id: (Date.now() + 2).toString(),
-        content: `I understand you're asking about: "${inputValue}". I'm here to help you with conversations and content creation! How can I assist you further?`,
+        content: aiResponseMsg,
         role: 'assistant',
         timestamp: new Date(),
       };
@@ -122,48 +126,103 @@ const ChatInterface = () => {
     }
   };
 
+  const handleRegenerateResponse = async (msgIndex: number) => {
+    // Find the previous user message before this assistant message
+    let prevUserMessage = null;
+    for (let i = msgIndex - 1; i >= 0; i--) {
+      if (messages[i].role === "user") {
+        prevUserMessage = messages[i];
+        break;
+      }
+    }
+    if (!prevUserMessage) {
+      toast({
+        title: "Cannot regenerate",
+        description: "No previous user message found.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setRegeneratingIndex(msgIndex);
+    // Insert a 'thinking' message in place of this message
+    setMessages((msgs) => {
+      const updated = [...msgs];
+      updated[msgIndex] = {
+        ...updated[msgIndex],
+        content: "",
+        isThinking: true,
+      };
+      return updated;
+    });
+
+    try {
+      const newAIResponse = await getAIResponse(prevUserMessage.content);
+      setMessages((msgs) => {
+        const updated = [...msgs];
+        updated[msgIndex] = {
+          ...updated[msgIndex],
+          content: newAIResponse,
+          isThinking: false,
+        };
+        return updated;
+      });
+      // Don't increment chat limit for regenerate
+    } catch (err) {
+      toast({
+        title: "Regeneration failed",
+        description: "Could not regenerate response.",
+        variant: "destructive",
+      });
+    }
+    setRegeneratingIndex(null);
+  };
+
   return (
     <div className="flex h-screen bg-gray-50">
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
       
       <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <header className="bg-gradient-to-r from-blue-600 to-purple-600 border-b border-gray-200 px-4 py-3 shadow-sm">
-          <div className="flex items-center justify-between">
+        {/* Header with soft gradient, pink/purple/white, subtle blur */}
+        <header
+          className="relative z-10 backdrop-blur-md"
+          style={{
+            background: 'linear-gradient(90deg, #fff5fb 0%, #ffe7fa 50%, #ebdaf8 100%)',
+            borderBottom: '1px solid #ECECEC',
+            boxShadow: "0 2px 16px rgba(220, 192, 246, 0.10)"
+          }}
+        >
+          <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center space-x-3">
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsSidebarOpen(true)}
-                className="lg:hidden text-white hover:bg-white/20"
+                className="lg:hidden text-purple-500 hover:bg-purple-100"
               >
                 <Menu className="h-4 w-4" />
               </Button>
               
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-pink-300 to-purple-300 rounded-lg flex items-center justify-center">
                   <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-5 h-5 rounded" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-semibold text-white">MAKAB</h1>
-                  <p className="text-xs text-white/80">AI Assistant</p>
+                  <h1 className="text-lg font-semibold text-purple-700">MAKAB</h1>
+                  <p className="text-xs text-purple-400">AI Assistant</p>
                 </div>
               </div>
             </div>
-
             <div className="flex items-center space-x-3">
-              {/* Message Limit Display */}
-              <div className="hidden sm:flex items-center space-x-2 bg-white/20 rounded-full px-3 py-1">
+              <div className="hidden sm:flex items-center space-x-2 bg-white/70 rounded-full px-3 py-1 border border-pink-200">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
-                <span className="text-sm text-white font-medium">{remainingMessages}/10</span>
+                <span className="text-sm text-purple-700 font-medium">{remainingMessages}/10</span>
               </div>
-
-              {/* New Chat Button */}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleNewChat}
-                className="text-white hover:bg-white/20 border border-white/30"
+                className="text-purple-700 hover:bg-pink-100 border border-purple-100"
               >
                 <Plus className="h-4 w-4 mr-2" />
                 <span className="hidden sm:inline">New Chat</span>
@@ -172,7 +231,7 @@ const ChatInterface = () => {
           </div>
         </header>
 
-        {/* Chat Messages Area */}
+        {/* Main chat area */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-24 sm:pb-20">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
@@ -193,12 +252,15 @@ const ChatInterface = () => {
               </div>
             </div>
           ) : (
-            messages.map((message) => (
+            messages.map((message, idx) => (
               <ChatMessage
                 key={message.id}
                 message={message}
-                isCurrentlyThinking={isThinking}
-                onRegenerate={() => {}}
+                isCurrentlyThinking={isThinking || regeneratingIndex === idx}
+                onRegenerate={message.role === "assistant" && !message.isThinking
+                  ? () => handleRegenerateResponse(idx)
+                  : undefined
+                }
                 onStop={() => setIsThinking(false)}
               />
             ))
@@ -206,20 +268,20 @@ const ChatInterface = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Mobile Message Limit - Show on small screens */}
-        <div className="sm:hidden px-4 py-2 bg-white border-t border-gray-200">
+        {/* Mobile message limit line */}
+        <div className="sm:hidden px-4 py-2 bg-white/90 border-t border-purple-100">
           <div className="flex justify-center">
-            <div className="flex items-center space-x-2 bg-blue-50 rounded-full px-3 py-1 border border-blue-200">
+            <div className="flex items-center space-x-2 bg-pink-50 rounded-full px-3 py-1 border border-pink-200">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-sm text-gray-700 font-medium">{remainingMessages}/10 messages left</span>
+              <span className="text-sm text-purple-800 font-medium">{remainingMessages}/10 messages left</span>
             </div>
           </div>
         </div>
 
-        {/* Input Area - Fixed at bottom */}
-        <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg lg:relative lg:shadow-none">
-          <div className="max-w-4xl mx-auto">
-            <div className="bg-white border-2 border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
+        {/* Input Area - fixed at VERY bottom, nice UI */}
+        <div className="fixed inset-x-0 bottom-0 z-30 bg-gradient-to-t from-white/95 via-white/70 to-transparent border-t-2 border-purple-100 shadow-lg lg:relative lg:shadow-none">
+          <div className="max-w-4xl mx-auto px-2">
+            <div className="bg-white border-2 border-purple-100 rounded-2xl p-3 shadow-sm hover:shadow-md transition transition-shadow duration-200">
               <div className="flex items-end space-x-3">
                 <div className="flex-1">
                   <textarea
@@ -227,7 +289,7 @@ const ChatInterface = () => {
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={handleKeyPress}
                     placeholder="Type your message here..."
-                    className="w-full resize-none bg-transparent border-none outline-none text-gray-800 placeholder-gray-500 text-sm leading-relaxed"
+                    className="w-full resize-none bg-transparent border-none outline-none text-purple-800 placeholder-purple-300 text-sm leading-relaxed"
                     rows={1}
                     style={{ minHeight: '24px', maxHeight: '120px' }}
                   />
@@ -241,7 +303,7 @@ const ChatInterface = () => {
                     className={`rounded-xl border-2 transition-colors duration-200 ${
                       isListening 
                         ? 'bg-red-50 border-red-300 text-red-600 hover:bg-red-100' 
-                        : 'bg-blue-50 border-blue-300 text-blue-600 hover:bg-blue-100'
+                        : 'bg-pink-50 border-pink-300 text-pink-600 hover:bg-pink-100'
                     }`}
                   >
                     {isListening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
@@ -251,7 +313,7 @@ const ChatInterface = () => {
                     size="sm"
                     onClick={handleSendMessage}
                     disabled={!inputValue.trim() || isLoading}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50"
+                    className="bg-gradient-to-r from-pink-400 via-purple-400 to-purple-600 hover:from-pink-400 hover:to-purple-700 text-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50"
                   >
                     <Send className="h-4 w-4" />
                   </Button>

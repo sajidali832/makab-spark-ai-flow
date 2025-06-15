@@ -1,4 +1,3 @@
-
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Square, Copy, Check } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
@@ -75,23 +74,23 @@ const ChatMessage = ({ message, isCurrentlyThinking, onRegenerate, onStop }: Cha
 
   return (
     <div className="flex justify-start space-x-2">
-      <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+      <div className="w-6 h-6 bg-gradient-to-br from-pink-400 to-purple-400 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
         <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-4 h-4 rounded-full" />
       </div>
       
       <div className="flex-1 space-y-2">
-        <div className="max-w-[85%] sm:max-w-[80%] bg-white border border-gray-200 rounded-xl rounded-bl-md px-4 py-2 shadow-sm">
+        <div className="max-w-[85%] sm:max-w-[80%] bg-white border border-purple-200 rounded-xl rounded-bl-md px-4 py-2 shadow-sm">
           {message.isThinking ? (
-            <div className="flex items-center space-x-2 text-gray-600">
+            <div className="flex items-center space-x-2 text-purple-600">
               <div className="flex space-x-1">
-                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></div>
-                <div className="w-1.5 h-1.5 bg-purple-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                <div className="w-1.5 h-1.5 bg-pink-400 rounded-full animate-pulse"></div>
+                <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-1.5 h-1.5 bg-pink-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
               </div>
               <span className="text-xs">Thinking...</span>
             </div>
           ) : (
-            <p className="whitespace-pre-wrap text-gray-800 text-sm">{message.content}</p>
+            <p className="whitespace-pre-wrap text-purple-800 text-sm">{message.content}</p>
           )}
         </div>
         
@@ -101,28 +100,30 @@ const ChatMessage = ({ message, isCurrentlyThinking, onRegenerate, onStop }: Cha
               variant="ghost"
               size="sm"
               onClick={copyToClipboard}
-              className={`h-6 px-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors duration-200 ${
+              className={`h-6 px-2 text-purple-600 hover:text-purple-800 hover:bg-purple-100 transition-colors duration-200 ${
                 copySuccess ? 'text-green-600' : ''
               }`}
             >
               {copySuccess ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
             </Button>
             
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={regenerateResponse}
-              className="h-6 px-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors duration-200"
-            >
-              <RotateCcw className="h-3 w-3" />
-            </Button>
+            {onRegenerate && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onRegenerate}
+                className="h-6 px-2 text-purple-600 hover:text-pink-500 hover:bg-pink-100 transition-colors duration-200"
+              >
+                <RotateCcw className="h-3 w-3" />
+              </Button>
+            )}
             
             {isCurrentlyThinking && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={stopResponse}
-                className="h-6 px-2 text-gray-600 hover:text-red-600 hover:bg-gray-100 transition-colors duration-200"
+                className="h-6 px-2 text-purple-600 hover:text-red-600 hover:bg-pink-100 transition-colors duration-200"
               >
                 <Square className="h-3 w-3" />
               </Button>
