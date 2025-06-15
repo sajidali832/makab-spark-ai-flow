@@ -65,7 +65,7 @@ const ChatMessage = ({ message, isCurrentlyThinking, onRegenerate, onStop }: Cha
     return (
       <div className="flex justify-end">
         <div className="max-w-[85%] sm:max-w-[80%]">
-          <div className="bg-gradient-to-r from-blue-600/90 to-purple-600/90 backdrop-blur-md border border-white/20 text-white rounded-xl rounded-br-md px-3 py-2 animate-fade-in shadow-glass">
+          <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl rounded-br-md px-4 py-2 shadow-sm">
             <p className="whitespace-pre-wrap text-sm">{message.content}</p>
           </div>
         </div>
@@ -74,19 +74,19 @@ const ChatMessage = ({ message, isCurrentlyThinking, onRegenerate, onStop }: Cha
   }
 
   return (
-    <div className="flex justify-start space-x-2 animate-fade-in">
-      <div className="w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-glass backdrop-blur-sm border border-white/20">
-        <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-3 h-3 sm:w-4 sm:h-4 rounded-full" />
+    <div className="flex justify-start space-x-2">
+      <div className="w-6 h-6 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
+        <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-4 h-4 rounded-full" />
       </div>
       
-      <div className="flex-1 space-y-1">
-        <div className="max-w-[85%] sm:max-w-[80%] bg-white/15 backdrop-blur-xl border border-white/30 rounded-xl rounded-bl-md px-3 py-2 shadow-glass">
+      <div className="flex-1 space-y-2">
+        <div className="max-w-[85%] sm:max-w-[80%] bg-white border border-gray-200 rounded-xl rounded-bl-md px-4 py-2 shadow-sm">
           {message.isThinking ? (
             <div className="flex items-center space-x-2 text-gray-600">
               <div className="flex space-x-1">
-                <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-600 rounded-full animate-pulse"></div>
-                <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-purple-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse"></div>
+                <div className="w-1.5 h-1.5 bg-purple-600 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                <div className="w-1.5 h-1.5 bg-blue-600 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
               </div>
               <span className="text-xs">Thinking...</span>
             </div>
@@ -98,31 +98,31 @@ const ChatMessage = ({ message, isCurrentlyThinking, onRegenerate, onStop }: Cha
         {!message.isThinking && (
           <div className="flex items-center space-x-1">
             <Button
-              variant="glass"
+              variant="ghost"
               size="sm"
               onClick={copyToClipboard}
-              className={`h-5 px-1 text-gray-600 hover:text-gray-800 transition-all duration-200 ${
-                copySuccess ? 'text-green-600 scale-110' : ''
-              } hover:animate-liquid-ripple`}
+              className={`h-6 px-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors duration-200 ${
+                copySuccess ? 'text-green-600' : ''
+              }`}
             >
               {copySuccess ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
             </Button>
             
             <Button
-              variant="glass"
+              variant="ghost"
               size="sm"
               onClick={regenerateResponse}
-              className="h-5 px-1 text-gray-600 hover:text-gray-800 hover:scale-110 transition-all duration-200 hover:animate-liquid-ripple"
+              className="h-6 px-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 transition-colors duration-200"
             >
               <RotateCcw className="h-3 w-3" />
             </Button>
             
             {isCurrentlyThinking && (
               <Button
-                variant="glass"
+                variant="ghost"
                 size="sm"
                 onClick={stopResponse}
-                className="h-5 px-1 text-gray-600 hover:text-red-600 hover:scale-110 transition-all duration-200 hover:animate-liquid-ripple"
+                className="h-6 px-2 text-gray-600 hover:text-red-600 hover:bg-gray-100 transition-colors duration-200"
               >
                 <Square className="h-3 w-3" />
               </Button>

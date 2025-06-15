@@ -128,7 +128,7 @@ const ChatInterface = () => {
       
       <div className="flex-1 flex flex-col">
         {/* Header */}
-        <header className="bg-gradient-to-r from-blue-600 to-purple-600 border-b border-gray-200 px-4 py-3 shadow-lg">
+        <header className="bg-gradient-to-r from-blue-600 to-purple-600 border-b border-gray-200 px-4 py-3 shadow-sm">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Button
@@ -141,7 +141,7 @@ const ChatInterface = () => {
               </Button>
               
               <div className="flex items-center space-x-3">
-                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
                   <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-5 h-5 rounded" />
                 </div>
                 <div>
@@ -153,7 +153,7 @@ const ChatInterface = () => {
 
             <div className="flex items-center space-x-3">
               {/* Message Limit Display */}
-              <div className="hidden sm:flex items-center space-x-2 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1">
+              <div className="hidden sm:flex items-center space-x-2 bg-white/20 rounded-full px-3 py-1">
                 <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                 <span className="text-sm text-white font-medium">{remainingMessages}/10</span>
               </div>
@@ -176,7 +176,7 @@ const ChatInterface = () => {
         <div className="flex-1 overflow-y-auto p-4 space-y-4 pb-24 sm:pb-20">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center space-y-6">
-              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-xl">
+              <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
                 <img src="/lovable-uploads/904df8c0-f8d1-4e1a-b7f5-274e6b80d61f.png" alt="Makab" className="w-12 h-12 rounded-full" />
               </div>
               <div className="space-y-2">
@@ -185,7 +185,7 @@ const ChatInterface = () => {
                   Your AI assistant created by Sajid for conversations and content creation! 🤖
                 </p>
               </div>
-              <div className="bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg px-4 py-2 border border-blue-200">
+              <div className="bg-blue-50 rounded-lg px-4 py-2 border border-blue-200">
                 <div className="flex items-center space-x-2">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-sm text-gray-700 font-medium">{remainingMessages} messages remaining today</span>
@@ -209,7 +209,7 @@ const ChatInterface = () => {
         {/* Mobile Message Limit - Show on small screens */}
         <div className="sm:hidden px-4 py-2 bg-white border-t border-gray-200">
           <div className="flex justify-center">
-            <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full px-3 py-1 border border-blue-200">
+            <div className="flex items-center space-x-2 bg-blue-50 rounded-full px-3 py-1 border border-blue-200">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <span className="text-sm text-gray-700 font-medium">{remainingMessages}/10 messages left</span>
             </div>
@@ -219,7 +219,7 @@ const ChatInterface = () => {
         {/* Input Area - Fixed at bottom */}
         <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg lg:relative lg:shadow-none">
           <div className="max-w-4xl mx-auto">
-            <div className="bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-2xl p-4 shadow-lg hover:shadow-xl transition-all duration-300">
+            <div className="bg-white border-2 border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow duration-200">
               <div className="flex items-end space-x-3">
                 <div className="flex-1">
                   <textarea
@@ -238,7 +238,7 @@ const ChatInterface = () => {
                     variant="outline"
                     size="sm"
                     onClick={handleVoiceToggle}
-                    className={`rounded-xl border-2 transition-all duration-300 ${
+                    className={`rounded-xl border-2 transition-colors duration-200 ${
                       isListening 
                         ? 'bg-red-50 border-red-300 text-red-600 hover:bg-red-100' 
                         : 'bg-blue-50 border-blue-300 text-blue-600 hover:bg-blue-100'
@@ -251,7 +251,7 @@ const ChatInterface = () => {
                     size="sm"
                     onClick={handleSendMessage}
                     disabled={!inputValue.trim() || isLoading}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50"
+                    className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-xl shadow-sm hover:shadow-md transition-all duration-200 disabled:opacity-50"
                   >
                     <Send className="h-4 w-4" />
                   </Button>

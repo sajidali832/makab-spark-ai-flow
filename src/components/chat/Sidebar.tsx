@@ -31,63 +31,63 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   return (
     <>
-      {/* Enhanced Overlay */}
+      {/* Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-black/30 z-40 lg:hidden"
           onClick={onClose}
         />
       )}
       
-      {/* Enhanced Sidebar */}
+      {/* Sidebar */}
       <div className={`
-        fixed lg:relative top-0 left-0 h-full w-72 sm:w-80 bg-white/10 backdrop-blur-2xl border-r border-white/20 z-50 shadow-2xl
-        transform transition-all duration-500 ease-out
+        fixed lg:relative top-0 left-0 h-full w-72 sm:w-80 bg-white border-r border-gray-200 z-50 shadow-lg
+        transform transition-transform duration-300 ease-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         lg:block
       `}>
         <div className="flex flex-col h-full">
-          {/* Enhanced Header */}
-          <div className="flex items-center justify-between p-6 border-b border-white/20 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-xl">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-purple-600">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center shadow-glass border border-white/30">
-                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-8 h-8 rounded-xl" />
+              <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-8 h-8 rounded-lg" />
               </div>
               <div>
-                <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                <span className="font-bold text-xl text-white">
                   MAKAB
                 </span>
-                <p className="text-sm text-gray-600 mt-1">AI Assistant</p>
+                <p className="text-sm text-white/80 mt-1">AI Assistant</p>
               </div>
             </div>
             <Button
-              variant="frosted"
+              variant="ghost"
               size="sm"
               onClick={onClose}
-              className="lg:hidden h-10 w-10 p-0 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              className="lg:hidden h-10 w-10 p-0 rounded-lg text-white hover:bg-white/20"
             >
               <X className="h-5 w-5" />
             </Button>
           </div>
 
-          {/* Enhanced Navigation */}
+          {/* Navigation */}
           <nav className="flex-1 p-6">
-            <div className="space-y-3">
+            <div className="space-y-2">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
                 return (
                   <Button
                     key={item.id}
-                    variant={active ? "liquid" : "frosted"}
-                    className={`w-full justify-start text-base h-14 rounded-2xl transition-all duration-300 ${
+                    variant={active ? "default" : "ghost"}
+                    className={`w-full justify-start text-base h-12 rounded-xl transition-all duration-200 ${
                       active 
-                        ? 'shadow-xl hover:shadow-2xl transform hover:scale-[1.02]' 
-                        : 'hover:shadow-lg hover:scale-[1.01] text-gray-700 hover:text-gray-900'
+                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm hover:shadow-md' 
+                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
                     }`}
                     onClick={() => handleNavigation(item.path)}
                   >
-                    <Icon className={`h-6 w-6 mr-4 ${active ? 'text-white' : 'text-gray-600'}`} />
+                    <Icon className={`h-5 w-5 mr-3 ${active ? 'text-white' : 'text-gray-600'}`} />
                     <span className="font-medium">{item.label}</span>
                   </Button>
                 );
@@ -95,9 +95,9 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </div>
           </nav>
 
-          {/* Enhanced Footer */}
-          <div className="p-6 border-t border-white/20 bg-gradient-to-r from-gray-50/20 to-white/10 backdrop-blur-xl">
-            <div className="text-center bg-white/10 backdrop-blur-lg rounded-2xl p-4 border border-white/20 shadow-glass">
+          {/* Footer */}
+          <div className="p-6 border-t border-gray-200 bg-gray-50">
+            <div className="text-center bg-white rounded-xl p-4 border border-gray-200 shadow-sm">
               <p className="text-xs text-gray-500 mb-2">Made with ❤️ by</p>
               <p className="text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Sajid
