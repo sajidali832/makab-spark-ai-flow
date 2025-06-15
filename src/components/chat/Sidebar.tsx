@@ -2,6 +2,8 @@
 import { Button } from '@/components/ui/button';
 import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen, LogOut } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import PageLoader from '@/components/ui/PageLoader';
+import { useState } from 'react';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -11,6 +13,7 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [loading, setLoading] = useState(false);
 
   const menuItems = [
     { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
@@ -23,8 +26,16 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   ];
 
   const handleNavigation = (path: string) => {
-    navigate(path);
-    onClose();
+    if (location.pathname !== path) {
+      setLoading(true);
+      setTimeout(() => {
+        navigate(path);
+        onClose();
+        setTimeout(() => setLoading(false), 100);
+      }, 200);
+    } else {
+      onClose();
+    }
   };
 
   const isActive = (path: string) => location.pathname === path;
@@ -37,10 +48,12 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   return (
     <>
+      {loading && <PageLoader />}
+      
       {/* Overlay for mobile - visible only when sidebar is open */}
       <div
         className={`
-          fixed inset-0 z-40 bg-black/30 transition-opacity duration-200
+          fixed inset-0 z-40 bg-black/30 transition-all duration-300 ease-out
           ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
           lg:hidden
         `}
@@ -48,11 +61,11 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         aria-hidden="true"
       />
 
-      {/* Sidebar – slides in/out, with GPU acceleration, on top of content on mobile */}
+      {/* Sidebar – slides in/out with smooth animations */}
       <aside
         className={`
           fixed z-50 top-0 left-0 h-full w-72 sm:w-80 bg-white border-r border-gray-200 shadow-lg
-          transform transition-transform duration-300 ease-out will-change-transform
+          transform transition-all duration-300 ease-out will-change-transform
           ${isOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:sticky lg:left-0 lg:top-0 lg:translate-x-0 lg:shadow-none
         `}
@@ -74,12 +87,13 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               variant="ghost"
               size="sm"
               onClick={onClose}
-              className="lg:hidden h-8 w-8 p-0 text-gray-600 hover:bg-gray-100"
+              className="lg:hidden h-8 w-8 p-0 text-gray-600 hover:bg-gray-100 transition-colors duration-200"
             >
               <X className="h-4 w-4" />
               <span className="sr-only">Close sidebar</span>
             </Button>
           </div>
+          
           {/* Navigation */}
           <nav className="flex-1 p-4 overflow-y-auto">
             <div className="space-y-1">
@@ -90,25 +104,26 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                   <Button
                     key={item.id}
                     variant={active ? "default" : "ghost"}
-                    className={`w-full justify-start h-10 transition-colors duration-150 ${
+                    className={`w-full justify-start h-10 transition-all duration-200 ease-out ${
                       active 
-                        ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                        ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-sm' 
+                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100 hover:translate-x-1'
                     }`}
                     onClick={() => handleNavigation(item.path)}
                   >
-                    <Icon className={`h-4 w-4 mr-3 ${active ? 'text-white' : 'text-gray-600'}`} />
+                    <Icon className={`h-4 w-4 mr-3 transition-colors duration-200 ${active ? 'text-white' : 'text-gray-600'}`} />
                     <span className="font-medium">{item.label}</span>
                   </Button>
                 );
               })}
             </div>
           </nav>
+          
           {/* Footer */}
           <div className="p-4 border-t border-gray-200">
             <Button
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 text-red-600 hover:bg-red-50 hover:text-red-700 transition-colors duration-150"
+              className="w-full flex items-center justify-center gap-2 text-red-600 hover:bg-red-50 hover:text-red-700 hover:border-red-200 transition-all duration-200 ease-out"
               onClick={handleSignOut}
             >
               <LogOut className="h-4 w-4" />
