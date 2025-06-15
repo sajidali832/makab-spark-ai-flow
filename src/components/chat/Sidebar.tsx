@@ -31,72 +31,75 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   return (
     <>
-      {/* Overlay */}
+      {/* Enhanced Overlay */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 lg:hidden"
           onClick={onClose}
         />
       )}
       
-      {/* Sidebar */}
+      {/* Enhanced Sidebar */}
       <div className={`
-        fixed lg:relative top-0 left-0 h-full w-64 sm:w-80 bg-gradient-to-b from-white to-gray-50 border-r border-gray-200 z-50 shadow-2xl
-        transform transition-transform duration-300 ease-in-out
+        fixed lg:relative top-0 left-0 h-full w-72 sm:w-80 bg-white/10 backdrop-blur-2xl border-r border-white/20 z-50 shadow-2xl
+        transform transition-all duration-500 ease-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         lg:block
       `}>
         <div className="flex flex-col h-full">
-          {/* Header */}
-          <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-purple-600">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-lg">
-                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-8 h-8 rounded-lg" />
+          {/* Enhanced Header */}
+          <div className="flex items-center justify-between p-6 border-b border-white/20 bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-xl">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-white/20 backdrop-blur-lg rounded-2xl flex items-center justify-center shadow-glass border border-white/30">
+                <img src="/lovable-uploads/0a6f6566-e098-48bb-8fbe-fcead42f3a46.png" alt="Makab" className="w-8 h-8 rounded-xl" />
               </div>
-              <span className="font-bold text-xl text-white">
-                MAKAB
-              </span>
+              <div>
+                <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  MAKAB
+                </span>
+                <p className="text-sm text-gray-600 mt-1">AI Assistant</p>
+              </div>
             </div>
             <Button
-              variant="ghost"
+              variant="frosted"
               size="sm"
               onClick={onClose}
-              className="lg:hidden h-8 w-8 p-0 text-white hover:bg-white/20"
+              className="lg:hidden h-10 w-10 p-0 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <X className="h-5 w-5" />
             </Button>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 p-4">
-            <div className="space-y-2">
+          {/* Enhanced Navigation */}
+          <nav className="flex-1 p-6">
+            <div className="space-y-3">
               {menuItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
                 return (
                   <Button
                     key={item.id}
-                    variant="ghost"
-                    className={`w-full justify-start text-base h-12 rounded-xl transition-all duration-200 ${
+                    variant={active ? "liquid" : "frosted"}
+                    className={`w-full justify-start text-base h-14 rounded-2xl transition-all duration-300 ${
                       active 
-                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg hover:shadow-xl' 
-                        : 'hover:bg-gray-100 text-gray-700 hover:text-gray-900'
+                        ? 'shadow-xl hover:shadow-2xl transform hover:scale-[1.02]' 
+                        : 'hover:shadow-lg hover:scale-[1.01] text-gray-700 hover:text-gray-900'
                     }`}
                     onClick={() => handleNavigation(item.path)}
                   >
-                    <Icon className={`h-5 w-5 mr-3 ${active ? 'text-white' : 'text-gray-500'}`} />
-                    {item.label}
+                    <Icon className={`h-6 w-6 mr-4 ${active ? 'text-white' : 'text-gray-600'}`} />
+                    <span className="font-medium">{item.label}</span>
                   </Button>
                 );
               })}
             </div>
           </nav>
 
-          {/* Footer */}
-          <div className="p-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-            <div className="text-center">
+          {/* Enhanced Footer */}
+          <div className="p-6 border-t border-white/20 bg-gradient-to-r from-gray-50/20 to-white/10 backdrop-blur-xl">
+            <div className="text-center bg-white/10 backdrop-blur-lg rounded-2xl p-4 border border-white/20 shadow-glass">
               <p className="text-xs text-gray-500 mb-2">Made with ❤️ by</p>
-              <p className="text-sm font-semibold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <p className="text-base font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 Sajid
               </p>
             </div>
