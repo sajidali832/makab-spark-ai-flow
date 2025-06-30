@@ -1,8 +1,24 @@
+
+import { useState, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { 
+  MessageCircle, 
+  Settings, 
+  History, 
+  User, 
+  Info, 
+  Heart, 
+  FileText, 
+  BarChart3, 
+  BookOpen, 
+  X, 
+  Menu,
+  LogOut,
+  Calendar,
+  Lightbulb
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { X, MessageSquare, Wrench, User, History, MessageCircle, Info, BookOpen, LogOut, Menu, BarChart } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import PageLoader from '@/components/ui/PageLoader';
-import { useState } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -11,142 +27,137 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isOpen, onClose, onMenuClick }: SidebarProps) => {
+  const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
-  const location = useLocation();
-  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const userData = localStorage.getItem('makab_user');
+    if (userData) {
+      setUser(JSON.parse(userData));
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('makab_user');
+    setUser(null);
+    toast({
+      title: "Logged out successfully",
+      description: "You have been logged out of your account.",
+    });
+    navigate('/');
+    onClose();
+  };
 
   const menuItems = [
-    { id: 'chat', label: 'Chat', icon: MessageSquare, path: '/chat' },
-    { id: 'tools', label: 'Tools', icon: Wrench, path: '/tools' },
-    { id: 'free-course', label: 'Free Course', icon: BookOpen, path: '/free-course' },
-    { id: 'history', label: 'Tools History', icon: History, path: '/history' },
-    { id: 'chat-history', label: 'Chats History', icon: MessageCircle, path: '/chat-history' },
-    { id: 'profile', label: 'Profile', icon: User, path: '/profile' },
-    { id: 'analytics', label: 'Analytics', icon: BarChart, path: '/analytics' },
-    { id: 'about', label: 'About', icon: Info, path: '/about' },
+    { to: '/chat', icon: MessageCircle, label: 'Chat' },
+    { to: '/tools', icon: Settings, label: 'Tools' },
+    { to: '/content-hub', icon: Calendar, label: 'Content Hub' },
+    { to: '/history', icon: History, label: 'Tools History' },
+    { to: '/chat-history', icon: MessageCircle, label: 'Chat History' },
+    { to: '/favorites', icon: Heart, label: 'Favorites' },
+    { to: '/templates', icon: FileText, label: 'Templates' },
+    { to: '/analytics', icon: BarChart3, label: 'Analytics' },
+    { to: '/free-course', icon: BookOpen, label: 'Free Course' },
+    { to: '/profile', icon: User, label: 'Profile' },
+    { to: '/about', icon: Info, label: 'About' },
   ];
-
-  const handleNavigation = (path: string) => {
-    if (location.pathname !== path) {
-      setLoading(true);
-      setTimeout(() => {
-        navigate(path);
-        onClose();
-        setTimeout(() => setLoading(false), 150);
-      }, 100);
-    } else {
-      onClose();
-    }
-  };
-
-  const isActive = (path: string) => location.pathname === path;
-
-  const handleSignOut = () => {
-    localStorage.removeItem('makab_user');
-    navigate('/');
-    window.location.reload();
-  };
 
   return (
     <>
-      {loading && <PageLoader />}
-
-      {/* NO Menu/Close button above logo -- just the sidebar for mobile! */}
       {/* Overlay for mobile */}
-      <div
-        className={`
-          fixed inset-0 z-40 bg-black/40 backdrop-blur-sm transition-all duration-400 ease-in-out
-          ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
-          lg:hidden
-        `}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      
       {/* Sidebar */}
-      <aside
-        className={`
-          fixed z-50 top-0 left-0 h-full w-80 bg-white/95 backdrop-blur-md border-r border-gray-200/80 shadow-xl
-          transform transition-all duration-500 ease-in-out will-change-transform
-          ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-          lg:sticky lg:left-0 lg:top-0 lg:translate-x-0 lg:shadow-lg lg:bg-white lg:w-72
-        `}
-        style={{ maxWidth: '100vw' }}
-      >
-        <div className="flex flex-col h-full">
-          {/* Sidebar header */}
-          <div className="flex items-center justify-start py-4 px-6 border-b border-gray-200/80 bg-gradient-to-r from-blue-50 to-indigo-50">
-            <div className="flex items-center gap-3">
-              <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-md">
-                <img src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" alt="Makab" className="w-7 h-7 rounded-lg" />
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">MAKAB</span>
-                <span className="text-xs text-gray-500 font-medium">AI Assistant</span>
-              </div>
+      <div className={`
+        fixed top-0 left-0 h-full w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-50
+        lg:relative lg:transform-none lg:shadow-none lg:border-r lg:border-gray-200
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-gray-200">
+          <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+              <img 
+                src="/lovable-uploads/7ba237d8-d482-44ec-b85b-c5b82d878782.png" 
+                alt="Makab" 
+                className="w-7 h-7 rounded-full" 
+              />
             </div>
-            {/* Only close button for MOBILE in the row, right side */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="ml-auto lg:hidden h-8 w-8 p-0 text-gray-500 hover:bg-white/70 hover:text-gray-700 transition-all duration-200 rounded-lg"
-            >
-              <X className="h-4 w-4" />
-              <span className="sr-only">Close sidebar</span>
-            </Button>
-          </div>
-          
-          {/* Navigation */}
-          <nav className="flex-1 p-5 overflow-y-auto">
-            <div className="space-y-2">
-              {menuItems.map((item, index) => {
-                const Icon = item.icon;
-                const active = isActive(item.path);
-                return (
-                  <Button
-                    key={item.id}
-                    variant={active ? "default" : "ghost"}
-                    className={`
-                      w-full justify-start h-12 transition-all duration-500 ease-in-out transform group
-                      ${active 
-                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:from-blue-700 hover:to-indigo-700 shadow-lg scale-[1.02]' 
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gradient-to-r hover:from-gray-50 hover:to-blue-50 hover:translate-x-1 hover:shadow-sm hover:border-blue-200/50 border border-transparent'
-                      }
-                      rounded-xl font-medium
-                    `}
-                    onClick={() => handleNavigation(item.path)}
-                    style={{ 
-                      animationDelay: `${index * 60}ms`,
-                      animation: isOpen ? 'fade-in 0.4s ease-in-out forwards' : undefined
-                    }}
-                  >
-                    <Icon className={`h-5 w-5 mr-3 transition-all duration-500 ${
-                      active 
-                        ? 'text-white' 
-                        : 'text-gray-500 group-hover:text-blue-600 group-hover:scale-110'
-                    }`} />
-                    <span className="font-semibold">{item.label}</span>
-                  </Button>
-                );
-              })}
+            <div>
+              <h2 className="font-bold text-gray-800 text-sm">MAKAB</h2>
+              <p className="text-xs text-gray-500">AI Assistant</p>
             </div>
-          </nav>
-          
-          {/* Footer */}
-          <div className="p-5 border-t border-gray-200/80 bg-gradient-to-r from-gray-50 to-blue-50/30">
-            <Button
-              variant="outline"
-              className="w-full flex items-center justify-center gap-3 h-12 text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:text-red-700 hover:border-red-200 transition-all duration-400 ease-in-out hover:shadow-md rounded-xl font-semibold border-red-200/50"
-              onClick={handleSignOut}
-            >
-              <LogOut className="h-5 w-5" />
-              Sign out
-            </Button>
           </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="lg:hidden h-8 w-8 p-0 hover:bg-gray-100"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </div>
-      </aside>
+
+        {/* User Info */}
+        {user && (
+          <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-purple-50">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-gray-800 text-sm truncate">
+                  {user.username || 'User'}
+                </p>
+                <p className="text-xs text-gray-500 truncate">
+                  {user.email || 'user@example.com'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Navigation */}
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              onClick={onClose}
+              className={({ isActive }) =>
+                `flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors duration-200 ${
+                  isActive
+                    ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                    : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                }`
+              }
+            >
+              <item.icon className="h-5 w-5 flex-shrink-0" />
+              <span className="truncate">{item.label}</span>
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-gray-200">
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="w-full flex items-center justify-center space-x-2 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+          >
+            <LogOut className="h-4 w-4" />
+            <span>Logout</span>
+          </Button>
+        </div>
+      </div>
     </>
   );
 };
+
 export default Sidebar;
