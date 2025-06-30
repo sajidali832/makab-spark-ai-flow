@@ -10,15 +10,13 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Show loading animation for better UX
     const timer = setTimeout(() => {
-      // Check if user is logged in (for now, using localStorage)
       const user = localStorage.getItem('makab_user');
       if (user) {
         setIsAuthenticated(true);
       }
       setIsLoading(false);
-    }, 1500); // Show loading for 1.5 seconds
+    }, 800); // Shorter loading time
 
     return () => clearTimeout(timer);
   }, []);
@@ -30,11 +28,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-white">
       {!isAuthenticated ? (
-        <div className="animate-fade-in">
-          <LoginForm onAuthSuccess={() => setIsAuthenticated(true)} />
-        </div>
+        <LoginForm onAuthSuccess={() => setIsAuthenticated(true)} />
       ) : (
-        <div className="animate-fade-in">
+        <div>
           <ChatInterface />
           <NotificationPrompt />
         </div>
