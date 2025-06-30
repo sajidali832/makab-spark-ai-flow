@@ -72,52 +72,57 @@ const ContentCalendar = () => {
   const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center space-x-2">
-          <Calendar className="h-6 w-6 text-blue-600" />
-          <h2 className="text-2xl font-bold text-gray-800">Content Calendar</h2>
+          <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 flex-shrink-0" />
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Content Calendar</h2>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          <Plus className="h-4 w-4 mr-2" />
+        <Button className="bg-blue-600 hover:bg-blue-700 text-sm w-full sm:w-auto">
+          <Plus className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
           Schedule Content
         </Button>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">January 2025</CardTitle>
+          <CardTitle className="text-base sm:text-lg">January 2025</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-7 gap-2 mb-4">
+        <CardContent className="p-3 sm:p-6">
+          <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-3 sm:mb-4">
             {dayNames.map(day => (
-              <div key={day} className="text-center text-sm font-medium text-gray-500 py-2">
+              <div key={day} className="text-center text-xs sm:text-sm font-medium text-gray-500 py-1 sm:py-2">
                 {day}
               </div>
             ))}
           </div>
           
-          <div className="grid grid-cols-7 gap-2">
+          <div className="grid grid-cols-7 gap-1 sm:gap-2">
             {days.map((day, index) => (
               <div
                 key={index}
-                className={`min-h-[80px] p-2 border rounded-lg cursor-pointer hover:bg-gray-50 ${
+                className={`min-h-[60px] sm:min-h-[80px] p-1 sm:p-2 border rounded-lg cursor-pointer hover:bg-gray-50 ${
                   day?.date === selectedDate ? 'bg-blue-50 border-blue-300' : 'border-gray-200'
                 }`}
                 onClick={() => day && setSelectedDate(day.date)}
               >
                 {day && (
                   <>
-                    <div className="text-sm font-medium text-gray-800">{day.day}</div>
+                    <div className="text-xs sm:text-sm font-medium text-gray-800">{day.day}</div>
                     <div className="space-y-1 mt-1">
-                      {day.content.map(content => (
+                      {day.content.slice(0, 2).map(content => (
                         <div
                           key={content.id}
-                          className="text-xs p-1 bg-blue-100 text-blue-800 rounded truncate"
+                          className="text-[10px] sm:text-xs p-1 bg-blue-100 text-blue-800 rounded truncate"
                         >
                           {content.title}
                         </div>
                       ))}
+                      {day.content.length > 2 && (
+                        <div className="text-[10px] sm:text-xs text-gray-500 text-center">
+                          +{day.content.length - 2} more
+                        </div>
+                      )}
                     </div>
                   </>
                 )}
@@ -130,35 +135,37 @@ const ContentCalendar = () => {
       {/* Scheduled content for selected date */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
-            <Clock className="h-5 w-5" />
-            <span>Content for {selectedDate}</span>
+          <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
+            <Clock className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+            <span className="truncate">Content for {selectedDate}</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           {getContentForDate(selectedDate).length > 0 ? (
             <div className="space-y-3">
               {getContentForDate(selectedDate).map(content => (
-                <div key={content.id} className="p-4 border rounded-lg">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <FileText className="h-4 w-4 text-gray-500" />
-                        <h4 className="font-medium">{content.title}</h4>
-                        <Badge variant={content.status === 'published' ? 'default' : 'secondary'}>
+                <div key={content.id} className="p-3 sm:p-4 border rounded-lg">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-2 mb-2 flex-wrap gap-1">
+                        <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
+                        <h4 className="font-medium text-sm sm:text-base truncate">{content.title}</h4>
+                        <Badge variant={content.status === 'published' ? 'default' : 'secondary'} className="text-xs">
                           {content.status}
                         </Badge>
                       </div>
-                      <p className="text-sm text-gray-600 line-clamp-2">{content.content}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 leading-relaxed">
+                        {content.content}
+                      </p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
-              <Calendar className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>No content scheduled for this date</p>
+            <div className="text-center py-6 sm:py-8 text-gray-500">
+              <Calendar className="h-8 w-8 sm:h-12 sm:w-12 mx-auto mb-3 sm:mb-4 opacity-50" />
+              <p className="text-sm sm:text-base">No content scheduled for this date</p>
             </div>
           )}
         </CardContent>
