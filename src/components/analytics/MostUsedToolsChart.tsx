@@ -1,15 +1,21 @@
+
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { Cell, Pie, PieChart } from 'recharts';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface MostUsedToolsChartProps {
   data: any[] | null | undefined;
 }
 
 const MostUsedToolsChart = ({ data }: MostUsedToolsChartProps) => {
+  const isMobile = useIsMobile();
+
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-gray-500">
-        <p>No tool usage data available yet. Try using some AI tools to see your analytics!</p>
+      <div className="h-48 sm:h-64 flex items-center justify-center text-gray-500">
+        <p className="text-sm sm:text-base text-center px-4">
+          No tool usage data available yet. Try using some AI tools to see your analytics!
+        </p>
       </div>
     );
   }
@@ -38,15 +44,15 @@ const MostUsedToolsChart = ({ data }: MostUsedToolsChartProps) => {
   };
 
   return (
-    <div className="h-64 w-full">
+    <div className="h-48 sm:h-64 w-full">
       <ChartContainer config={chartConfig}>
-        <PieChart>
+        <PieChart margin={{ top: 10, right: 10, left: 10, bottom: 10 }}>
           <Pie
             data={chartData}
             cx="50%"
             cy="50%"
-            innerRadius={40}
-            outerRadius={80}
+            innerRadius={isMobile ? 25 : 40}
+            outerRadius={isMobile ? 60 : 80}
             paddingAngle={2}
             dataKey="value"
           >
@@ -61,14 +67,14 @@ const MostUsedToolsChart = ({ data }: MostUsedToolsChartProps) => {
       </ChartContainer>
       
       {/* Legend */}
-      <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+      <div className="mt-3 sm:mt-4 grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-2 text-xs sm:text-sm max-h-24 overflow-y-auto">
         {chartData.map((entry, index) => (
           <div key={entry.name} className="flex items-center gap-2">
             <div 
-              className="w-3 h-3 rounded-full" 
+              className="w-2 h-2 sm:w-3 sm:h-3 rounded-full flex-shrink-0" 
               style={{ backgroundColor: COLORS[index % COLORS.length] }}
             />
-            <span className="truncate">{entry.name} ({entry.value})</span>
+            <span className="truncate text-xs sm:text-sm">{entry.name} ({entry.value})</span>
           </div>
         ))}
       </div>

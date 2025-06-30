@@ -10,8 +10,10 @@ interface WeeklyUsageChartProps {
 const WeeklyUsageChart = ({ data }: WeeklyUsageChartProps) => {
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-gray-500">
-        <p>No usage data available yet. Start using the app to see your analytics!</p>
+      <div className="h-48 sm:h-64 flex items-center justify-center text-gray-500">
+        <p className="text-sm sm:text-base text-center px-4">
+          No usage data available yet. Start using the app to see your analytics!
+        </p>
       </div>
     );
   }
@@ -54,19 +56,21 @@ const WeeklyUsageChart = ({ data }: WeeklyUsageChartProps) => {
   };
 
   return (
-    <div className="h-64 w-full">
+    <div className="h-48 sm:h-64 w-full">
       <ChartContainer config={chartConfig}>
-        <BarChart data={chartData}>
+        <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
           <XAxis 
             dataKey="week"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
+            interval="preserveStartEnd"
           />
           <YAxis 
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
+            width={30}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Bar dataKey="events" fill="#3b82f6" radius={[4, 4, 0, 0]} />

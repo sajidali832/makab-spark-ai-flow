@@ -10,8 +10,10 @@ interface ContentTrendsChartProps {
 const ContentTrendsChart = ({ data }: ContentTrendsChartProps) => {
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-gray-500">
-        <p>No content generation data available yet. Create some content to see your trends!</p>
+      <div className="h-48 sm:h-64 flex items-center justify-center text-gray-500">
+        <p className="text-sm sm:text-base text-center px-4">
+          No content generation data available yet. Create some content to see your trends!
+        </p>
       </div>
     );
   }
@@ -75,19 +77,21 @@ const ContentTrendsChart = ({ data }: ContentTrendsChartProps) => {
   };
 
   return (
-    <div className="h-64 w-full">
+    <div className="h-48 sm:h-64 w-full">
       <ChartContainer config={chartConfig}>
-        <LineChart data={chartData}>
+        <LineChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
           <XAxis 
             dataKey="date"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
+            interval="preserveStartEnd"
           />
           <YAxis 
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
+            width={30}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Line
@@ -95,29 +99,29 @@ const ContentTrendsChart = ({ data }: ContentTrendsChartProps) => {
             dataKey="total"
             stroke="#3b82f6"
             strokeWidth={2}
-            dot={{ r: 4 }}
-            activeDot={{ r: 6 }}
+            dot={{ r: 3 }}
+            activeDot={{ r: 4 }}
           />
           <Line
             type="monotone"
             dataKey="short"
             stroke="#10b981"
             strokeWidth={2}
-            dot={{ r: 3 }}
+            dot={{ r: 2 }}
           />
           <Line
             type="monotone"
             dataKey="medium"
             stroke="#f59e0b"
             strokeWidth={2}
-            dot={{ r: 3 }}
+            dot={{ r: 2 }}
           />
           <Line
             type="monotone"
             dataKey="long"
             stroke="#ef4444"
             strokeWidth={2}
-            dot={{ r: 3 }}
+            dot={{ r: 2 }}
           />
         </LineChart>
       </ChartContainer>

@@ -10,8 +10,10 @@ interface DailyUsageChartProps {
 const DailyUsageChart = ({ data }: DailyUsageChartProps) => {
   if (!data || data.length === 0) {
     return (
-      <div className="h-64 flex items-center justify-center text-gray-500">
-        <p>No usage data available yet. Start using the app to see your analytics!</p>
+      <div className="h-48 sm:h-64 flex items-center justify-center text-gray-500">
+        <p className="text-sm sm:text-base text-center px-4">
+          No usage data available yet. Start using the app to see your analytics!
+        </p>
       </div>
     );
   }
@@ -42,9 +44,9 @@ const DailyUsageChart = ({ data }: DailyUsageChartProps) => {
   };
 
   return (
-    <div className="h-64 w-full">
+    <div className="h-48 sm:h-64 w-full">
       <ChartContainer config={chartConfig}>
-        <AreaChart data={chartData}>
+        <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 10 }}>
           <defs>
             <linearGradient id="colorEvents" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
@@ -53,14 +55,16 @@ const DailyUsageChart = ({ data }: DailyUsageChartProps) => {
           </defs>
           <XAxis 
             dataKey="formattedDate"
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
+            interval="preserveStartEnd"
           />
           <YAxis 
-            tick={{ fontSize: 12 }}
+            tick={{ fontSize: 10 }}
             axisLine={false}
             tickLine={false}
+            width={30}
           />
           <ChartTooltip content={<ChartTooltipContent />} />
           <Area
