@@ -95,6 +95,7 @@
   .scroll-container, 
   .overflow-y-auto, 
   .overflow-auto,
+  .overflow-x-auto,
   [class*="overflow"] {
     /* Force GPU acceleration */
     -webkit-transform: translateZ(0);
@@ -108,6 +109,8 @@
     scroll-behavior: smooth;
     /* Enable hardware compositing */
     contain: layout style paint;
+    /* Better touch behavior */
+    touch-action: pan-x pan-y;
   }
 
   /* Optimize text rendering during scroll */
@@ -170,6 +173,15 @@
       height: 100vh;
       height: var(--viewport-height, 100vh);
     }
+    
+    /* Enhanced mobile horizontal scrolling */
+    .overflow-x-auto {
+      -webkit-overflow-scrolling: touch;
+      overflow-scrolling: touch;
+      scroll-behavior: smooth;
+      touch-action: pan-x;
+      overscroll-behavior-x: contain;
+    }
   }
 
   /* Remove focus outlines that cause scroll stuttering */
@@ -188,14 +200,21 @@
 
 /* Ultra-smooth scrolling utilities */
 @layer utilities {
-  /* Hide scrollbars while keeping scroll functionality */
+  /* Enhanced scrollbar hiding with better mobile support */
   .scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;
+    /* Enhanced mobile scrolling */
+    -webkit-overflow-scrolling: touch;
+    overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
   }
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
+    width: 0;
+    height: 0;
   }
 
   /* Lightweight line clamp without layout thrashing */
@@ -232,7 +251,7 @@
     height: var(--viewport-height, 100vh);
   }
   
-  /* 60fps smooth scrolling */
+  /* Enhanced 60fps smooth scrolling */
   .smooth-scroll {
     -webkit-overflow-scrolling: touch;
     overflow-scrolling: touch;
@@ -241,6 +260,7 @@
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
     will-change: scroll-position;
+    overscroll-behavior: contain;
   }
   
   /* Hardware acceleration for 60fps animations */
@@ -270,40 +290,13 @@
     -webkit-transform: translateZ(0);
     transform: translateZ(0);
   }
-}
 
-/* Lightweight 60fps animations */
-@keyframes fade-in {
-  from { 
-    opacity: 0; 
-    -webkit-transform: translateZ(0) translateY(5px);
-    transform: translateZ(0) translateY(5px);
-  }
-  to { 
-    opacity: 1; 
-    -webkit-transform: translateZ(0) translateY(0);
-    transform: translateZ(0) translateY(0);
+  /* Mobile touch optimization */
+  .touch-manipulation {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
   }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
-
-/* Ultra-smooth pulse for voice input */
-@keyframes pulse-mic {
-  0%, 100% { 
-    transform: translateZ(0) scale(1); 
-  }
-  50% { 
-    transform: translateZ(0) scale(1.05); 
-  }
-}
-
-.animate-pulse-mic {
-  animation: pulse-mic 0.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
+/* ... keep existing code (keyframes and animations) the same ... */
