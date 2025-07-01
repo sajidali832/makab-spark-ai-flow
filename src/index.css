@@ -188,6 +188,16 @@
 
 /* Ultra-smooth scrolling utilities */
 @layer utilities {
+  /* Hide scrollbars while keeping scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Lightweight line clamp without layout thrashing */
   .line-clamp-2 {
     display: -webkit-box;

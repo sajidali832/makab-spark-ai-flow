@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import Sidebar from '@/components/chat/Sidebar';
 import ContentCalendar from '@/components/calendar/ContentCalendar';
 import SmartSuggestions from '@/components/suggestions/SmartSuggestions';
@@ -68,38 +67,38 @@ const ContentHub = () => {
           <div className="p-4 space-y-6">
             {/* Mobile-First Tabs */}
             <Tabs defaultValue="calendar" className="w-full">
-              {/* Mobile Tab Navigation with Horizontal Scroll */}
+              {/* Mobile Tab Navigation with Native Horizontal Scroll */}
               <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm -mx-4 px-4 pb-4 border-b border-gray-100">
-                <ScrollArea className="w-full whitespace-nowrap">
-                  <div className="flex space-x-2 pb-2">
-                    <TabsList className="inline-flex h-12 items-center justify-start rounded-md bg-muted p-1 text-muted-foreground min-w-max">
+                <div className="overflow-x-auto scrollbar-hide">
+                  <div className="flex space-x-2 pb-2 min-w-max">
+                    <div className="flex bg-muted rounded-md p-1 space-x-1">
                       <TabsTrigger 
                         value="calendar" 
-                        className="flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap"
+                        className="flex-shrink-0 px-6 py-3 text-sm font-medium whitespace-nowrap rounded-sm min-w-[120px] touch-manipulation"
                       >
                         📅 Calendar
                       </TabsTrigger>
                       <TabsTrigger 
                         value="suggestions" 
-                        className="flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap"
+                        className="flex-shrink-0 px-6 py-3 text-sm font-medium whitespace-nowrap rounded-sm min-w-[120px] touch-manipulation"
                       >
                         💡 Ideas
                       </TabsTrigger>
                       <TabsTrigger 
                         value="analytics" 
-                        className="flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap"
+                        className="flex-shrink-0 px-6 py-3 text-sm font-medium whitespace-nowrap rounded-sm min-w-[120px] touch-manipulation"
                       >
                         📊 Analytics
                       </TabsTrigger>
                       <TabsTrigger 
                         value="export" 
-                        className="flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap"
+                        className="flex-shrink-0 px-6 py-3 text-sm font-medium whitespace-nowrap rounded-sm min-w-[120px] touch-manipulation"
                       >
                         📤 Export
                       </TabsTrigger>
-                    </TabsList>
+                    </div>
                   </div>
-                </ScrollArea>
+                </div>
               </div>
 
               {/* Tab Content */}
