@@ -45,65 +45,62 @@ const ContentHub = () => {
         onClose={() => setSidebarOpen(false)} 
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
       />
-      <div className="flex-1 flex flex-col lg:ml-0">
-        <div className="flex items-center justify-between p-3 sm:p-4 border-b border-gray-200 lg:hidden bg-gradient-to-r from-blue-50 to-indigo-50">
-          <div className="flex items-center">
+      <div className="flex-1 flex flex-col">
+        {/* Mobile Header */}
+        <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 sticky top-0 z-10">
+          <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setSidebarOpen(true)}
-              className="h-8 w-8 p-0 mr-2 sm:mr-3"
+              className="h-9 w-9 p-0 flex-shrink-0"
             >
-              <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Menu className="h-5 w-5" />
             </Button>
-            <h1 className="text-base sm:text-lg md:text-xl font-semibold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent truncate">
+            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent">
               Content Hub
             </h1>
           </div>
         </div>
         
         <div className="flex-1 overflow-auto bg-gradient-to-br from-blue-50 to-purple-50">
-          <div className="max-w-7xl mx-auto p-3 sm:p-4 md:p-6">
-            <div className="mb-4 sm:mb-6">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">
-                Content Hub
-              </h1>
-              <p className="text-sm sm:text-base text-gray-600">
-                Manage, plan, and analyze your content creation journey
-              </p>
-            </div>
-
-            <Tabs defaultValue="calendar" className="space-y-4 sm:space-y-6">
-              <div className="overflow-x-auto">
-                <TabsList className="grid w-full grid-cols-4 min-w-[320px] h-auto">
-                  <TabsTrigger value="calendar" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
-                    Calendar
+          <div className="p-4 space-y-6">
+            {/* Mobile-First Tabs */}
+            <Tabs defaultValue="calendar" className="w-full">
+              {/* Mobile Tab Navigation */}
+              <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-sm -mx-4 px-4 pb-4">
+                <TabsList className="grid w-full grid-cols-2 h-12 mb-4">
+                  <TabsTrigger value="calendar" className="text-sm font-medium">
+                    📅 Calendar
                   </TabsTrigger>
-                  <TabsTrigger value="suggestions" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
-                    Suggestions
+                  <TabsTrigger value="suggestions" className="text-sm font-medium">
+                    💡 Ideas
                   </TabsTrigger>
-                  <TabsTrigger value="analytics" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
-                    Analytics
+                </TabsList>
+                <TabsList className="grid w-full grid-cols-2 h-12">
+                  <TabsTrigger value="analytics" className="text-sm font-medium">
+                    📊 Analytics
                   </TabsTrigger>
-                  <TabsTrigger value="export" className="text-xs sm:text-sm py-2 px-1 sm:px-3">
-                    Export
+                  <TabsTrigger value="export" className="text-sm font-medium">
+                    📤 Export
                   </TabsTrigger>
                 </TabsList>
               </div>
 
-              <TabsContent value="calendar" className="space-y-4 sm:space-y-6">
+              {/* Tab Content */}
+              <TabsContent value="calendar" className="mt-6">
                 <ContentCalendar />
               </TabsContent>
 
-              <TabsContent value="suggestions" className="space-y-4 sm:space-y-6">
+              <TabsContent value="suggestions" className="mt-6">
                 <SmartSuggestions />
               </TabsContent>
 
-              <TabsContent value="analytics" className="space-y-4 sm:space-y-6">
+              <TabsContent value="analytics" className="mt-6">
                 <EnhancedAnalytics />
               </TabsContent>
 
-              <TabsContent value="export" className="space-y-4 sm:space-y-6">
+              <TabsContent value="export" className="mt-6">
                 <ContentExporter content={sampleContent} />
               </TabsContent>
             </Tabs>
