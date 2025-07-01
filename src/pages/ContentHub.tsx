@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import Sidebar from '@/components/chat/Sidebar';
 import ContentCalendar from '@/components/calendar/ContentCalendar';
 import SmartSuggestions from '@/components/suggestions/SmartSuggestions';
@@ -47,7 +48,7 @@ const ContentHub = () => {
       />
       <div className="flex-1 flex flex-col">
         {/* Mobile Header */}
-        <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 sticky top-0 z-10">
+        <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 sticky top-0 z-20">
           <div className="flex items-center space-x-3">
             <Button
               variant="ghost"
@@ -67,24 +68,38 @@ const ContentHub = () => {
           <div className="p-4 space-y-6">
             {/* Mobile-First Tabs */}
             <Tabs defaultValue="calendar" className="w-full">
-              {/* Mobile Tab Navigation */}
-              <div className="sticky top-0 z-10 bg-white/90 backdrop-blur-sm -mx-4 px-4 pb-4">
-                <TabsList className="grid w-full grid-cols-2 h-12 mb-4">
-                  <TabsTrigger value="calendar" className="text-sm font-medium">
-                    📅 Calendar
-                  </TabsTrigger>
-                  <TabsTrigger value="suggestions" className="text-sm font-medium">
-                    💡 Ideas
-                  </TabsTrigger>
-                </TabsList>
-                <TabsList className="grid w-full grid-cols-2 h-12">
-                  <TabsTrigger value="analytics" className="text-sm font-medium">
-                    📊 Analytics
-                  </TabsTrigger>
-                  <TabsTrigger value="export" className="text-sm font-medium">
-                    📤 Export
-                  </TabsTrigger>
-                </TabsList>
+              {/* Mobile Tab Navigation with Horizontal Scroll */}
+              <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm -mx-4 px-4 pb-4 border-b border-gray-100">
+                <ScrollArea className="w-full whitespace-nowrap">
+                  <div className="flex space-x-2 pb-2">
+                    <TabsList className="inline-flex h-12 items-center justify-start rounded-md bg-muted p-1 text-muted-foreground min-w-max">
+                      <TabsTrigger 
+                        value="calendar" 
+                        className="flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap"
+                      >
+                        📅 Calendar
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="suggestions" 
+                        className="flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap"
+                      >
+                        💡 Ideas
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="analytics" 
+                        className="flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap"
+                      >
+                        📊 Analytics
+                      </TabsTrigger>
+                      <TabsTrigger 
+                        value="export" 
+                        className="flex-shrink-0 px-4 py-2 text-sm font-medium whitespace-nowrap"
+                      >
+                        📤 Export
+                      </TabsTrigger>
+                    </TabsList>
+                  </div>
+                </ScrollArea>
               </div>
 
               {/* Tab Content */}
