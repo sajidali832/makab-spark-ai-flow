@@ -72,38 +72,40 @@ const ContentHub = () => {
           <div className="p-3 space-y-4">
             {/* Mobile-First Navigation */}
             <Tabs defaultValue="calendar" className="w-full">
-              {/* Navigation Pills */}
+              {/* Mobile Navigation */}
               <div className="mb-6">
-                <div className="flex gap-3 overflow-x-auto pb-4 -mx-3 px-3">
-                  <TabsTrigger 
-                    value="calendar" 
-                    className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full bg-white/90 border border-gray-200 shadow-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-500 data-[state=active]:shadow-lg transition-all duration-300 min-w-[150px] justify-center text-sm font-medium whitespace-nowrap hover:shadow-md"
-                  >
-                    <img src={calendarIcon} alt="Calendar" className="w-5 h-5 opacity-80 data-[state=active]:opacity-100" />
-                    Calendar
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="suggestions" 
-                    className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full bg-white/90 border border-gray-200 shadow-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:border-purple-500 data-[state=active]:shadow-lg transition-all duration-300 min-w-[150px] justify-center text-sm font-medium whitespace-nowrap hover:shadow-md"
-                  >
-                    <img src={ideasIcon} alt="Ideas" className="w-5 h-5 opacity-80 data-[state=active]:opacity-100" />
-                    Ideas
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="analytics" 
-                    className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full bg-white/90 border border-gray-200 shadow-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:border-green-500 data-[state=active]:shadow-lg transition-all duration-300 min-w-[150px] justify-center text-sm font-medium whitespace-nowrap hover:shadow-md"
-                  >
-                    <img src={analyticsIcon} alt="Analytics" className="w-5 h-5 opacity-80 data-[state=active]:opacity-100" />
-                    Analytics
-                  </TabsTrigger>
-                  <TabsTrigger 
-                    value="export" 
-                    className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full bg-white/90 border border-gray-200 shadow-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:border-orange-500 data-[state=active]:shadow-lg transition-all duration-300 min-w-[150px] justify-center text-sm font-medium whitespace-nowrap hover:shadow-md"
-                  >
-                    <img src={exportIcon} alt="Export" className="w-5 h-5 opacity-80 data-[state=active]:opacity-100" />
-                    Export
-                  </TabsTrigger>
-                </div>
+                <TabsList className="w-full h-auto p-2 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+                    <TabsTrigger 
+                      value="calendar" 
+                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-sm font-medium whitespace-nowrap min-w-[120px] flex-shrink-0"
+                    >
+                      <img src={calendarIcon} alt="Calendar" className="w-4 h-4" />
+                      Calendar
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="suggestions" 
+                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-sm font-medium whitespace-nowrap min-w-[120px] flex-shrink-0"
+                    >
+                      <img src={ideasIcon} alt="Ideas" className="w-4 h-4" />
+                      Ideas
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="analytics" 
+                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-sm font-medium whitespace-nowrap min-w-[120px] flex-shrink-0"
+                    >
+                      <img src={analyticsIcon} alt="Analytics" className="w-4 h-4" />
+                      Analytics
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="export" 
+                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-sm font-medium whitespace-nowrap min-w-[120px] flex-shrink-0"
+                    >
+                      <img src={exportIcon} alt="Export" className="w-4 h-4" />
+                      Export
+                    </TabsTrigger>
+                  </div>
+                </TabsList>
               </div>
 
               {/* Tab Content */}
