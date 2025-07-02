@@ -52,56 +52,56 @@ const ContentHub = () => {
       />
       <div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
-        <div className="flex items-center justify-between p-3 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 sticky top-0 z-20 shrink-0">
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 sticky top-0 z-20 shrink-0">
           <div className="flex items-center space-x-3 min-w-0">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setSidebarOpen(true)}
-              className="h-9 w-9 p-0 flex-shrink-0"
+              className="h-10 w-10 p-0 flex-shrink-0 touch-button rounded-lg hover:bg-white/80"
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <h1 className="text-lg font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent truncate">
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent truncate">
               Content Hub
             </h1>
           </div>
         </div>
         
-        <div className="flex-1 overflow-auto bg-gradient-to-br from-blue-50 to-purple-50">
-          <div className="p-3 space-y-4">
+        <div className="flex-1 overflow-auto bg-gradient-to-br from-blue-50 to-purple-50 scroll-60fps">
+          <div className="p-4 space-y-4 pb-8 safe-bottom">
             {/* Mobile-First Navigation */}
             <Tabs defaultValue="calendar" className="w-full">
-              {/* Mobile Navigation */}
+              {/* Mobile-First Navigation */}
               <div className="mb-6">
-                <TabsList className="w-full h-auto p-2 bg-white/80 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
-                  <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
+                <TabsList className="w-full h-auto p-1 bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
+                  <div className="flex gap-1 overflow-x-auto scrollbar-hide touch-manipulation" style={{ scrollBehavior: 'smooth' }}>
                     <TabsTrigger 
                       value="calendar" 
-                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-sm font-medium whitespace-nowrap min-w-[120px] flex-shrink-0"
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-xs font-medium whitespace-nowrap min-w-[100px] flex-shrink-0 touch-manipulation hover:bg-gray-100 data-[state=active]:hover:bg-gradient-to-r data-[state=active]:hover:from-blue-600 data-[state=active]:hover:to-blue-700"
                     >
-                      <img src={calendarIcon} alt="Calendar" className="w-4 h-4" />
+                      <img src={calendarIcon} alt="Calendar" className="w-3.5 h-3.5" />
                       Calendar
                     </TabsTrigger>
                     <TabsTrigger 
                       value="suggestions" 
-                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-sm font-medium whitespace-nowrap min-w-[120px] flex-shrink-0"
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-xs font-medium whitespace-nowrap min-w-[100px] flex-shrink-0 touch-manipulation hover:bg-gray-100 data-[state=active]:hover:bg-gradient-to-r data-[state=active]:hover:from-purple-600 data-[state=active]:hover:to-purple-700"
                     >
-                      <img src={ideasIcon} alt="Ideas" className="w-4 h-4" />
+                      <img src={ideasIcon} alt="Ideas" className="w-3.5 h-3.5" />
                       Ideas
                     </TabsTrigger>
                     <TabsTrigger 
                       value="analytics" 
-                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-sm font-medium whitespace-nowrap min-w-[120px] flex-shrink-0"
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-xs font-medium whitespace-nowrap min-w-[100px] flex-shrink-0 touch-manipulation hover:bg-gray-100 data-[state=active]:hover:bg-gradient-to-r data-[state=active]:hover:from-green-600 data-[state=active]:hover:to-green-700"
                     >
-                      <img src={analyticsIcon} alt="Analytics" className="w-4 h-4" />
+                      <img src={analyticsIcon} alt="Analytics" className="w-3.5 h-3.5" />
                       Analytics
                     </TabsTrigger>
                     <TabsTrigger 
                       value="export" 
-                      className="flex items-center gap-2 px-4 py-3 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-sm font-medium whitespace-nowrap min-w-[120px] flex-shrink-0"
+                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-xs font-medium whitespace-nowrap min-w-[100px] flex-shrink-0 touch-manipulation hover:bg-gray-100 data-[state=active]:hover:bg-gradient-to-r data-[state=active]:hover:from-orange-600 data-[state=active]:hover:to-orange-700"
                     >
-                      <img src={exportIcon} alt="Export" className="w-4 h-4" />
+                      <img src={exportIcon} alt="Export" className="w-3.5 h-3.5" />
                       Export
                     </TabsTrigger>
                   </div>
