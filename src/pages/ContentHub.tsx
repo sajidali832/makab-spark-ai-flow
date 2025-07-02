@@ -1,8 +1,9 @@
 
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Menu } from 'lucide-react';
+import { Menu, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import Sidebar from '@/components/chat/Sidebar';
 import ContentCalendar from '@/components/calendar/ContentCalendar';
 import SmartSuggestions from '@/components/suggestions/SmartSuggestions';
@@ -17,6 +18,8 @@ import exportIcon from '@/assets/export-icon.png';
 
 const ContentHub = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('calendar');
+  const { toast } = useToast();
 
   // Sample content data - in real app, this would come from your database
   const sampleContent = [
@@ -43,91 +46,136 @@ const ContentHub = () => {
     }
   ];
 
+  const handleScheduleContent = () => {
+    toast({
+      title: "Content Scheduler",
+      description: "Opening content creation dialog...",
+    });
+    // Here you would typically open a modal or navigate to content creation
+    console.log("Schedule Content clicked");
+  };
+
+  const tabConfig = [
+    {
+      id: 'calendar',
+      label: 'Calendar',
+      icon: calendarIcon,
+      color: 'from-blue-500 to-blue-600',
+      hoverColor: 'hover:from-blue-600 hover:to-blue-700'
+    },
+    {
+      id: 'suggestions',
+      label: 'Ideas',
+      icon: ideasIcon,
+      color: 'from-purple-500 to-purple-600',
+      hoverColor: 'hover:from-purple-600 hover:to-purple-700'
+    },
+    {
+      id: 'analytics',
+      label: 'Analytics',
+      icon: analyticsIcon,
+      color: 'from-green-500 to-green-600',
+      hoverColor: 'hover:from-green-600 hover:to-green-700'
+    },
+    {
+      id: 'export',
+      label: 'Export',
+      icon: exportIcon,
+      color: 'from-orange-500 to-orange-600',
+      hoverColor: 'hover:from-orange-600 hover:to-orange-700'
+    }
+  ];
+
   return (
-    <div className="flex h-screen bg-white overflow-hidden">
+    <div className="flex h-screen bg-gray-50 overflow-hidden">
       <Sidebar 
         isOpen={sidebarOpen} 
         onClose={() => setSidebarOpen(false)} 
         onMenuClick={() => setSidebarOpen(!sidebarOpen)}
       />
-      <div className="flex-1 flex flex-col min-w-0">
+      
+      <div className="flex-1 flex flex-col min-w-0 relative">
         {/* Mobile Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 sticky top-0 z-20 shrink-0">
+        <div className="flex items-center justify-between p-3 bg-white border-b border-gray-200 shadow-sm sticky top-0 z-20 shrink-0">
           <div className="flex items-center space-x-3 min-w-0">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setSidebarOpen(true)}
-              className="h-10 w-10 p-0 flex-shrink-0 touch-button rounded-lg hover:bg-white/80"
+              className="h-9 w-9 p-0 flex-shrink-0 rounded-lg hover:bg-gray-100"
             >
               <Menu className="h-5 w-5" />
             </Button>
-            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-700 to-purple-700 bg-clip-text text-transparent truncate">
+            <h1 className="text-lg font-bold text-gray-800 truncate">
               Content Hub
             </h1>
           </div>
+          <Button
+            size="sm"
+            onClick={handleScheduleContent}
+            className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-xs px-3 py-2 rounded-lg shadow-md"
+          >
+            <Plus className="h-3 w-3 mr-1" />
+            Create
+          </Button>
         </div>
         
-        <div className="flex-1 overflow-auto bg-gradient-to-br from-blue-50 to-purple-50 scroll-60fps">
-          <div className="p-4 space-y-4 pb-8 safe-bottom">
-            {/* Mobile-First Navigation */}
-            <Tabs defaultValue="calendar" className="w-full">
-              {/* Mobile-First Navigation */}
-              <div className="mb-6">
-                <TabsList className="w-full h-auto p-1 bg-white/90 backdrop-blur-sm rounded-2xl border border-gray-200 shadow-lg overflow-hidden">
-                  <div className="flex gap-1 overflow-x-auto scrollbar-hide touch-manipulation" style={{ scrollBehavior: 'smooth' }}>
-                    <TabsTrigger 
-                      value="calendar" 
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-xs font-medium whitespace-nowrap min-w-[100px] flex-shrink-0 touch-manipulation hover:bg-gray-100 data-[state=active]:hover:bg-gradient-to-r data-[state=active]:hover:from-blue-600 data-[state=active]:hover:to-blue-700"
-                    >
-                      <img src={calendarIcon} alt="Calendar" className="w-3.5 h-3.5" />
-                      Calendar
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="suggestions" 
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-xs font-medium whitespace-nowrap min-w-[100px] flex-shrink-0 touch-manipulation hover:bg-gray-100 data-[state=active]:hover:bg-gradient-to-r data-[state=active]:hover:from-purple-600 data-[state=active]:hover:to-purple-700"
-                    >
-                      <img src={ideasIcon} alt="Ideas" className="w-3.5 h-3.5" />
-                      Ideas
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="analytics" 
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-xs font-medium whitespace-nowrap min-w-[100px] flex-shrink-0 touch-manipulation hover:bg-gray-100 data-[state=active]:hover:bg-gradient-to-r data-[state=active]:hover:from-green-600 data-[state=active]:hover:to-green-700"
-                    >
-                      <img src={analyticsIcon} alt="Analytics" className="w-3.5 h-3.5" />
-                      Analytics
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="export" 
-                      className="flex items-center gap-2 px-3 py-2.5 rounded-xl bg-transparent data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300 text-xs font-medium whitespace-nowrap min-w-[100px] flex-shrink-0 touch-manipulation hover:bg-gray-100 data-[state=active]:hover:bg-gradient-to-r data-[state=active]:hover:from-orange-600 data-[state=active]:hover:to-orange-700"
-                    >
-                      <img src={exportIcon} alt="Export" className="w-3.5 h-3.5" />
-                      Export
-                    </TabsTrigger>
-                  </div>
-                </TabsList>
-              </div>
-
-              {/* Tab Content */}
-              <TabsContent value="calendar" className="mt-0">
+        {/* Main Content Area */}
+        <div className="flex-1 flex flex-col overflow-hidden">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+            {/* Content Area */}
+            <div className="flex-1 overflow-auto px-4 py-4 pb-20">
+              <TabsContent value="calendar" className="mt-0 h-full">
                 <ContentCalendar />
               </TabsContent>
 
-              <TabsContent value="suggestions" className="mt-0">
+              <TabsContent value="suggestions" className="mt-0 h-full">
                 <SmartSuggestions />
               </TabsContent>
 
-              <TabsContent value="analytics" className="mt-0">
+              <TabsContent value="analytics" className="mt-0 h-full">
                 <EnhancedAnalytics />
               </TabsContent>
 
-              <TabsContent value="export" className="mt-0">
+              <TabsContent value="export" className="mt-0 h-full">
                 <ContentExporter content={sampleContent} />
               </TabsContent>
-            </Tabs>
-          </div>
+            </div>
+
+            {/* Bottom Navigation - Mobile First */}
+            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-30">
+              <TabsList className="w-full h-16 p-0 bg-transparent grid grid-cols-4 gap-0">
+                {tabConfig.map((tab) => (
+                  <TabsTrigger
+                    key={tab.id}
+                    value={tab.id}
+                    className={`
+                      flex flex-col items-center justify-center h-16 px-2 py-2 
+                      border-0 rounded-none bg-transparent
+                      data-[state=active]:bg-gradient-to-t data-[state=active]:${tab.color}
+                      data-[state=active]:text-white data-[state=active]:shadow-md
+                      hover:bg-gray-50 data-[state=active]:hover:bg-gradient-to-t 
+                      data-[state=active]:${tab.hoverColor}
+                      transition-all duration-300 touch-manipulation
+                      text-gray-600 data-[state=active]:text-white
+                    `}
+                  >
+                    <img 
+                      src={tab.icon} 
+                      alt={tab.label} 
+                      className="w-5 h-5 mb-1 flex-shrink-0"
+                    />
+                    <span className="text-xs font-medium leading-tight">
+                      {tab.label}
+                    </span>
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </div>
+          </Tabs>
         </div>
       </div>
+      
       <NotificationPrompt />
       <FeatureIntroduction />
     </div>

@@ -4,6 +4,7 @@ import { Calendar, Plus, Clock, FileText, ChevronLeft, ChevronRight } from 'luci
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 
 interface ScheduledContent {
   id: string;
@@ -17,6 +18,7 @@ interface ScheduledContent {
 const ContentCalendar = () => {
   const [selectedDate, setSelectedDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [currentMonth, setCurrentMonth] = useState(new Date());
+  const { toast } = useToast();
   const [scheduledContent] = useState<ScheduledContent[]>([
     {
       id: '1',
@@ -35,6 +37,22 @@ const ContentCalendar = () => {
       status: 'draft'
     }
   ]);
+
+  const handleAddContent = () => {
+    toast({
+      title: "Add Content",
+      description: "Opening content creation form...",
+    });
+    console.log("Add content clicked");
+  };
+
+  const handleScheduleContent = () => {
+    toast({
+      title: "Schedule Content",
+      description: "Opening scheduler for selected date...",
+    });
+    console.log("Schedule content clicked for date:", selectedDate);
+  };
 
   const getContentForDate = (date: string) => {
     return scheduledContent.filter(content => content.date === date);
@@ -85,7 +103,7 @@ const ContentCalendar = () => {
   const monthName = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 pb-4">
       {/* Mobile Header */}
       <div className="flex flex-col space-y-3">
         <div className="flex items-center justify-between">
@@ -93,7 +111,11 @@ const ContentCalendar = () => {
             <Calendar className="h-5 w-5 text-blue-600" />
             <h2 className="text-lg font-bold text-gray-800">Calendar</h2>
           </div>
-          <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-xs px-3 py-2">
+          <Button 
+            size="sm" 
+            onClick={handleAddContent}
+            className="bg-blue-600 hover:bg-blue-700 text-xs px-3 py-2 shadow-md"
+          >
             <Plus className="h-3 w-3 mr-1" />
             Add
           </Button>
@@ -101,14 +123,14 @@ const ContentCalendar = () => {
       </div>
 
       {/* Mobile Calendar */}
-      <Card className="overflow-hidden">
+      <Card className="overflow-hidden shadow-sm">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <Button
               variant="outline"
               size="sm"
               onClick={() => navigateMonth('prev')}
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 hover:bg-gray-100"
             >
               <ChevronLeft className="h-4 w-4" />
             </Button>
@@ -117,7 +139,7 @@ const ContentCalendar = () => {
               variant="outline"
               size="sm"
               onClick={() => navigateMonth('next')}
-              className="h-8 w-8 p-0"
+              className="h-8 w-8 p-0 hover:bg-gray-100"
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
@@ -172,7 +194,7 @@ const ContentCalendar = () => {
       </Card>
 
       {/* Selected Date Content */}
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center space-x-2 text-base">
             <Clock className="h-4 w-4" />
@@ -205,8 +227,12 @@ const ContentCalendar = () => {
           ) : (
             <div className="text-center py-6 text-gray-500">
               <Calendar className="h-8 w-8 mx-auto mb-3 opacity-50" />
-              <p className="text-sm">No content scheduled</p>
-              <Button size="sm" className="mt-3 bg-blue-600 hover:bg-blue-700">
+              <p className="text-sm mb-4">No content scheduled</p>
+              <Button 
+                size="sm" 
+                onClick={handleScheduleContent}
+                className="bg-blue-600 hover:bg-blue-700 shadow-md"
+              >
                 <Plus className="h-3 w-3 mr-1" />
                 Schedule Content
               </Button>
