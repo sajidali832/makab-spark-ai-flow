@@ -10,6 +10,10 @@ import ContentExporter from '@/components/export/ContentExporter';
 import EnhancedAnalytics from '@/components/analytics/EnhancedAnalytics';
 import NotificationPrompt from '@/components/notifications/NotificationPrompt';
 import FeatureIntroduction from '@/components/introduction/FeatureIntroduction';
+import calendarIcon from '@/assets/calendar-icon.png';
+import ideasIcon from '@/assets/ideas-icon.png';
+import analyticsIcon from '@/assets/analytics-icon.png';
+import exportIcon from '@/assets/export-icon.png';
 
 const ContentHub = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -66,37 +70,39 @@ const ContentHub = () => {
         
         <div className="flex-1 overflow-auto bg-gradient-to-br from-blue-50 to-purple-50">
           <div className="p-3 space-y-4">
-            {/* Mobile-First Tabs */}
+            {/* Mobile-First Navigation */}
             <Tabs defaultValue="calendar" className="w-full">
-              {/* Fixed Mobile Tab Navigation */}
-              <div className="sticky top-0 z-10 bg-white/95 backdrop-blur-sm -mx-3 px-3 pb-3 border-b border-gray-100 mb-4">
-                <div className="w-full overflow-x-auto scrollbar-hide" style={{ WebkitOverflowScrolling: 'touch' }}>
-                  <div className="flex gap-2 pb-2" style={{ minWidth: 'fit-content', width: 'max-content' }}>
-                    <TabsTrigger 
-                      value="calendar" 
-                      className="flex-shrink-0 px-4 py-2.5 text-sm font-medium whitespace-nowrap rounded-lg bg-white border border-gray-200 data-[state=active]:bg-blue-100 data-[state=active]:text-blue-700 data-[state=active]:border-blue-300 min-w-[100px] touch-manipulation"
-                    >
-                      📅 Calendar
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="suggestions" 
-                      className="flex-shrink-0 px-4 py-2.5 text-sm font-medium whitespace-nowrap rounded-lg bg-white border border-gray-200 data-[state=active]:bg-purple-100 data-[state=active]:text-purple-700 data-[state=active]:border-purple-300 min-w-[100px] touch-manipulation"
-                    >
-                      💡 Ideas
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="analytics" 
-                      className="flex-shrink-0 px-4 py-2.5 text-sm font-medium whitespace-nowrap rounded-lg bg-white border border-gray-200 data-[state=active]:bg-green-100 data-[state=active]:text-green-700 data-[state=active]:border-green-300 min-w-[100px] touch-manipulation"
-                    >
-                      📊 Analytics
-                    </TabsTrigger>
-                    <TabsTrigger 
-                      value="export" 
-                      className="flex-shrink-0 px-4 py-2.5 text-sm font-medium whitespace-nowrap rounded-lg bg-white border border-gray-200 data-[state=active]:bg-orange-100 data-[state=active]:text-orange-700 data-[state=active]:border-orange-300 min-w-[100px] touch-manipulation"
-                    >
-                      📤 Export
-                    </TabsTrigger>
-                  </div>
+              {/* Navigation Pills */}
+              <div className="mb-6">
+                <div className="flex gap-3 overflow-x-auto pb-4 -mx-3 px-3">
+                  <TabsTrigger 
+                    value="calendar" 
+                    className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full bg-white/90 border border-gray-200 shadow-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-500 data-[state=active]:to-blue-600 data-[state=active]:text-white data-[state=active]:border-blue-500 data-[state=active]:shadow-lg transition-all duration-300 min-w-[150px] justify-center text-sm font-medium whitespace-nowrap hover:shadow-md"
+                  >
+                    <img src={calendarIcon} alt="Calendar" className="w-5 h-5 opacity-80 data-[state=active]:opacity-100" />
+                    Calendar
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="suggestions" 
+                    className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full bg-white/90 border border-gray-200 shadow-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-purple-600 data-[state=active]:text-white data-[state=active]:border-purple-500 data-[state=active]:shadow-lg transition-all duration-300 min-w-[150px] justify-center text-sm font-medium whitespace-nowrap hover:shadow-md"
+                  >
+                    <img src={ideasIcon} alt="Ideas" className="w-5 h-5 opacity-80 data-[state=active]:opacity-100" />
+                    Ideas
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="analytics" 
+                    className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full bg-white/90 border border-gray-200 shadow-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-500 data-[state=active]:to-green-600 data-[state=active]:text-white data-[state=active]:border-green-500 data-[state=active]:shadow-lg transition-all duration-300 min-w-[150px] justify-center text-sm font-medium whitespace-nowrap hover:shadow-md"
+                  >
+                    <img src={analyticsIcon} alt="Analytics" className="w-5 h-5 opacity-80 data-[state=active]:opacity-100" />
+                    Analytics
+                  </TabsTrigger>
+                  <TabsTrigger 
+                    value="export" 
+                    className="flex-shrink-0 flex items-center gap-3 px-5 py-3 rounded-full bg-white/90 border border-gray-200 shadow-sm data-[state=active]:bg-gradient-to-r data-[state=active]:from-orange-500 data-[state=active]:to-orange-600 data-[state=active]:text-white data-[state=active]:border-orange-500 data-[state=active]:shadow-lg transition-all duration-300 min-w-[150px] justify-center text-sm font-medium whitespace-nowrap hover:shadow-md"
+                  >
+                    <img src={exportIcon} alt="Export" className="w-5 h-5 opacity-80 data-[state=active]:opacity-100" />
+                    Export
+                  </TabsTrigger>
                 </div>
               </div>
 
